@@ -1,7 +1,11 @@
 import React from "react";
-
+import MyBarChart from "./BarChart";
 const Dashboard: React.FC = () => {
-  return <h1 className="text-2xl font-bold">Dashboard Page</h1>;
+  return (
+    <div>
+      <MyBarChart />
+    </div>
+  );
 };
 
 export default Dashboard;
