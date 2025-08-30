@@ -289,7 +289,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       <div className="text-white p-6 flex flex-col items-center" style={{ backgroundColor: '#00a1b8' }}>
         <div className="bg-white p-3 rounded-lg mb-3">
           <img 
-            src="/path-to-your-wavesnett-logo.png" 
+            src="/wavesnett.png" 
             alt="WavesNett" 
             className="w-12 h-12 object-contain"
           />
