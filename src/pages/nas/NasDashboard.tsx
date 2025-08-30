@@ -109,7 +109,7 @@ const NasDashboard: React.FC = () => {
       <span className="text-xs font-normal leading-tight">temp</span>
     </div>
   </div>
-</div>
+        </div>
 
       </div>
       {/* Second Row */}
