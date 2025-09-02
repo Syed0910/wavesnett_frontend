@@ -56,7 +56,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [expanded, setExpanded] = useState([]);
+  const [expanded, setExpanded] = useState(['user']); // Default expand user management
 
   const toggleExpand = (id) => {
     setExpanded((prev) =>
@@ -65,7 +65,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   };
 
   const handleClick = (item) => {
-    if (item.subItems) {
+    if (item.subItems && item.subItems.length > 0) {
       toggleExpand(item.id);
     } else if (item.path) {
       navigate(item.path);
@@ -73,9 +73,10 @@ const Sidebar = ({ isOpen, onClose }) => {
     }
   };
 
-  const isActive = (item) =>
-    location.pathname === item.path ||
-    (item.path === "/dashboard" && location.pathname === "/");
+  const isActive = (item) => {
+    if (item.path === "/dashboard" && location.pathname === "/") return true;
+    return location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+  };
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: <Home className="w-5 h-5" />, path: "/dashboard" },
@@ -134,7 +135,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     },
 
     // Complaints
-    { id: "complaints", label: "Complaints", icon: <AlertCircle className="w-5 h-5" />, subItems: [] },
+    { id: "complaints", label: "Complaints", icon: <AlertCircle className="w-5 h-5" />, path: "/complaints" },
 
     // Reports
     {
@@ -243,6 +244,8 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const renderItem = (item) => {
     const expandedItem = expanded.includes(item.id);
+    const hasSubItems = item.subItems && item.subItems.length > 0;
+    
     return (
       <div key={item.id}>
         <button
@@ -256,13 +259,13 @@ const Sidebar = ({ isOpen, onClose }) => {
             {item.icon}
             <span className="text-sm font-medium whitespace-nowrap">{item.label}</span>
           </div>
-          {item.subItems && item.subItems.length > 0 && (
+          {hasSubItems && (
             <span className="text-gray-500">
               {expandedItem ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </span>
           )}
         </button>
-        {item.subItems && item.subItems.length > 0 && expandedItem && (
+        {hasSubItems && expandedItem && (
           <div className="ml-8 mt-1 space-y-1">
             {item.subItems.map((sub) => (
               <button
@@ -288,11 +291,9 @@ const Sidebar = ({ isOpen, onClose }) => {
       {/* Logo and Company Name Section */}
       <div className="text-white p-6 flex flex-col items-center" style={{ backgroundColor: '#00a1b8' }}>
         <div className="bg-white p-3 rounded-lg mb-3">
-          <img 
-            src="/path-to-your-wavesnett-logo.png" 
-            alt="WavesNett" 
-            className="w-12 h-12 object-contain"
-          />
+          <div className="w-12 h-12 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xl">
+            W
+          </div>
         </div>
         <h2 className="text-lg font-semibold text-center leading-tight">
           AaniRids Technologies...
