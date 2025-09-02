@@ -5,7 +5,8 @@ import Users from "./pages/users";
 import Settings from "./pages/Settings";
 import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
-import NasDashboard from "./pages/nas/NasDashboard";
+import Nas from "./pages/Nas";
+
 
 const App = () => {
   return (
@@ -20,7 +21,7 @@ const App = () => {
         <Route path="/user/*" element={<UsersPage />} />
         
         {/* NAS Routes - Placeholder for future implementation */}
-        <Route path="/nas/*" element={<NasDashboard/>} />
+        <Route path="/nas/*" element={<Nas/>} />
         
         {/* Billing Routes - Placeholder for future implementation */}
         <Route path="/billing/*" element={<div className="p-6"><h2 className="text-xl font-semibold">Billing Management</h2><p className="text-gray-600 mt-2">Billing management features will be implemented here.</p></div>} />

@@ -221,7 +221,7 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
   const operators = [
     { value: 'contains', label: 'Contains' },
     { value: 'equals', label: 'Equals' },
-    { value: 'startsWith', label: 'Starts with' },
+    {value: 'startsWith', label: 'Starts with' },
     { value: 'endsWith', label: 'Ends with' },
     { value: 'greater', label: 'Greater than' },
     { value: 'less', label: 'Less than' }
@@ -406,7 +406,8 @@ const DataTable = ({
   showSelection = false,
   toolbar,
   pageSize = 10,
-  searchable = true
+  searchable = true,
+  showNasDropdown=false,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -421,6 +422,9 @@ const DataTable = ({
   const [showSortModal, setShowSortModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Check if any action handlers are provided
+  const hasActions = onView || onEdit || onDelete;
 
   // Check screen size on mount and resize
   React.useEffect(() => {
@@ -642,14 +646,16 @@ const DataTable = ({
         ))}
       </div>
 
-      <div className="flex justify-end mt-3 pt-3 border-t border-gray-100">
-        <MobileActionsMenu
-          row={row}
-          onView={onView}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      </div>
+      {hasActions && (
+        <div className="flex justify-end mt-3 pt-3 border-t border-gray-100">
+          <MobileActionsMenu
+            row={row}
+            onView={onView}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        </div>
+      )}
     </div>
   );
 
@@ -740,9 +746,19 @@ const DataTable = ({
               </Tooltip>
             </div>
           </div>
+          
+           
+       {searchable && (
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            {/* NAS IP Dropdown (optional) */}
+            {showNasDropdown && (
+              <select className="border-b p-2 shadow-sm rounded bg-white focus:outline-none">
+                <option>NAS_1 [10.10.1.1]</option>
+                <option>NAS_2 [10.10.1.2]</option>
+              </select>
+            )}
 
-          {/* Search */}
-          {searchable && (
+            {/* Search Bar */}
             <div className="relative w-full md:w-auto">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
@@ -753,7 +769,9 @@ const DataTable = ({
                 className="pl-10 pr-4 py-2 border-b border-gray-300 focus:border-b-2 focus:border-blue-400 outline-none w-full md:w-48"
               />
             </div>
-          )}
+          </div>
+        )}
+
         </div>
       </div>
 
@@ -796,16 +814,18 @@ const DataTable = ({
                     </th>
                   );
                 })}
-                <th className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                  Action
-                </th>
+                {hasActions && (
+                  <th className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    Action
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {paginatedData.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={filteredColumns.length + (showSelection ? 1 : 0) + 1}
+                    colSpan={filteredColumns.length + (showSelection ? 1 : 0) + (hasActions ? 1 : 0)}
                     className="px-6 py-12 text-center text-gray-500"
                   >
                     No data available
@@ -829,34 +849,42 @@ const DataTable = ({
                         {column.render ? column.render(row[column.key], row, index) : row[column.key]}
                       </td>
                     ))}
-                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end gap-2">
-                        <Tooltip content="View">
-                          <button
-                            onClick={() => onView && onView(row, index)}
-                            className="text-blue-600 hover:text-blue-900"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                        </Tooltip>
-                        <Tooltip content="Edit">
-                          <button
-                            onClick={() => onEdit && onEdit(row, index)}
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </button>
-                        </Tooltip>
-                        <Tooltip content="Delete">
-                          <button
-                            onClick={() => onDelete && onDelete(row, index)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </Tooltip>
-                      </div>
-                    </td>
+                    {hasActions && (
+                      <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex items-center justify-end gap-2">
+                          {onView && (
+                            <Tooltip content="View">
+                              <button
+                                onClick={() => onView(row, index)}
+                                className="text-blue-600 hover:text-blue-900"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                            </Tooltip>
+                          )}
+                          {onEdit && (
+                            <Tooltip content="Edit">
+                              <button
+                                onClick={() => onEdit(row, index)}
+                                className="text-indigo-600 hover:text-indigo-900"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </button>
+                            </Tooltip>
+                          )}
+                          {onDelete && (
+                            <Tooltip content="Delete">
+                              <button
+                                onClick={() => onDelete(row, index)}
+                                className="text-red-600 hover:text-red-900"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </Tooltip>
+                          )}
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               )}
