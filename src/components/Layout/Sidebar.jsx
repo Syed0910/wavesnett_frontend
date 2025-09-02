@@ -56,7 +56,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [expanded, setExpanded] = useState([]);
+  const [expanded, setExpanded] = useState(['user']); // Default expand user management
 
   const toggleExpand = (id) => {
     setExpanded((prev) =>
@@ -65,17 +65,18 @@ const Sidebar = ({ isOpen, onClose }) => {
   };
 
   const handleClick = (item) => {
-    if (item.subItems) {
+    if (item.subItems && item.subItems.length > 0) {
       toggleExpand(item.id);
     } else if (item.path) {
       navigate(item.path);
       if (window.innerWidth < 1024) onClose();
     }
   };
-  console.log("value:",isOpen);
-  const isActive = (item) =>
-    location.pathname === item.path ||
-    (item.path === "/dashboard" && location.pathname === "/");
+
+  const isActive = (item) => {
+    if (item.path === "/dashboard" && location.pathname === "/") return true;
+    return location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+  };
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: <Home className="w-5 h-5" />, path: "/dashboard" },
@@ -134,7 +135,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     },
 
     // Complaints
-    { id: "complaints", label: "Complaints", icon: <AlertCircle className="w-5 h-5" />, subItems: [] },
+    { id: "complaints", label: "Complaints", icon: <AlertCircle className="w-5 h-5" />, path: "/complaints" },
 
     // Reports
     {
@@ -243,6 +244,8 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const renderItem = (item) => {
     const expandedItem = expanded.includes(item.id);
+    const hasSubItems = item.subItems && item.subItems.length > 0;
+    
     return (
       <div key={item.id}>
         <button
@@ -256,13 +259,13 @@ const Sidebar = ({ isOpen, onClose }) => {
             {item.icon}
             <span className="text-sm font-medium whitespace-nowrap">{item.label}</span>
           </div>
-          {item.subItems && item.subItems.length > 0 && (
+          {hasSubItems && (
             <span className="text-gray-500">
               {expandedItem ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </span>
           )}
         </button>
-        {item.subItems && item.subItems.length > 0 && expandedItem && (
+        {hasSubItems && expandedItem && (
           <div className="ml-8 mt-1 space-y-1">
             {item.subItems.map((sub) => (
               <button

@@ -1,6 +1,6 @@
 // Layout.jsx
 import React, { useState } from 'react';
-import Navbar from './Navbar';
+import { Menu, X } from 'lucide-react';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 

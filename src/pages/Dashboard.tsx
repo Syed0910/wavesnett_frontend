@@ -1,7 +1,12 @@
 import React from "react";
+import DashboardCards from "./BarChart"; // rename for clarity
 
 const Dashboard: React.FC = () => {
-  return <h1 className="text-2xl font-bold">Dashboard Page</h1>;
+  return (
+    <div >
+      <DashboardCards />
+    </div>
+  );
 };
 
 export default Dashboard;
