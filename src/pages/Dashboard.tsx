@@ -1,9 +1,10 @@
 import React from "react";
-import MyBarChart from "./BarChart";
+import DashboardCards from "./BarChart"; // rename for clarity
+
 const Dashboard: React.FC = () => {
   return (
-    <div>
-      <MyBarChart />
+    <div >
+      <DashboardCards />
     </div>
   );
 };
