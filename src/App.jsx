@@ -5,6 +5,7 @@ import Users from "./pages/users";
 import Settings from "./pages/Settings";
 import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
+import NasDashboard from "./pages/nas/NasDashboard";
 
 const App = () => {
   return (

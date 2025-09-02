@@ -287,13 +287,16 @@ const Sidebar = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 w-64 h-screen flex flex-col">
+    <div className={`${isOpen ? "translate-x-0" : "-translate-x-70"} transform transition-transform duration-300` }>
+    <div className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen flex flex-col">
       {/* Logo and Company Name Section */}
       <div className="text-white p-6 flex flex-col items-center" style={{ backgroundColor: '#00a1b8' }}>
         <div className="bg-white p-3 rounded-lg mb-3">
-          <div className="w-12 h-12 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xl">
-            W
-          </div>
+          <img 
+            src="/wavesnett.png" 
+            alt="WavesNett" 
+            className="w-12 h-12 object-contain"
+          />
         </div>
         <h2 className="text-lg font-semibold text-center leading-tight">
           AaniRids Technologies...
@@ -306,6 +309,8 @@ const Sidebar = ({ isOpen, onClose }) => {
         </nav>
       </div>
     </div>
+    </div>
+  
   );
 };
 
