@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BarChart } from "@mui/x-charts";
+import { BarChart } from "@mui/x-charts/BarChart";   // ✅ Fixed import
 import {
   Card,
   Typography,
@@ -124,7 +124,7 @@ function DashboardCard({
   );
 }
 
-// 🔹 License Details Card (unchanged)
+// 🔹 License Details Card
 function LicenseDetailsCard() {
   return (
     <Card
@@ -263,7 +263,7 @@ export default function MyBarChart() {
           />
         </Grid>
 
-        {/* Other Cards unchanged */}
+        {/* Other Cards */}
         <Grid item>
           <DashboardCard
             title="New Connections"
