@@ -1,0 +1,18 @@
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Users from '../components/users-management/users';
+import NewUser from '../components/users-management/new-users';
+import BulkUserLots from '../components/users-management/bulk-user-lots';
+
+const UsersPage = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/user/users" replace />} />
+      <Route path="/users" element={<Users />} />
+      <Route path="/new" element={<NewUser />} />
+      <Route path="/bulk" element={<BulkUserLots />} />
+    </Routes>
+  );
+};
+
+export default UsersPage;
