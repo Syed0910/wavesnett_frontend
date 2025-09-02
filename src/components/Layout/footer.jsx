@@ -8,7 +8,7 @@ const Footer = () => {
         <p>Aanirids PVT © 2025</p>
         
         {/* Right Side */}
-        <span className="font-medium">V3.72.69 numan</span>
+        <span className="font-medium">V3.72.69</span>
       </div>
     </footer>
   );
