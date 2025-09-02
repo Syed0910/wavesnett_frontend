@@ -72,7 +72,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       if (window.innerWidth < 1024) onClose();
     }
   };
-
+  console.log("value:",isOpen);
   const isActive = (item) =>
     location.pathname === item.path ||
     (item.path === "/dashboard" && location.pathname === "/");
@@ -284,7 +284,8 @@ const Sidebar = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 w-64 h-screen flex flex-col">
+    <div className={`${isOpen ? "translate-x-0" : "-translate-x-70"} transform transition-transform duration-300` }>
+    <div className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen flex flex-col">
       {/* Logo and Company Name Section */}
       <div className="text-white p-6 flex flex-col items-center" style={{ backgroundColor: '#00a1b8' }}>
         <div className="bg-white p-3 rounded-lg mb-3">
@@ -305,6 +306,8 @@ const Sidebar = ({ isOpen, onClose }) => {
         </nav>
       </div>
     </div>
+    </div>
+  
   );
 };
 

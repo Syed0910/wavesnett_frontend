@@ -242,30 +242,29 @@ const NasDashboard = () => {
         </div>
 
         {/* PPP / Hotspot Circle */}
-        <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center justify-center">
-          <p className="text-sm font-medium mb-2">Hotspot</p>
-          <div className="relative w-32 h-32 sm:w-40 sm:h-40 flex items-center justify-center">
-            <svg
-              className="w-full h-full"
-              viewBox="0 0 100 100"
-              preserveAspectRatio="xMidYMid meet"
-            >
-              <circle
-                cx="50"
-                cy="50"
-                r="40"
-                stroke="#10b981"
-                strokeWidth="10"
-                fill="transparent"
-              />
+        <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center justify-center group relative">
+          <p class="text-sm font-medium mb-2">Hotspot</p>
+          <div class="relative w-32 h-32 sm:w-40 sm:h-40 flex items-center justify-center">
+        
+            <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+              <circle cx="50" cy="50" r="40" stroke="#10b981" stroke-width="15" fill="transparent"></circle>
             </svg>
-            <div className="absolute flex flex-col items-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-              <p className="text-sm text-gray-600">Total</p>
-              <p className="text-2xl font-bold">{ppp}</p>
-              <p className="text-sm text-gray-600">PPP {ppp}</p>
+            
+
+            <div class="absolute flex flex-col items-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+              <p class="text-sm text-gray-600">Total</p>
+              <p class="text-2xl font-bold">84</p>
+              <p class="text-sm text-gray-600">PPP 84</p>
+            </div>
+            
+
+            <div class="absolute left-full top-1/2 -translate-y-1/2 ml-2 hidden group-hover:flex bg-gray-800 text-white text-xs rounded px-2 py-1 items-center">
+              PPP: 84
+            <div class="w-2 h-2 bg-gray-800 rotate-45 ml-[-4px]"></div>
             </div>
           </div>
-        </div>
+      </div>
+
         <div></div>
       </div>
 
@@ -280,7 +279,7 @@ const NasDashboard = () => {
               animate="visible"
               exit="exit"
               className="fixed inset-0 bg-black z-40 pointer-events-none"
-              style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
+           style={{ backgroundColor: "rgba(255, 0, 0, 0.9)" }}
             />
             {/* Modal */}
             <motion.div
