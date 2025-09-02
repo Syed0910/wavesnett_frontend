@@ -20,6 +20,7 @@ const Navbar = ({ onMenuToggle, isSidebarOpen }) => {
   const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
 
+  console.log("sidebar in navbar:",isSidebarOpen);
   const handleImageUpload = (event) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -42,19 +43,22 @@ const Navbar = ({ onMenuToggle, isSidebarOpen }) => {
   return (
     <nav className="bg-cyan-400 sticky top-0 z-50 shadow-sm">
       <div className="px-0 sm:px-6 lg:px-8">
-        <div className="flex justify-end items-center h-14 gap-4">
+        <div className="flex justify-between items-center h-14 gap-4">
           {/* Left section - Menu Button */}
+          <div className={`${isSidebarOpen ? "translate-x-70 z-80" : "translate-x-0"} transform transition-transform duration-300 `}>
           <div className="flex items-center">
             <button
               onClick={onMenuToggle}
               className="p-2 rounded-md hover:bg-cyan-500 transition-colors duration-200"
-            >
+              >
               <Menu className="w-5 h-5 text-white" />
             </button>
+            </div>
           </div>
 
           {/* Center section - Search Bar */}
-          <div className="flex max-w-2xl items-center">
+          <div className='flex items-center'>
+                      <div className="flex max-w-2xl items-center">
             <div className="relative w-full">
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
                 <User className="w-4 h-4 text-gray-400 mr-2" />
@@ -199,6 +203,8 @@ const Navbar = ({ onMenuToggle, isSidebarOpen }) => {
               )}
             </div>
           </div>
+          </div>
+
         </div>
       </div>
     </nav>

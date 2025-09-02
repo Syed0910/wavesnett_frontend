@@ -1,63 +1,51 @@
+// Layout.jsx
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import Sidebar from './Sidebar';
-import Navbar from './Navbar';
-import Footer from './footer';
-import { ToastProvider } from '../ui/toast';
+import Footer from './Footer';
 
 const Layout = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
 
   return (
-    <ToastProvider>
-      <div className="min-h-screen bg-gray-50 flex">
-        {/* Mobile sidebar overlay */}
-        {sidebarOpen && (
-          <div 
-            className="fixed inset-0 z-40 bg-gray-600 bg-opacity-50 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
-        {/* Sidebar */}
-        <div className={`
-          fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}>
-          <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        </div>
-
-        {/* Main content */}
-        <div className="flex-1 flex flex-col min-w-0">
-          {/* Top navigation */}
-          <div className="bg-white shadow-sm border-b border-gray-200 lg:hidden">
-            <div className="px-4 py-3 flex items-center justify-between">
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="text-gray-600 hover:text-gray-900"
-              >
-                <Menu className="w-6 h-6" />
-              </button>
-              <h1 className="text-lg font-semibold text-gray-900">WavesNett</h1>
-              <div className="w-6" /> {/* Spacer */}
-            </div>
-          </div>
-
-          {/* Navbar - Desktop only */}
-          <div className="hidden lg:block">
-            <Navbar />
-          </div>
-
-          {/* Page content */}
-          <main className="flex-1 overflow-y-auto">
-            {children}
-          </main>
-
-          {/* Footer */}
-          <Footer />
-        </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
+      {/* Navbar */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <Navbar isSidebarOpen={isSidebarOpen} onMenuToggle={toggleSidebar} />
       </div>
-    </ToastProvider>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 left-0 h-full  transform transition-transform duration-300
+          ${isSidebarOpen ? 'translate-x-0 z-60' : '-translate-x-full z-40'} lg:translate-x-0`}
+      >
+        <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
+      </div>
+
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div
+          className={`${isSidebarOpen ? "-translate-x-100" : "translate-x-0"} flex items-center transform transition-transform duration-300 fixed inset-0  lg:hidden`}
+          onClick={closeSidebar}
+        />
+      )}
+
+      {/* Main Content */}
+      <div className={`flex-1 flex flex-col pt-16 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
+        <main className="flex-1 p-4 sm:p-6">
+          {children}
+        </main>
+        <Footer />
+      </div>
+    </div>
   );
 };
 
