@@ -1,156 +1,113 @@
+// src/components/users-management/users.jsx
 import React, { useState } from 'react';
-import { Eye, Edit, Trash2, Download, Upload, Plus, Filter } from 'lucide-react';
-import DataTable from '../ui/datatable'
+import { useNavigate } from 'react-router-dom';
+import { Upload, Plus } from 'lucide-react';
+import DataTable from '../ui/datatable';
 
 const Users = () => {
+  const navigate = useNavigate();
+  
   // Sample data matching the image
   const [users] = useState([
     {
-      username: 'moiz',
-      alternatePhone: '5',
-      email: 'mdmoizuddinmg@gmail.com',
-      plan: '',
-      expiry: '',
-      createdAt: '30/08/2025 16:13:20',
-      bill: '₹0.00',
-      type: 'User',
-      planGroup: '',
-      status: 'Disable',
-      account: 'Inactive'
-    },
-    {
-      username: 'aleem',
-      alternatePhone: '4',
-      email: 'aleemsk945@gmail.com',
-      plan: 'WavesNett 50mbps UL 6M',
-      expiry: '01/03/2026 18:43:33',
-      createdAt: '28/08/2025 14:28:24',
-      bill: '₹0.00',
-      type: 'User',
-      planGroup: '',
-      status: 'Disable',
-      account: 'Active'
-    },
-    {
-      username: 'aqeela',
-      alternatePhone: '0',
-      email: 'syedaaqeela81@gmail.com',
-      plan: 'WavesNett 50mbps UL 6M',
-      expiry: '28/02/2026 12:50:28',
-      createdAt: '28/08/2025 11:00:55',
-      bill: '₹0.00',
-      type: 'User',
-      planGroup: '',
-      status: 'Disable',
-      account: 'Active'
-    },
-    {
-      username: 'shoukat',
-      alternatePhone: '0',
-      email: 'alishoukat297@gmail.com',
-      plan: 'WavesNett 50mbps UL 6M',
-      expiry: '27/02/2026 19:36:07',
-      createdAt: '27/08/2025 18:33:49',
-      bill: '₹0.00',
-      type: 'User',
-      planGroup: '',
-      status: 'Disable',
-      account: 'Active'
-    },
-    {
-      username: 'wnett',
-      alternatePhone: '6',
-      email: 'humanaidtrust@gmail.com',
-      plan: 'WavesNett 100Mbps UL 3M',
-      expiry: '27/11/2025 04:43:12',
-      createdAt: '27/08/2025 04:34:24',
-      bill: '₹258.00',
-      type: 'User',
-      planGroup: '',
-      status: 'Disable',
-      account: 'Active'
-    },
-    {
-      username: 'shaikshafi',
-      alternatePhone: '1',
-      email: 'shafiuddinsulta@gmail.com',
-      plan: 'WavesNett 50Mbps UL 12M',
-      expiry: '26/08/2026 16:30:00',
-      createdAt: '26/08/2025 16:30:00',
-      bill: '₹4248.00',
-      type: 'User',
-      planGroup: '',
-      status: 'Enable',
-      account: 'Active'
-    },
-    {
-      username: 'maqbool',
+      id: '039',
+      username: 'abdul',
+      name: 'Mohammed Abdul wahab',
+      phone: '9448652221',
       alternatePhone: '',
-      email: 'naziamaqbool343@gmail.com',
-      plan: 'WavesNett 50mbps UL 6M',
-      expiry: '03/03/2026 17:25:28',
-      createdAt: '31/08/2025 02:01:42',
+      email: 'avar777@gmail.com',
+      plan: 'Wareekett Springs UL 6M',
+      expiry: '18/12/2025 17:07:19',
+      createdAt: '16/06/2025 17:07:19',
       bill: '₹0.00',
       type: 'User',
       planGroup: '',
-      status: 'Disable',
+      status: 'Enable',
       account: 'Active'
     },
     {
-      username: 'fkvideo',
+      id: '078',
+      username: 'abdulkareem',
+      name: 'Abdul Kareem',
+      phone: '7204010590',
       alternatePhone: '',
-      email: 'fkvideodk@gmail.com',
-      plan: 'WavesNett 50mbps UL 6M',
-      expiry: '02/03/2026 21:46:56',
-      createdAt: '30/08/2025 20:54:26',
+      email: 'kuisumadmi981@gmail.com',
+      plan: 'Wareekett Springs UL 6M',
+      expiry: '21/01/2025 14:34:36',
+      createdAt: '21/07/2025 14:34:36',
       bill: '₹0.00',
       type: 'User',
       planGroup: '',
-      status: 'Disable',
+      status: 'Enable',
       account: 'Active'
     },
     {
-      username: 'testuser1',
-      alternatePhone: '2',
-      email: 'testuser1@gmail.com',
-      plan: 'WavesNett 25mbps UL 3M',
-      expiry: '15/12/2025 10:30:00',
-      createdAt: '25/08/2025 09:15:30',
-      bill: '₹150.00',
+      id: '099',
+      username: 'abdulkareemis',
+      name: 'Abdul Kareem',
+      phone: '997284775',
+      alternatePhone: '',
+      email: 'abdulkareem@gmail.com',
+      plan: 'Wareekett Springs UL 6M',
+      expiry: '12/02/2025 12:18:13',
+      createdAt: '12/08/2025 12:18:13',
+      bill: '₹0.00',
       type: 'User',
       planGroup: '',
       status: 'Enable',
       account: 'Active'
     },
     {
-      username: 'testuser2',
-      alternatePhone: '3',
-      email: 'testuser2@gmail.com',
-      plan: 'WavesNett 75mbps UL 6M',
-      expiry: '20/01/2026 14:20:00',
-      createdAt: '22/08/2025 11:45:15',
-      bill: '₹300.00',
+      id: '018',
+      username: 'Abdullah',
+      name: 'Stakicel Miyan',
+      phone: '7339568700',
+      alternatePhone: '',
+      email: 'shakimiyang@gmail.com',
+      plan: 'Wareekett Sdkilpes UL 12M',
+      expiry: '30/05/2025 19:23:06',
+      createdAt: '30/05/2025 19:23:06',
+      bill: '₹0.00',
       type: 'User',
       planGroup: '',
       status: 'Enable',
       account: 'Active'
-    }
+    },
+    {
+      id: '091',
+      username: 'abdulrahman',
+      name: 'Mohammed Abdul Rahman Z',
+      phone: '720455830',
+      alternatePhone: '',
+      email: 'raimanbials50@gmail.com',
+      plan: 'Wareekett Springs UL 6M',
+      expiry: '06/02/2025 13:24:07',
+      createdAt: '06/08/2025 13:24:07',
+      bill: '₹0.00',
+      type: 'User',
+      planGroup: '',
+      status: 'Enable',
+      account: 'Active'
+    },
+    // Add more users as needed
   ]);
 
   const columns = [
     {
       key: 'username',
       label: 'User name',
-      render: (value) => (
-        <span className="text-blue-600 font-medium cursor-pointer hover:underline">
+      render: (value, row) => (
+        <span 
+          className="text-blue-600 font-medium cursor-pointer hover:underline"
+          onClick={() => navigate(`/user/${value}`)}
+        >
           {value}
         </span>
       )
     },
     {
       key: 'id',
-      label: 'ID',
-      primaryKey: true
+      label: 'ID'
     },
     {
       key: 'name',
@@ -227,34 +184,23 @@ const Users = () => {
 
   const handleEdit = (user, index) => {
     console.log('Edit user:', user);
-    // Navigate to edit user page or open modal
     alert(`Edit user: ${user.username}`);
   };
 
   const handleDelete = (user, index) => {
     console.log('Delete user:', user);
-    // Show confirmation dialog and delete user
     if (window.confirm(`Are you sure you want to delete user "${user.username}"?`)) {
       alert(`User ${user.username} would be deleted`);
-      // Add actual delete logic here
     }
   };
 
   const handleView = (user, index) => {
     console.log('View user:', user);
-    // Navigate to user details page or open modal
     alert(`View user details: ${user.username}`);
-  };
-
-  const handleExport = () => {
-    console.log('Exporting users...');
-    // Export functionality is handled by the DataTable component
-    alert('Export functionality triggered from toolbar');
   };
 
   const handleImport = () => {
     console.log('Importing users...');
-    // Create file input and trigger click
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.csv,.json';
@@ -262,25 +208,15 @@ const Users = () => {
       const file = e.target.files[0];
       if (file) {
         alert(`Selected file: ${file.name}`);
-        // Add actual import logic here
       }
     };
     input.click();
   };
 
-  const handleFilter = () => {
-    console.log('Filtering users...');
-    // Filter logic is handled by the DataTable component
-    alert('Filter functionality triggered from toolbar');
-  };
-
   const handleAddUser = () => {
-    console.log('Adding new user...');
-    // Navigate to add user page or open modal
-    alert('Add new user form would open here');
+    navigate('/user/new');
   };
 
-  // Tooltip Component for toolbar buttons
   const Tooltip = ({ children, content }) => {
     const [isVisible, setIsVisible] = useState(false);
 
@@ -303,8 +239,6 @@ const Users = () => {
 
   const toolbar = (
     <div className="flex items-center gap-2">
-      
-      
       <Tooltip content="Import Users">
         <button 
           onClick={handleImport}
@@ -313,7 +247,6 @@ const Users = () => {
           <Upload className="w-4 h-4" />
         </button>
       </Tooltip>
-      
       
       <Tooltip content="Add New User">
         <button 
@@ -335,7 +268,7 @@ const Users = () => {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onView={handleView}
-        showSelection={false} // Changed from true to false to remove the checkbox column
+        showSelection={false}
         toolbar={toolbar}
         pageSize={10}
       />
