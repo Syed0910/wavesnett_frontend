@@ -15,7 +15,7 @@ const Billing = () => {
       <Route path="/invoices" element={<Invoices />} />
       <Route path="/receipts" element={<Receipts />} />
       <Route path="/transactions" element={<OnlineTransaction/>} />
-      <Route path="/billing" element={<BillingSummaryChart />} />
+      <Route path="/summary" element={<BillingSummaryChart />} />
     </Routes>
   );
 };
