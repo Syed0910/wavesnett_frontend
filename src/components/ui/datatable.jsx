@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo , useRef, useEffect } from 'react';
 import {
   Eye, Edit, Trash2, Copy, Settings, Columns,
   ArrowUpDown, X, Search, Printer, ChevronLeft, ChevronRight,
@@ -54,10 +54,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
 
   return (
     <div className="fixed inset-0 z-[100]">
-      {/* Semi-transparent overlay */}
       <div className="fixed inset-0 bg-black bg-opacity-30"></div>
-
-      {/* Modal content */}
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <div className={`bg-white rounded-lg shadow-xl ${sizeClasses[size]} w-full max-h-[90vh] overflow-hidden relative z-[101]`}>
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -116,7 +113,7 @@ const ColumnSelectionModal = ({ isOpen, onClose, columns, visibleColumns, onTogg
 };
 
 // Sorting Modal
-const SortingModal = ({ isOpen, onClose, columns, sortConfig, onSort, onAddSort, onRemoveSort, onSave, onReset }) => {
+const SortingModal = ({ isOpen, onClose, columns, sortConfig, onAddSort, onRemoveSort, onSave, onReset }) => {
   const [newSortColumn, setNewSortColumn] = useState('');
   const [newSortOrder, setNewSortOrder] = useState('asc');
 
@@ -131,7 +128,6 @@ const SortingModal = ({ isOpen, onClose, columns, sortConfig, onSort, onAddSort,
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Choose Sorting Order" size="lg">
       <div className="space-y-4">
-        {/* Current Sort Rules */}
         <div>
           <h4 className="text-sm font-medium text-gray-900 mb-3">Current Sorting Rules:</h4>
           <div className="space-y-2">
@@ -159,7 +155,6 @@ const SortingModal = ({ isOpen, onClose, columns, sortConfig, onSort, onAddSort,
           </div>
         </div>
 
-        {/* Add New Sort Rule */}
         <div className="border-t pt-4">
           <h4 className="text-sm font-medium text-gray-900 mb-3">Add New Sort Rule:</h4>
           <div className="flex gap-3">
@@ -213,7 +208,7 @@ const SortingModal = ({ isOpen, onClose, columns, sortConfig, onSort, onAddSort,
 };
 
 // Filter Modal
-const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveFilter, onUpdateFilter, onSave, onReset }) => {
+const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveFilter, onSave, onReset }) => {
   const [newFilterColumn, setNewFilterColumn] = useState('');
   const [newFilterOperator, setNewFilterOperator] = useState('contains');
   const [newFilterValue, setNewFilterValue] = useState('');
@@ -243,7 +238,6 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Filter Data" size="lg">
       <div className="space-y-4">
-        {/* Current Filters */}
         <div>
           <h4 className="text-sm font-medium text-gray-900 mb-3">Active Filters:</h4>
           <div className="space-y-2">
@@ -272,7 +266,6 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
           </div>
         </div>
 
-        {/* Add New Filter */}
         <div className="border-t pt-4">
           <h4 className="text-sm font-medium text-gray-900 mb-3">Add New Filter:</h4>
           <div className="space-y-3">
@@ -408,6 +401,9 @@ const DataTable = ({
   pageSize = 10,
   searchable = true,
   showNasDropdown=false,
+  showDateFilter = false,   // 👈 new prop
+  dateRange = { from: "", to: "" },
+  onDateChange = () => {},  
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -416,6 +412,7 @@ const DataTable = ({
   const [sortConfig, setSortConfig] = useState([]);
   const [filters, setFilters] = useState([]);
   const [isMobileView, setIsMobileView] = useState(false);
+  const [isTabletView, setIsTabletView] = useState(false);
 
   // Modal states
   const [showColumnModal, setShowColumnModal] = useState(false);
@@ -429,7 +426,9 @@ const DataTable = ({
   // Check screen size on mount and resize
   React.useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobileView(window.innerWidth < 768);
+      const width = window.innerWidth;
+      setIsMobileView(width < 768);
+      setIsTabletView(width >= 768 && width < 1280); // Tablet range
     };
 
     checkScreenSize();
@@ -658,7 +657,30 @@ const DataTable = ({
       )}
     </div>
   );
+const firstColRef = useRef(null);
+const middleColsRef = useRef(null);
+const lastColRef = useRef(null);
+useEffect(() => {
+  if (isTabletView) {
+    const firstRows = firstColRef.current?.querySelectorAll('tbody tr');
+    const middleRows = middleColsRef.current?.querySelectorAll('tbody tr');
+    const lastRows = lastColRef.current?.querySelectorAll('tbody tr');
 
+    if (!firstRows || !middleRows || !lastRows) return;
+
+    for (let i = 0; i < firstRows.length; i++) {
+      const firstHeight = firstRows[i].getBoundingClientRect().height;
+      const middleHeight = middleRows[i]?.getBoundingClientRect().height || 0;
+      const lastHeight = lastRows[i]?.getBoundingClientRect().height || 0;
+
+      const maxHeight = Math.max(firstHeight, middleHeight, lastHeight);
+
+      firstRows[i].style.height = `${maxHeight}px`;
+      if (middleRows[i]) middleRows[i].style.height = `${maxHeight}px`;
+      if (lastRows[i]) lastRows[i].style.height = `${maxHeight}px`;
+    }
+  }
+}, [paginatedData, filteredColumns, isTabletView]);
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
       {/* Header */}
@@ -683,7 +705,7 @@ const DataTable = ({
               <Menu className="w-5 h-5" />
             </button>
 
-            {/* Table Action Icons - hidden on mobile when menu is closed */}
+            {/* Table Action Icons */}
             <div className={`${mobileMenuOpen ? 'flex' : 'hidden md:flex'} absolute md:relative left-0 top-full mt-2 md:mt-0 w-full md:w-auto bg-white md:bg-transparent shadow-md md:shadow-none rounded-md p-3 md:p-0 z-10 md:z-auto flex-wrap gap-2 md:gap-1`}>
               {/* Copy */}
               <Tooltip content="Copy Data" placement="bottom">
@@ -748,7 +770,7 @@ const DataTable = ({
           </div>
           
            
-       {searchable && (
+        {searchable && (
           <div className="flex items-center gap-4 w-full md:w-auto">
             {/* NAS IP Dropdown (optional) */}
             {showNasDropdown && (
@@ -758,6 +780,24 @@ const DataTable = ({
               </select>
             )}
 
+ {showDateFilter && (
+          <div className="flex items-center gap-2 mr-4">
+            <input
+              type="date"
+              value={dateRange.from}
+              onChange={(e) => onDateChange("from", e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <span className="text-gray-500">–</span>
+            <input
+              type="date"
+              value={dateRange.to}
+              onChange={(e) => onDateChange("to", e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        )}
+   
             {/* Search Bar */}
             <div className="relative w-full md:w-auto">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -777,26 +817,95 @@ const DataTable = ({
 
       {/* Table */}
       {!isMobileView ? (
-        <div className="overflow-x-auto">
-          <table className="w-full">
+         <div className="overflow-hidden">
+    {isTabletView && filteredColumns.length > 2 ? (
+      <div className="flex">
+        {/* Fixed First Column */}
+        <div className="flex-shrink-0 border-r border-gray-200" ref={firstColRef}>
+          <table className="border-collapse">
             <thead className="bg-gray-50">
               <tr>
                 {showSelection && (
-                  <th className="w-12 px-3 py-3 text-left">
+                  <th className="w-12 px-3 py-3 text-left bg-gray-50">
                     <input
                       type="checkbox"
-                      checked={selectedRows.length === paginatedData.length && paginatedData.length > 0}
+                      checked={
+                        selectedRows.length === paginatedData.length &&
+                        paginatedData.length > 0
+                      }
                       onChange={(e) => handleSelectAll(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                   </th>
                 )}
-                {filteredColumns.map((column) => {
-                  const sortDirection = sortConfig.find(sort => sort.column === column.key)?.direction;
+                <th
+                  className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleHeaderSort(filteredColumns[0].key)}
+                >
+                  <div className="flex items-center">
+                    {filteredColumns[0].label}
+                    {sortConfig.find((sort) => sort.column === filteredColumns[0].key)
+                      ?.direction && (
+                      <span className="ml-1">
+                        {sortConfig.find((sort) => sort.column === filteredColumns[0].key)
+                          ?.direction === 'asc' ? (
+                          <ArrowUp className="w-3 h-3" />
+                        ) : (
+                          <ArrowDown className="w-3 h-3" />
+                        )}
+                      </span>
+                    )}
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {paginatedData.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={showSelection ? 2 : 1}
+                    className="px-6 py-12 text-center text-gray-500"
+                  >
+                    No data
+                  </td>
+                </tr>
+              ) : (
+                paginatedData.map((row, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    {showSelection && (
+                      <td className="px-3 py-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedRows.includes(index)}
+                          onChange={(e) => handleRowSelect(index, e.target.checked)}
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                      </td>
+                    )}
+                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {filteredColumns[0].render
+                        ? filteredColumns[0].render(row[filteredColumns[0].key], row, index)
+                        : row[filteredColumns[0].key]}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Scrollable Middle Columns */}
+        <div className="flex-1 overflow-x-auto" ref={middleColsRef}>
+          <table className="border-collapse min-w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                {filteredColumns.slice(1, -1).map((column) => {
+                  const sortDirection = sortConfig.find((sort) => sort.column === column.key)
+                    ?.direction;
                   return (
                     <th
                       key={column.key}
-                      className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 whitespace-nowrap"
                       onClick={() => handleHeaderSort(column.key)}
                     >
                       <div className="flex items-center">
@@ -814,6 +923,59 @@ const DataTable = ({
                     </th>
                   );
                 })}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {paginatedData.length === 0 ? (
+                <tr>
+                  <td colSpan={filteredColumns.length - 2} className="px-6 py-12 text-center text-gray-500">
+                    No data available
+                  </td>
+                </tr>
+              ) : (
+                paginatedData.map((row, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    {filteredColumns.slice(1, -1).map((column) => (
+                      <td
+                        key={column.key}
+                        className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                      >
+                        {column.render ? column.render(row[column.key], row, index) : row[column.key]}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Fixed Last Column + Actions */}
+        <div className="flex-shrink-0 border-l border-gray-200" ref={lastColRef}>
+          <table className="border-collapse">
+            <thead className="bg-gray-50">
+              <tr>
+                <th
+                  className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleHeaderSort(filteredColumns[filteredColumns.length - 1].key)}
+                >
+                  <div className="flex items-center">
+                    {filteredColumns[filteredColumns.length - 1].label}
+                    {sortConfig.find(
+                      (sort) => sort.column === filteredColumns[filteredColumns.length - 1].key
+                    )?.direction && (
+                      <span className="ml-1">
+                        {sortConfig.find(
+                          (sort) => sort.column === filteredColumns[filteredColumns.length - 1].key
+                        )?.direction === 'asc' ? (
+                          <ArrowUp className="w-3 h-3" />
+                        ) : (
+                          <ArrowDown className="w-3 h-3" />
+                        )}
+                      </span>
+                    )}
+                  </div>
+                </th>
                 {hasActions && (
                   <th className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Action
@@ -824,31 +986,22 @@ const DataTable = ({
             <tbody className="bg-white divide-y divide-gray-200">
               {paginatedData.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={filteredColumns.length + (showSelection ? 1 : 0) + (hasActions ? 1 : 0)}
-                    className="px-6 py-12 text-center text-gray-500"
-                  >
-                    No data available
+                  <td colSpan={hasActions ? 2 : 1} className="px-6 py-12 text-center text-gray-500">
+                    No data
                   </td>
                 </tr>
               ) : (
                 paginatedData.map((row, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                    {showSelection && (
-                      <td className="px-3 py-4">
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.includes(index)}
-                          onChange={(e) => handleRowSelect(index, e.target.checked)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                      </td>
-                    )}
-                    {filteredColumns.map((column) => (
-                      <td key={column.key} className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {column.render ? column.render(row[column.key], row, index) : row[column.key]}
-                      </td>
-                    ))}
+                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {filteredColumns[filteredColumns.length - 1].render
+                        ? filteredColumns[filteredColumns.length - 1].render(
+                            row[filteredColumns[filteredColumns.length - 1].key],
+                            row,
+                            index
+                          )
+                        : row[filteredColumns[filteredColumns.length - 1].key]}
+                    </td>
                     {hasActions && (
                       <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end gap-2">
@@ -891,19 +1044,134 @@ const DataTable = ({
             </tbody>
           </table>
         </div>
+      </div>
+    ) : (
+      // Desktop Regular scrollable Table
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              {showSelection && (
+                <th className="w-12 px-3 py-3 text-left">
+                  <input
+                    type="checkbox"
+                    checked={selectedRows.length === paginatedData.length && paginatedData.length > 0}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                </th>
+              )}
+              {filteredColumns.map((column) => {
+                const sortDirection = sortConfig.find((sort) => sort.column === column.key)?.direction;
+                return (
+                  <th
+                    key={column.key}
+                    className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleHeaderSort(column.key)}
+                  >
+                    <div className="flex items-center">
+                      {column.label}
+                      {sortDirection && (
+                        <span className="ml-1">
+                          {sortDirection === 'asc' ? (
+                            <ArrowUp className="w-3 h-3" />
+                          ) : (
+                            <ArrowDown className="w-3 h-3" />
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                );
+              })}
+              {hasActions && (
+                <th className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  Action
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {paginatedData.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={filteredColumns.length + (showSelection ? 1 : 0) + (hasActions ? 1 : 0)}
+                  className="px-6 py-12 text-center text-gray-500"
+                >
+                  No data available
+                </td>
+              </tr>
+            ) : (
+              paginatedData.map((row, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  {showSelection && (
+                    <td className="px-3 py-4">
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.includes(index)}
+                        onChange={(e) => handleRowSelect(index, e.target.checked)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                    </td>
+                  )}
+                  {filteredColumns.map((column) => (
+                    <td key={column.key} className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {column.render ? column.render(row[column.key], row, index) : row[column.key]}
+                    </td>
+                  ))}
+                  {hasActions && (
+                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end gap-2">
+                        {onView && (
+                          <Tooltip content="View">
+                            <button
+                              onClick={() => onView(row, index)}
+                              className="text-blue-600 hover:text-blue-900"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                          </Tooltip>
+                        )}
+                        {onEdit && (
+                          <Tooltip content="Edit">
+                            <button
+                              onClick={() => onEdit(row, index)}
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                          </Tooltip>
+                        )}
+                        {onDelete && (
+                          <Tooltip content="Delete">
+                            <button
+                              onClick={() => onDelete(row, index)}
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </Tooltip>
+                        )}
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
       ) : (
-        // Mobile view
-        <div className="p-4">
-          {paginatedData.length === 0 ? (
-            <div className="px-6 py-12 text-center text-gray-500">
-              No data available
-            </div>
-          ) : (
-            paginatedData.map((row, index) => (
-              <MobileRowCard key={index} row={row} index={index} />
-            ))
-          )}
-        </div>
+        /* Mobile view */
+         <div className="p-4">
+    {paginatedData.length === 0 ? (
+      <div className="px-6 py-12 text-center text-gray-500">No data available</div>
+    ) : (
+      paginatedData.map((row, index) => <MobileRowCard key={index} row={row} index={index} />)
+    )}
+  </div>
       )}
 
       {/* Pagination */}

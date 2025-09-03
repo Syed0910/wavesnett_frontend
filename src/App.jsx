@@ -6,6 +6,7 @@ import Settings from "./pages/Settings";
 import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
 import Nas from "./pages/Nas";
+import Billing from "./pages/Billing";
 
 
 const App = () => {
@@ -24,7 +25,7 @@ const App = () => {
         <Route path="/nas/*" element={<Nas/>} />
         
         {/* Billing Routes - Placeholder for future implementation */}
-        <Route path="/billing/*" element={<div className="p-6"><h2 className="text-xl font-semibold">Billing Management</h2><p className="text-gray-600 mt-2">Billing management features will be implemented here.</p></div>} />
+        <Route path="/billing/*" element={<Billing/>} />
         
         {/* Packages Routes - Placeholder for future implementation */}
         <Route path="/packages/*" element={<div className="p-6"><h2 className="text-xl font-semibold">Package Management</h2><p className="text-gray-600 mt-2">Package management features will be implemented here.</p></div>} />

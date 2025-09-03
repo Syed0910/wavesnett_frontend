@@ -188,7 +188,7 @@ const OnlineUsers = () => {
   ];
 
   return (
-    <div className="p-6">
+    <div className="p-6 ">
       <DataTable
         title="Online Users"
         data={users}

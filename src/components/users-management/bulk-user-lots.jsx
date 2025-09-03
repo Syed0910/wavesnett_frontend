@@ -128,22 +128,7 @@ const BulkUserLots = () => {
   const toolbar = (
     <>
       {/* Date Range Picker */}
-      <div className="flex items-center gap-2 mr-4">
-        <input
-          type="date"
-          value={dateRange.from}
-          onChange={(e) => handleDateChange('from', e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <span className="text-gray-500">–</span>
-        <input
-          type="date"
-          value={dateRange.to}
-          onChange={(e) => handleDateChange('to', e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        
-      </div>
+  
       
       
       
@@ -170,7 +155,12 @@ const BulkUserLots = () => {
         toolbar={toolbar}
         pageSize={15}
         headerClassName="font-semibold"
+         showDateFilter={true}   // 👈 enables date range filter
+        dateRange={dateRange}
+        onDateChange={handleDateChange}
+ 
       />
+      
     </div>
   );
 };
