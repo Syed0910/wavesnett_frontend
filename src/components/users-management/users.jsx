@@ -272,7 +272,7 @@ const Users = () => {
         onDelete={handleDelete}
         onView={handleView}
         showSelection={false}
-        showSelection={false}
+        
         toolbar={toolbar}
         pageSize={10}
       />
