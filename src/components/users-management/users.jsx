@@ -259,6 +259,9 @@ const Users = () => {
     </div>
   );
 
+  if (loading) return <div className="p-6">Loading users...</div>;
+  if (error) return <div className="p-6 text-red-600">{error}</div>;
+
   return (
     <div className="p-6">
       <DataTable
@@ -268,6 +271,7 @@ const Users = () => {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onView={handleView}
+        showSelection={false}
         showSelection={false}
         toolbar={toolbar}
         pageSize={10}
