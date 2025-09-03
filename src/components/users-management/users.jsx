@@ -32,42 +32,57 @@ const Users = () => {
   const handleImport = () => alert("Import users clicked");
   const handleAddUser = () => alert("Add user clicked");
 
-  const columns = [
-    { key: 'id', label: 'ID', primaryKey: true },
-    { key: 'username', label: 'Username' },
-    { key: 'plan', label: 'Plan' },
-    { key: 'planGroup', label: 'Plan Group' },
-    { key: 'createdAt', label: 'Created At' },
-    { key: 'expiry', label: 'Expiry' },
-    { key: 'bill', label: 'Bill' },
-    {
-      key: 'status',
-      label: 'Status',
-      render: (value) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${
-            value === 'Enable' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-          }`}
-        >
-          {value}
-        </span>
-      )
-    },
-    {
-      key: 'account',
-      label: 'Account',
-      render: (value) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${
-            value === 'Active' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
-          }`}
-        >
-          {value}
-        </span>
-      )
-    },
-   
-  ];
+const columns = [
+  { key: 'id', label: 'ID', primaryKey: true },
+  {
+    key: 'username',
+    label: 'Username',
+    render: (value, row) => (
+      <span
+        onClick={() => handleView(row)}
+        className="cursor-pointer px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-all duration-200"
+      >
+        {value}
+      </span>
+    )
+  },
+  { key: 'email', label: 'Email' },
+  { key: 'phone', label: 'Phone' },
+  { key: 'alternatePhone', label: 'Alternate Phone' },
+  { key: 'contactPerson', label: 'Contact Person' },
+  { key: 'plan', label: 'Plan' },
+  { key: 'planGroup', label: 'Plan Group' },
+  { key: 'createdAt', label: 'Created At' },
+  { key: 'expiry', label: 'Expiry' },
+  { key: 'bill', label: 'Bill' },
+  {
+    key: 'status',
+    label: 'Status',
+    render: (value) => (
+      <span
+        className={`px-2 py-1 rounded-full text-xs font-medium ${
+          value === 'Enable' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+        }`}
+      >
+        {value}
+      </span>
+    )
+  },
+  {
+    key: 'account',
+    label: 'Account',
+    render: (value) => (
+      <span
+        className={`px-2 py-1 rounded-full text-xs font-medium ${
+          value === 'Active' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+        }`}
+      >
+        {value}
+      </span>
+    )
+  },
+];
+
 
   const toolbar = (
     <div className="flex items-center gap-2">
