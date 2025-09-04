@@ -221,7 +221,7 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
   const operators = [
     { value: 'contains', label: 'Contains' },
     { value: 'equals', label: 'Equals' },
-    { value: 'startsWith', label: 'Starts with' },
+    {value: 'startsWith', label: 'Starts with' },
     { value: 'endsWith', label: 'Ends with' },
     { value: 'greater', label: 'Greater than' },
     { value: 'less', label: 'Less than' }
@@ -395,6 +395,45 @@ const MobileActionsMenu = ({ row, onView, onEdit, onDelete }) => {
   );
 };
 
+// Enhanced sorting function
+const sortData = (data, sortConfig) => {
+  if (sortConfig.length === 0) return data;
+
+  return [...data].sort((a, b) => {
+    for (const sort of sortConfig) {
+      let aVal = a[sort.column];
+      let bVal = b[sort.column];
+
+      // Handle null/undefined values
+      if (aVal == null && bVal == null) continue;
+      if (aVal == null) return sort.direction === 'asc' ? -1 : 1;
+      if (bVal == null) return sort.direction === 'asc' ? 1 : -1;
+
+      // Convert to string and trim for comparison
+      aVal = String(aVal).trim();
+      bVal = String(bVal).trim();
+
+      // Try to parse as numbers if they look numeric
+      const aNum = parseFloat(aVal);
+      const bNum = parseFloat(bVal);
+      
+      if (!isNaN(aNum) && !isNaN(bNum) && 
+          aVal === String(aNum) && bVal === String(bNum)) {
+        // Both are valid numbers
+        if (aNum < bNum) return sort.direction === 'asc' ? -1 : 1;
+        if (aNum > bNum) return sort.direction === 'asc' ? 1 : -1;
+      } else {
+        // String comparison (case-insensitive)
+        const comparison = aVal.toLowerCase().localeCompare(bVal.toLowerCase());
+        if (comparison !== 0) {
+          return sort.direction === 'asc' ? comparison : -comparison;
+        }
+      }
+    }
+    return 0;
+  });
+};
+
 // Main DataTable Component
 const DataTable = ({
   title,
@@ -434,22 +473,34 @@ const DataTable = ({
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Handle column header sort
+  // Enhanced header sort handler
   const handleHeaderSort = (columnKey) => {
     const existingSortIndex = sortConfig.findIndex(sort => sort.column === columnKey);
 
     if (existingSortIndex >= 0) {
-      // Toggle direction if already sorted
+      // If column is already being sorted, toggle direction
       const newSortConfig = [...sortConfig];
-      newSortConfig[existingSortIndex] = {
-        column: columnKey,
-        direction: sortConfig[existingSortIndex].direction === 'asc' ? 'desc' : 'asc'
-      };
+      const currentDirection = sortConfig[existingSortIndex].direction;
+      
+      if (currentDirection === 'asc') {
+        // Change to descending
+        newSortConfig[existingSortIndex] = {
+          column: columnKey,
+          direction: 'desc'
+        };
+      } else {
+        // Remove this sort rule if it was descending
+        newSortConfig.splice(existingSortIndex, 1);
+      }
+      
       setSortConfig(newSortConfig);
     } else {
-      // Add new sort
+      // Add new sort rule (ascending)
       setSortConfig([...sortConfig, { column: columnKey, direction: 'asc' }]);
     }
+
+    // Reset to first page when sorting changes
+    setCurrentPage(1);
   };
 
   // Filter and search data
@@ -490,19 +541,8 @@ const DataTable = ({
       });
     });
 
-    // Apply sorting
-    if (sortConfig.length > 0) {
-      result.sort((a, b) => {
-        for (const sort of sortConfig) {
-          const aVal = a[sort.column];
-          const bVal = b[sort.column];
-
-          if (aVal < bVal) return sort.direction === 'asc' ? -1 : 1;
-          if (aVal > bVal) return sort.direction === 'asc' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
+    // Apply enhanced sorting
+    result = sortData(result, sortConfig);
 
     return result;
   }, [data, searchTerm, filters, sortConfig]);
@@ -616,6 +656,18 @@ const DataTable = ({
   };
 
   const filteredColumns = columns.filter(col => visibleColumns.includes(col.key));
+
+  // Get sort indicator for column header
+  const getSortIndicator = (columnKey) => {
+    const sortInfo = sortConfig.find(sort => sort.column === columnKey);
+    if (!sortInfo) {
+      return <ArrowUpDown className="w-3 h-3 opacity-30 group-hover:opacity-70" />;
+    }
+    
+    return sortInfo.direction === 'asc' ? 
+      <ArrowUp className="w-3 h-3 text-blue-600" /> : 
+      <ArrowDown className="w-3 h-3 text-blue-600" />;
+  };
 
   // Mobile card view for each row
   const MobileRowCard = ({ row, index }) => (
@@ -773,29 +825,20 @@ const DataTable = ({
                     />
                   </th>
                 )}
-                {filteredColumns.map((column) => {
-                  const sortDirection = sortConfig.find(sort => sort.column === column.key)?.direction;
-                  return (
-                    <th
-                      key={column.key}
-                      className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                      onClick={() => handleHeaderSort(column.key)}
-                    >
-                      <div className="flex items-center">
-                        {column.label}
-                        {sortDirection && (
-                          <span className="ml-1">
-                            {sortDirection === 'asc' ? (
-                              <ArrowUp className="w-3 h-3" />
-                            ) : (
-                              <ArrowDown className="w-3 h-3" />
-                            )}
-                          </span>
-                        )}
+                {filteredColumns.map((column) => (
+                  <th
+                    key={column.key}
+                    className="group px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                    onClick={() => handleHeaderSort(column.key)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="select-none">{column.label}</span>
+                      <div className="ml-2 flex-shrink-0">
+                        {getSortIndicator(column.key)}
                       </div>
-                    </th>
-                  );
-                })}
+                    </div>
+                  </th>
+                ))}
                 <th className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                   Action
                 </th>

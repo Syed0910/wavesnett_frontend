@@ -104,8 +104,8 @@ const Recharges = ({ username }) => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-8xl mx-auto bg-white p-6 min-h-screen">
+      
         {/* Header */}
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-semibold">Recharges</h2>
@@ -133,7 +133,7 @@ const Recharges = ({ username }) => {
             </div>
           }
         />
-      </div>
+     
     </div>
   );
 };
