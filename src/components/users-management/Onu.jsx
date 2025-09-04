@@ -7,7 +7,7 @@ const Onu = ({ username }) => {
   const onuList = []; // Empty for now
 
   return (
-    <div className="p-6">
+    <div className="max-w-8xl mx-auto bg-white p-6 min-h-screen">
       {/* Header with Delete Button */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold">ONU</h2>
