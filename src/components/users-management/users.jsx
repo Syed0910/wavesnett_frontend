@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { getUsers, addUser } from "../../services/api";
 import { Eye, Edit, Trash2, Upload, Plus } from 'lucide-react';
 import DataTable from '../ui/datatable';
+import { useNavigate } from "react-router-dom";
+
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -28,7 +30,14 @@ const Users = () => {
   const handleEdit = (user) => alert(`Edit user: ${user.username}`);
   const handleDelete = (user) =>
     window.confirm(`Delete ${user.username}?`) && alert(`Deleted ${user.username}`);
-  const handleView = (user) => alert(`View details: ${user.username}`);
+const navigate = useNavigate();
+
+const handleView = (user) => {
+  // Navigate to /user/usersDetail and pass user data
+  navigate("/user/usersDetail", { state: { user } });
+};
+
+
   const handleImport = () => alert("Import users clicked");
   const handleAddUser = () => alert("Add user clicked");
 
