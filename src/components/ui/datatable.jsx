@@ -1,4 +1,4 @@
-import React, { useState, useMemo , useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
   Eye, Edit, Trash2, Copy, Settings, Columns,
   ArrowUpDown, X, Search, Printer, ChevronLeft, ChevronRight,
@@ -12,7 +12,7 @@ const Tooltip = ({ children, content, position = 'top' }) => {
 
   const positionClasses = {
     top: 'bottom-full left-1/2 transform -translate-x-1/2 mb-2',
-    bottom: 'top-full left-1/2 transform -translate-x-1/2 mt-2',
+    bottom: 'top-full left-1/2 transform -translate-y-1/2 mt-2',
     left: 'right-full top-1/2 transform -translate-y-1/2 mr-2',
     right: 'left-full top-1/2 transform -translate-y-1/2 ml-2'
   };
@@ -41,17 +41,12 @@ const Tooltip = ({ children, content, position = 'top' }) => {
   );
 };
 
-// Modal Component with fixed background overlay
+// Modal Component
 const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
   if (!isOpen) return null;
-
   const sizeClasses = {
-    sm: 'max-w-md',
-    md: 'max-w-lg',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl'
+    sm: 'max-w-md', md: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl'
   };
-
   return (
     <div className="fixed inset-0 z-[100]">
       <div className="fixed inset-0 bg-black bg-opacity-30"></div>
@@ -66,9 +61,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
               <X className="w-5 h-5" />
             </button>
           </div>
-          <div className="p-4 overflow-y-auto max-h-[70vh]">
-            {children}
-          </div>
+          <div className="p-4 overflow-y-auto max-h-[70vh]">{children}</div>
         </div>
       </div>
     </div>
@@ -76,47 +69,44 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
 };
 
 // Column Selection Modal
-const ColumnSelectionModal = ({ isOpen, onClose, columns, visibleColumns, onToggleColumn, onSave, onReset }) => {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Choose Columns" size="md">
-      <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-3">
-          {columns.map((column) => (
-            <label key={column.key} className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
-              <input
-                type="checkbox"
-                checked={visibleColumns.includes(column.key)}
-                onChange={() => onToggleColumn(column.key)}
-                className="w-4 h-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
-              />
-              <span className="text-sm text-gray-700">{column.label}</span>
-            </label>
-          ))}
-        </div>
-        <div className="flex gap-3 pt-4 border-t border-gray-200">
-          <button
-            onClick={onSave}
-            className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 text-sm font-medium"
-          >
-            SAVE
-          </button>
-          <button
-            onClick={onReset}
-            className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm font-medium"
-          >
-            RESET COLUMNS
-          </button>
-        </div>
+const ColumnSelectionModal = ({ isOpen, onClose, columns, visibleColumns, onToggleColumn, onSave, onReset }) => (
+  <Modal isOpen={isOpen} onClose={onClose} title="Choose Columns" size="md">
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        {columns.map((column) => (
+          <label key={column.key} className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
+            <input
+              type="checkbox"
+              checked={visibleColumns.includes(column.key)}
+              onChange={() => onToggleColumn(column.key)}
+              className="w-4 h-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
+            />
+            <span className="text-sm text-gray-700">{column.label}</span>
+          </label>
+        ))}
       </div>
-    </Modal>
-  );
-};
+      <div className="flex gap-3 pt-4 border-t border-gray-200">
+        <button
+          onClick={onSave}
+          className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 text-sm font-medium"
+        >
+          SAVE
+        </button>
+        <button
+          onClick={onReset}
+          className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm font-medium"
+        >
+          RESET COLUMNS
+        </button>
+      </div>
+    </div>
+  </Modal>
+);
 
 // Sorting Modal
 const SortingModal = ({ isOpen, onClose, columns, sortConfig, onAddSort, onRemoveSort, onSave, onReset }) => {
   const [newSortColumn, setNewSortColumn] = useState('');
   const [newSortOrder, setNewSortOrder] = useState('asc');
-
   const handleAddSort = () => {
     if (newSortColumn && !sortConfig.find(s => s.column === newSortColumn)) {
       onAddSort(newSortColumn, newSortOrder);
@@ -124,7 +114,6 @@ const SortingModal = ({ isOpen, onClose, columns, sortConfig, onAddSort, onRemov
       setNewSortOrder('asc');
     }
   };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Choose Sorting Order" size="lg">
       <div className="space-y-4">
@@ -149,9 +138,9 @@ const SortingModal = ({ isOpen, onClose, columns, sortConfig, onAddSort, onRemov
                 </button>
               </div>
             ))}
-            {sortConfig.length === 0 && (
+            {sortConfig.length === 0 &&
               <p className="text-sm text-gray-500 italic">No sorting rules applied</p>
-            )}
+            }
           </div>
         </div>
 
@@ -160,19 +149,17 @@ const SortingModal = ({ isOpen, onClose, columns, sortConfig, onAddSort, onRemov
           <div className="flex gap-3">
             <select
               value={newSortColumn}
-              onChange={(e) => setNewSortColumn(e.target.value)}
+              onChange={e => setNewSortColumn(e.target.value)}
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
             >
               <option value="">Choose Columns</option>
-              {columns.map((column) => (
-                <option key={column.key} value={column.key}>
-                  {column.label}
-                </option>
+              {columns.map(column => (
+                <option key={column.key} value={column.key}>{column.label}</option>
               ))}
             </select>
             <select
               value={newSortOrder}
-              onChange={(e) => setNewSortOrder(e.target.value)}
+              onChange={e => setNewSortOrder(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
             >
               <option value="asc">Ascending</option>
@@ -187,7 +174,6 @@ const SortingModal = ({ isOpen, onClose, columns, sortConfig, onAddSort, onRemov
             </button>
           </div>
         </div>
-
         <div className="flex gap-3 pt-4 border-t border-gray-200">
           <button
             onClick={onSave}
@@ -212,16 +198,14 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
   const [newFilterColumn, setNewFilterColumn] = useState('');
   const [newFilterOperator, setNewFilterOperator] = useState('contains');
   const [newFilterValue, setNewFilterValue] = useState('');
-
   const operators = [
     { value: 'contains', label: 'Contains' },
     { value: 'equals', label: 'Equals' },
-    {value: 'startsWith', label: 'Starts with' },
+    { value: 'startsWith', label: 'Starts with' },
     { value: 'endsWith', label: 'Ends with' },
     { value: 'greater', label: 'Greater than' },
     { value: 'less', label: 'Less than' }
   ];
-
   const handleAddFilter = () => {
     if (newFilterColumn && newFilterValue) {
       onAddFilter({
@@ -234,7 +218,6 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
       setNewFilterValue('');
     }
   };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Filter Data" size="lg">
       <div className="space-y-4">
@@ -260,37 +243,32 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
                 </button>
               </div>
             ))}
-            {filters.length === 0 && (
+            {filters.length === 0 &&
               <p className="text-sm text-gray-500 italic">No filters applied</p>
-            )}
+            }
           </div>
         </div>
-
         <div className="border-t pt-4">
           <h4 className="text-sm font-medium text-gray-900 mb-3">Add New Filter:</h4>
           <div className="space-y-3">
             <div className="flex gap-3">
               <select
                 value={newFilterColumn}
-                onChange={(e) => setNewFilterColumn(e.target.value)}
+                onChange={e => setNewFilterColumn(e.target.value)}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
               >
                 <option value="">Choose Column</option>
-                {columns.map((column) => (
-                  <option key={column.key} value={column.key}>
-                    {column.label}
-                  </option>
+                {columns.map(column => (
+                  <option key={column.key} value={column.key}>{column.label}</option>
                 ))}
               </select>
               <select
                 value={newFilterOperator}
-                onChange={(e) => setNewFilterOperator(e.target.value)}
+                onChange={e => setNewFilterOperator(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
               >
                 {operators.map((op) => (
-                  <option key={op.value} value={op.value}>
-                    {op.label}
-                  </option>
+                  <option key={op.value} value={op.value}>{op.label}</option>
                 ))}
               </select>
             </div>
@@ -298,7 +276,7 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
               <input
                 type="text"
                 value={newFilterValue}
-                onChange={(e) => setNewFilterValue(e.target.value)}
+                onChange={e => setNewFilterValue(e.target.value)}
                 placeholder="Filter value..."
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
               />
@@ -312,7 +290,6 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
             </div>
           </div>
         </div>
-
         <div className="flex gap-3 pt-4 border-t border-gray-200">
           <button
             onClick={onSave}
@@ -332,78 +309,125 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
   );
 };
 
-// Mobile Actions Menu
-const MobileActionsMenu = ({ row, onView, onEdit, onDelete }) => {
-  const [isOpen, setIsOpen] = useState(false);
+// Actions Cell
+const ActionsCell = ({ actions, row, index }) => (
+  <div className="flex items-center justify-end gap-2">
+    {actions.map((action) =>
+      action.show !== false && (
+        <Tooltip key={action.label} content={action.label}>
+          <button
+            onClick={() => action.onClick(row, index)}
+            className={action.color || ''}
+            style={{ display: 'inline-flex', alignItems: 'center' }}
+          >
+            {action.icon}
+          </button>
+        </Tooltip>
+      )
+    )}
+  </div>
+);
 
+// Mobile Actions Cell
+const MobileActionsCell = ({ actions, row, index }) => (
+  <div className="flex items-center justify-end gap-2 mt-2 border-t pt-2">
+    {actions.map((action) =>
+      action.show !== false && (
+        <Tooltip key={action.label} content={action.label}>
+          <button
+            onClick={() => action.onClick(row, index)}
+            className={action.color || ''}
+            style={{ display: 'inline-flex', alignItems: 'center' }}
+          >
+            {action.icon}
+          </button>
+        </Tooltip>
+      )
+    )}
+  </div>
+);
+
+// PrintComponent: Table print utility
+const PrintComponent = ({ data, columns, title }) => {
+  const handlePrint = () => {
+    const printContent = `
+      <html>
+        <head>
+          <title>${title}</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+            th { background-color: #f5f5f5; font-weight: bold; }
+            .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #666; }
+            @media print {
+              body { margin: 0; }
+              .no-print { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>${title}</h1>
+            <p>Generated on ${new Date().toLocaleDateString()}</p>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                ${columns.filter(col => col.key !== 'actions').map(col => 
+                  `<th>${col.label}</th>`
+                ).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${data.map(row => `
+                <tr>
+                  ${columns.filter(col => col.key !== 'actions').map(col => 
+                    `<td>${row[col.key] || ''}</td>`
+                  ).join('')}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div class="footer">
+            <p>Total Records: ${data.length}</p>
+          </div>
+          <div class="no-print" style="margin-top: 20px; text-align: center;">
+            <button onclick="window.print()" style="padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+              Print Now
+            </button>
+            <button onclick="window.close()" style="padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">
+              Close
+            </button>
+          </div>
+        </body>
+      </html>
+    `;
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+  };
   return (
-    <div className="relative">
+    <Tooltip content="Print">
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-full text-gray-600 hover:bg-gray-100"
+        onClick={handlePrint}
+        className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
       >
-        <MoreHorizontal className="w-4 h-4" />
+        <Printer className="w-4 h-4" />
       </button>
-      {isOpen && (
-        <div className="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
-          {onView && (
-            <button
-              onClick={() => {
-                onView(row);
-                setIsOpen(false);
-              }}
-              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              <Eye className="w-4 h-4 mr-2" />
-              View
-            </button>
-          )}
-          {onEdit && (
-            <button
-              onClick={() => {
-                onEdit(row);
-                setIsOpen(false);
-              }}
-              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              <Edit className="w-4 h-4 mr-2" />
-              Edit
-            </button>
-          )}
-          {onDelete && (
-            <button
-              onClick={() => {
-                onDelete(row);
-                setIsOpen(false);
-              }}
-              className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-            >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Delete
-            </button>
-          )}
-        </div>
-      )}
-    </div>
+    </Tooltip>
   );
 };
 
-// Main DataTable Component
 const DataTable = ({
   title,
   data = [],
   columns = [],
-  onEdit,
-  onDelete,
-  onView,
-  showSelection = false,
   toolbar,
   pageSize = 10,
   searchable = true,
-  showNasDropdown=false,
-  showDateFilter = false,   // 👈 new prop
-  dateRange = { from: "", to: "" },
-  onDateChange = () => {},  
+  showSelection = false,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -414,35 +438,28 @@ const DataTable = ({
   const [isMobileView, setIsMobileView] = useState(false);
   const [isTabletView, setIsTabletView] = useState(false);
 
-  // Modal states
+  // Modals
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [showSortModal, setShowSortModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Check if any action handlers are provided
-  const hasActions = onView || onEdit || onDelete;
-
-  // Check screen size on mount and resize
-  React.useEffect(() => {
+  // Responsive
+  useEffect(() => {
     const checkScreenSize = () => {
       const width = window.innerWidth;
       setIsMobileView(width < 768);
-      setIsTabletView(width >= 768 && width < 1280); // Tablet range
+      setIsTabletView(width >= 768 && width < 1280);
     };
-
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
-
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Handle column header sort
+  // Sorting logic
   const handleHeaderSort = (columnKey) => {
     const existingSortIndex = sortConfig.findIndex(sort => sort.column === columnKey);
-
     if (existingSortIndex >= 0) {
-      // Toggle direction if already sorted
       const newSortConfig = [...sortConfig];
       newSortConfig[existingSortIndex] = {
         column: columnKey,
@@ -450,16 +467,13 @@ const DataTable = ({
       };
       setSortConfig(newSortConfig);
     } else {
-      // Add new sort
       setSortConfig([...sortConfig, { column: columnKey, direction: 'asc' }]);
     }
   };
 
-  // Filter and search data
+  // Filtering/search logic
   const filteredData = useMemo(() => {
     let result = [...data];
-
-    // Apply search
     if (searchTerm) {
       result = result.filter(row =>
         Object.values(row).some(value =>
@@ -467,54 +481,41 @@ const DataTable = ({
         )
       );
     }
-
-    // Apply filters
     filters.forEach(filter => {
       result = result.filter(row => {
-        const value = String(row[filter.column]).toLowerCase();
+        const value = String(row[filter.column] || '').toLowerCase();
         const filterValue = filter.value.toLowerCase();
-
         switch (filter.operator) {
-          case 'contains':
-            return value.includes(filterValue);
-          case 'equals':
-            return value === filterValue;
-          case 'startsWith':
-            return value.startsWith(filterValue);
-          case 'endsWith':
-            return value.endsWith(filterValue);
-          case 'greater':
-            return parseFloat(value) > parseFloat(filterValue);
-          case 'less':
-            return parseFloat(value) < parseFloat(filterValue);
-          default:
-            return true;
+          case 'contains': return value.includes(filterValue);
+          case 'equals': return value === filterValue;
+          case 'startsWith': return value.startsWith(filterValue);
+          case 'endsWith': return value.endsWith(filterValue);
+          case 'greater': return parseFloat(value) > parseFloat(filterValue);
+          case 'less': return parseFloat(value) < parseFloat(filterValue);
+          default: return true;
         }
       });
     });
-
-    // Apply sorting
     if (sortConfig.length > 0) {
       result.sort((a, b) => {
         for (const sort of sortConfig) {
           const aVal = a[sort.column];
           const bVal = b[sort.column];
-
           if (aVal < bVal) return sort.direction === 'asc' ? -1 : 1;
           if (aVal > bVal) return sort.direction === 'asc' ? 1 : -1;
         }
         return 0;
       });
     }
-
     return result;
   }, [data, searchTerm, filters, sortConfig]);
 
-  // Pagination
+  // Pagination logic
   const totalPages = Math.ceil(filteredData.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const paginatedData = filteredData.slice(startIndex, startIndex + pageSize);
 
+  // Selection logic
   const handleRowSelect = (index, checked) => {
     if (checked) {
       setSelectedRows([...selectedRows, index]);
@@ -522,7 +523,6 @@ const DataTable = ({
       setSelectedRows(selectedRows.filter(i => i !== index));
     }
   };
-
   const handleSelectAll = (checked) => {
     if (checked) {
       setSelectedRows(paginatedData.map((_, index) => index));
@@ -531,16 +531,7 @@ const DataTable = ({
     }
   };
 
-  const copyToClipboard = async (text) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      alert('Data copied to clipboard!');
-    } catch (err) {
-      console.error('Failed to copy data:', err);
-      alert('Failed to copy data');
-    }
-  };
-
+  // Export/copy/print logic
   const handleExport = () => {
     const csvContent = [
       columns.map(col => col.label).join(','),
@@ -548,7 +539,6 @@ const DataTable = ({
         columns.map(col => `"${row[col.key] || ''}"`).join(',')
       )
     ].join('\n');
-
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
@@ -559,750 +549,401 @@ const DataTable = ({
     document.body.removeChild(link);
   };
 
-  const handlePrint = () => {
-    const printContent = `
-      <html>
-        <head>
-          <title>${title}</title>
-          <style>
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-          </style>
-        </head>
-        <body>
-          <h2>${title}</h2>
-          <table>
-            <thead>
-              <tr>
-                ${columns.map(col => `<th>${col.label}</th>`).join('')}
-              </tr>
-            </thead>
-            <tbody>
-              ${filteredData.map(row =>
-      `<tr>${columns.map(col => `<td>${row[col.key] || ''}</td>`).join('')}</tr>`
-    ).join('')}
-            </tbody>
-          </table>
-        </body>
-      </html>
-    `;
-
-    const printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-    printWindow.print();
-  };
-
-  const handleColumnToggle = (columnKey) => {
+  // Column visibility
+  const handleToggleColumn = (columnKey) => {
     if (visibleColumns.includes(columnKey)) {
-      setVisibleColumns(visibleColumns.filter(key => key !== columnKey));
+      setVisibleColumns(visibleColumns.filter(col => col !== columnKey));
     } else {
       setVisibleColumns([...visibleColumns, columnKey]);
     }
   };
 
+  const handleResetColumns = () => {
+    setVisibleColumns(columns.map(col => col.key));
+  };
+
+  // Sorting
   const handleAddSort = (column, direction) => {
     setSortConfig([...sortConfig, { column, direction }]);
   };
 
   const handleRemoveSort = (index) => {
-    setSortConfig(sortConfig.filter((_, i) => i !== index));
+    const newSortConfig = [...sortConfig];
+    newSortConfig.splice(index, 1);
+    setSortConfig(newSortConfig);
   };
 
+  const handleResetSort = () => {
+    setSortConfig([]);
+  };
+
+  // Filtering
   const handleAddFilter = (filter) => {
     setFilters([...filters, filter]);
   };
 
   const handleRemoveFilter = (index) => {
-    setFilters(filters.filter((_, i) => i !== index));
+    const newFilters = [...filters];
+    newFilters.splice(index, 1);
+    setFilters(newFilters);
   };
 
-  const filteredColumns = columns.filter(col => visibleColumns.includes(col.key));
+  const handleResetFilters = () => {
+    setFilters([]);
+  };
 
-  // Mobile card view for each row
-  const MobileRowCard = ({ row, index }) => (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm">
-      {showSelection && (
-        <div className="flex items-center mb-3">
-          <input
-            type="checkbox"
-            checked={selectedRows.includes(index)}
-            onChange={(e) => handleRowSelect(index, e.target.checked)}
-            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-          />
-        </div>
-      )}
-
-      <div className="space-y-2">
-        {filteredColumns.map((column) => (
-          <div key={column.key} className="flex justify-between">
-            <span className="text-sm font-medium text-gray-500">{column.label}:</span>
-            <span className="text-sm text-gray-900 text-right">
-              {column.render ? column.render(row[column.key], row, index) : row[column.key]}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {hasActions && (
-        <div className="flex justify-end mt-3 pt-3 border-t border-gray-100">
-          <MobileActionsMenu
-            row={row}
-            onView={onView}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
-        </div>
-      )}
-    </div>
-  );
-const firstColRef = useRef(null);
-const middleColsRef = useRef(null);
-const lastColRef = useRef(null);
-useEffect(() => {
-  if (isTabletView) {
-    const firstRows = firstColRef.current?.querySelectorAll('tbody tr');
-    const middleRows = middleColsRef.current?.querySelectorAll('tbody tr');
-    const lastRows = lastColRef.current?.querySelectorAll('tbody tr');
-
-    if (!firstRows || !middleRows || !lastRows) return;
-
-    for (let i = 0; i < firstRows.length; i++) {
-      const firstHeight = firstRows[i].getBoundingClientRect().height;
-      const middleHeight = middleRows[i]?.getBoundingClientRect().height || 0;
-      const lastHeight = lastRows[i]?.getBoundingClientRect().height || 0;
-
-      const maxHeight = Math.max(firstHeight, middleHeight, lastHeight);
-
-      firstRows[i].style.height = `${maxHeight}px`;
-      if (middleRows[i]) middleRows[i].style.height = `${maxHeight}px`;
-      if (lastRows[i]) lastRows[i].style.height = `${maxHeight}px`;
+  // Action buttons configuration
+  const defaultActions = [
+    {
+      label: 'View',
+      icon: <Eye className="w-4 h-4" />,
+      onClick: (row, index) => console.log('View row:', row, index),
+      color: 'text-blue-600 hover:text-blue-800'
+    },
+    {
+      label: 'Edit',
+      icon: <Edit className="w-4 h-4" />,
+      onClick: (row, index) => console.log('Edit row:', row, index),
+      color: 'text-green-600 hover:text-green-800'
+    },
+    {
+      label: 'Delete',
+      icon: <Trash2 className="w-4 h-4" />,
+      onClick: (row, index) => console.log('Delete row:', row, index),
+      color: 'text-red-600 hover:text-red-800'
     }
-  }
-}, [paginatedData, filteredColumns, isTabletView]);
+  ];
+
+  // Get actions from columns or use defaults
+  const actionsColumn = columns.find(col => col.key === 'actions');
+  const actions = actionsColumn ? actionsColumn.actions || defaultActions : defaultActions;
+
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-      {/* Header */}
-      <div className="px-4 md:px-6 py-4 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg md:text-xl font-semibold text-gray-900">{title}</h2>
-          <div className="flex items-center gap-2">
-            {toolbar}
-          </div>
-        </div>
-      </div>
-
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       {/* Toolbar */}
-      <div className="px-4 md:px-6 py-4 border-b border-gray-200">
+      <div className="p-4 border-b border-gray-200">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center justify-between w-full md:w-auto">
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-
-            {/* Table Action Icons */}
-            <div className={`${mobileMenuOpen ? 'flex' : 'hidden md:flex'} absolute md:relative left-0 top-full mt-2 md:mt-0 w-full md:w-auto bg-white md:bg-transparent shadow-md md:shadow-none rounded-md p-3 md:p-0 z-10 md:z-auto flex-wrap gap-2 md:gap-1`}>
-              {/* Copy */}
-              <Tooltip content="Copy Data" placement="bottom">
-                <button
-                  onClick={() => copyToClipboard(JSON.stringify(filteredData, null, 2))}
-                  className="p-2 rounded-full text-gray-600 hover:text-[#00bcd4] hover:-translate-y-1 hover:bg-[#00bcd4]/10 transition-all duration-300 ease-out"
-                >
-                  <Copy className="w-4 h-4 md:w-5 md:h-5" />
-                </button>
-              </Tooltip>
-
-              {/* Export */}
-              <Tooltip content="Export" placement="bottom">
-                <button
-                  onClick={handleExport}
-                  className="p-2 rounded-full text-gray-600 hover:text-[#00bcd4] hover:-translate-y-1 hover:bg-[#00bcd4]/10 transition-all duration-300 ease-out"
-                >
-                  <Download className="w-4 h-4 md:w-5 md:h-5" />
-                </button>
-              </Tooltip>
-
-              {/* Print */}
-              <Tooltip content="Print" placement="bottom">
-                <button
-                  onClick={handlePrint}
-                  className="p-2 rounded-full text-gray-600 hover:text-[#00bcd4] hover:-translate-y-1 hover:bg-[#00bcd4]/10 transition-all duration-300 ease-out"
-                >
-                  <Printer className="w-4 h-4 md:w-5 md:h-5" />
-                </button>
-              </Tooltip>
-
-              {/* Filter */}
-              <Tooltip content="Filter" placement="bottom">
-                <button
-                  onClick={() => setShowFilterModal(true)}
-                  className="p-2 rounded-full text-gray-600 hover:text-[#00bcd4] hover:-translate-y-1 hover:bg-[#00bcd4]/10 transition-all duration-300 ease-out"
-                >
-                  <Filter className="w-4 h-4 md:w-5 md:h-5" />
-                </button>
-              </Tooltip>
-
-              {/* Columns */}
-              <Tooltip content="Columns" placement="bottom">
-                <button
-                  onClick={() => setShowColumnModal(true)}
-                  className="p-2 rounded-full text-gray-600 hover:text-[#00bcd4] hover:-translate-y-1 hover:bg-[#00bcd4]/10 transition-all duration-300 ease-out"
-                >
-                  <Columns className="w-4 h-4 md:w-5 md:h-5" />
-                </button>
-              </Tooltip>
-
-              {/* Sort */}
-              <Tooltip content="Sort" placement="bottom">
-                <button
-                  onClick={() => setShowSortModal(true)}
-                  className="p-2 rounded-full text-gray-600 hover:text-[#00bcd4] hover:-translate-y-1 hover:bg-[#00bcd4]/10 transition-all duration-300 ease-out"
-                >
-                  <ArrowUpDown className="w-4 h-4 md:w-5 md:h-5" />
-                </button>
-              </Tooltip>
-            </div>
-          </div>
-          
-           
-        {searchable && (
-          <div className="flex items-center gap-4 w-full md:w-auto">
-            {/* NAS IP Dropdown (optional) */}
-            {showNasDropdown && (
-              <select className="border-b p-2 shadow-sm rounded bg-white focus:outline-none">
-                <option>NAS_1 [10.10.1.1]</option>
-                <option>NAS_2 [10.10.1.2]</option>
-              </select>
+          <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+          <div className="flex flex-wrap items-center gap-2">
+            {searchable && (
+              <div className="relative">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                />
+              </div>
             )}
 
- {showDateFilter && (
-          <div className="flex items-center gap-2 mr-4">
-            <input
-              type="date"
-              value={dateRange.from}
-              onChange={(e) => onDateChange("from", e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <span className="text-gray-500">–</span>
-            <input
-              type="date"
-              value={dateRange.to}
-              onChange={(e) => onDateChange("to", e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-        )}
-   
-            {/* Search Bar */}
-            <div className="relative w-full md:w-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border-b border-gray-300 focus:border-b-2 focus:border-blue-400 outline-none w-full md:w-48"
-              />
-            </div>
-          </div>
-        )}
+            {/* Mobile menu button */}
+            {isMobileView && (
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 border border-gray-300 rounded-lg"
+              >
+                <Menu className="w-4 h-4" />
+              </button>
+            )}
 
+            {!isMobileView && (
+              <>
+                <Tooltip content="Filter">
+                  <button
+                    onClick={() => setShowFilterModal(true)}
+                    className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  >
+                    <Filter className="w-4 h-4" />
+                  </button>
+                </Tooltip>
+                <Tooltip content="Sort">
+                  <button
+                    onClick={() => setShowSortModal(true)}
+                    className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  >
+                    <ArrowUpDown className="w-4 h-4" />
+                  </button>
+                </Tooltip>
+                <Tooltip content="Columns">
+                  <button
+                    onClick={() => setShowColumnModal(true)}
+                    className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  >
+                    <Columns className="w-4 h-4" />
+                  </button>
+                </Tooltip>
+                <Tooltip content="Export">
+                  <button
+                    onClick={handleExport}
+                    className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  >
+                    <Download className="w-4 h-4" />
+                  </button>
+                </Tooltip>
+                <PrintComponent
+                  data={filteredData}
+                  columns={columns.filter(col => col.key !== 'actions')}
+                  title={title}
+                />
+                {toolbar}
+              </>
+            )}
+          </div>
         </div>
+        {/* Mobile menu */}
+        {isMobileView && mobileMenuOpen && (
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <button
+              onClick={() => setShowFilterModal(true)}
+              className="flex items-center justify-center gap-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm"
+            >
+              <Filter className="w-4 h-4" />
+              <span>Filter</span>
+            </button>
+            <button
+              onClick={() => setShowSortModal(true)}
+              className="flex items-center justify-center gap-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm"
+            >
+              <ArrowUpDown className="w-4 h-4" />
+              <span>Sort</span>
+            </button>
+            <button
+              onClick={() => setShowColumnModal(true)}
+              className="flex items-center justify-center gap-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm"
+            >
+              <Columns className="w-4 h-4" />
+              <span>Columns</span>
+            </button>
+            <button
+              onClick={handleExport}
+              className="flex items-center justify-center gap-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm"
+            >
+              <Download className="w-4 h-4" />
+              <span>Export</span>
+            </button>
+            <PrintComponent
+              data={filteredData}
+              columns={columns.filter(col => col.key !== 'actions')}
+              title={title}
+            />
+            {toolbar && (
+              <div className="col-span-2">
+                {toolbar}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Table */}
       {!isMobileView ? (
-         <div className="overflow-hidden">
-    {isTabletView && filteredColumns.length > 2 ? (
-      <div className="flex">
-        {/* Fixed First Column */}
-        <div className="flex-shrink-0 border-r border-gray-200" ref={firstColRef}>
-          <table className="border-collapse">
+        <div className="overflow-x-auto">
+          <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
                 {showSelection && (
-                  <th className="w-12 px-3 py-3 text-left bg-gray-50">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
                     <input
                       type="checkbox"
-                      checked={
-                        selectedRows.length === paginatedData.length &&
-                        paginatedData.length > 0
-                      }
+                      checked={selectedRows.length === paginatedData.length && paginatedData.length > 0}
                       onChange={(e) => handleSelectAll(e.target.checked)}
-                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      className="w-4 h-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
                     />
                   </th>
                 )}
-                <th
-                  className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleHeaderSort(filteredColumns[0].key)}
-                >
-                  <div className="flex items-center">
-                    {filteredColumns[0].label}
-                    {sortConfig.find((sort) => sort.column === filteredColumns[0].key)
-                      ?.direction && (
-                      <span className="ml-1">
-                        {sortConfig.find((sort) => sort.column === filteredColumns[0].key)
-                          ?.direction === 'asc' ? (
-                          <ArrowUp className="w-3 h-3" />
-                        ) : (
-                          <ArrowDown className="w-3 h-3" />
+                {columns
+                  .filter(column => column.key !== 'actions' && visibleColumns.includes(column.key))
+                  .map(column => (
+                    <th
+                      key={column.key}
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleHeaderSort(column.key)}
+                    >
+                      <div className="flex items-center gap-1">
+                        <span>{column.label}</span>
+                        {sortConfig.find(sort => sort.column === column.key) && (
+                          sortConfig.find(sort => sort.column === column.key).direction === 'asc' ?
+                            <ArrowUp className="w-3 h-3" /> :
+                            <ArrowDown className="w-3 h-3" />
                         )}
-                      </span>
-                    )}
-                  </div>
-                </th>
+                      </div>
+                    </th>
+                  ))}
+                {actions.length > 0 && (
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {paginatedData.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={showSelection ? 2 : 1}
-                    className="px-6 py-12 text-center text-gray-500"
-                  >
-                    No data
-                  </td>
-                </tr>
-              ) : (
+              {paginatedData.length > 0 ? (
                 paginatedData.map((row, index) => (
                   <tr key={index} className="hover:bg-gray-50">
                     {showSelection && (
-                      <td className="px-3 py-4">
+                      <td className="px-4 py-4 whitespace-nowrap">
                         <input
                           type="checkbox"
                           checked={selectedRows.includes(index)}
                           onChange={(e) => handleRowSelect(index, e.target.checked)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          className="w-4 h-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
                         />
                       </td>
                     )}
-                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {filteredColumns[0].render
-                        ? filteredColumns[0].render(row[filteredColumns[0].key], row, index)
-                        : row[filteredColumns[0].key]}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Scrollable Middle Columns */}
-        <div className="flex-1 overflow-x-auto" ref={middleColsRef}>
-          <table className="border-collapse min-w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                {filteredColumns.slice(1, -1).map((column) => {
-                  const sortDirection = sortConfig.find((sort) => sort.column === column.key)
-                    ?.direction;
-                  return (
-                    <th
-                      key={column.key}
-                      className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 whitespace-nowrap"
-                      onClick={() => handleHeaderSort(column.key)}
-                    >
-                      <div className="flex items-center">
-                        {column.label}
-                        {sortDirection && (
-                          <span className="ml-1">
-                            {sortDirection === 'asc' ? (
-                              <ArrowUp className="w-3 h-3" />
-                            ) : (
-                              <ArrowDown className="w-3 h-3" />
-                            )}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {paginatedData.length === 0 ? (
-                <tr>
-                  <td colSpan={filteredColumns.length - 2} className="px-6 py-12 text-center text-gray-500">
-                    No data available
-                  </td>
-                </tr>
-              ) : (
-                paginatedData.map((row, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    {filteredColumns.slice(1, -1).map((column) => (
-                      <td
-                        key={column.key}
-                        className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                      >
-                        {column.render ? column.render(row[column.key], row, index) : row[column.key]}
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Fixed Last Column + Actions */}
-        <div className="flex-shrink-0 border-l border-gray-200" ref={lastColRef}>
-          <table className="border-collapse">
-            <thead className="bg-gray-50">
-              <tr>
-                <th
-                  className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleHeaderSort(filteredColumns[filteredColumns.length - 1].key)}
-                >
-                  <div className="flex items-center">
-                    {filteredColumns[filteredColumns.length - 1].label}
-                    {sortConfig.find(
-                      (sort) => sort.column === filteredColumns[filteredColumns.length - 1].key
-                    )?.direction && (
-                      <span className="ml-1">
-                        {sortConfig.find(
-                          (sort) => sort.column === filteredColumns[filteredColumns.length - 1].key
-                        )?.direction === 'asc' ? (
-                          <ArrowUp className="w-3 h-3" />
-                        ) : (
-                          <ArrowDown className="w-3 h-3" />
-                        )}
-                      </span>
-                    )}
-                  </div>
-                </th>
-                {hasActions && (
-                  <th className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Action
-                  </th>
-                )}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {paginatedData.length === 0 ? (
-                <tr>
-                  <td colSpan={hasActions ? 2 : 1} className="px-6 py-12 text-center text-gray-500">
-                    No data
-                  </td>
-                </tr>
-              ) : (
-                paginatedData.map((row, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {filteredColumns[filteredColumns.length - 1].render
-                        ? filteredColumns[filteredColumns.length - 1].render(
-                            row[filteredColumns[filteredColumns.length - 1].key],
-                            row,
-                            index
-                          )
-                        : row[filteredColumns[filteredColumns.length - 1].key]}
-                    </td>
-                    {hasActions && (
-                      <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex items-center justify-end gap-2">
-                          {onView && (
-                            <Tooltip content="View">
-                              <button
-                                onClick={() => onView(row, index)}
-                                className="text-blue-600 hover:text-blue-900"
-                              >
-                                <Eye className="w-4 h-4" />
-                              </button>
-                            </Tooltip>
-                          )}
-                          {onEdit && (
-                            <Tooltip content="Edit">
-                              <button
-                                onClick={() => onEdit(row, index)}
-                                className="text-indigo-600 hover:text-indigo-900"
-                              >
-                                <Edit className="w-4 h-4" />
-                              </button>
-                            </Tooltip>
-                          )}
-                          {onDelete && (
-                            <Tooltip content="Delete">
-                              <button
-                                onClick={() => onDelete(row, index)}
-                                className="text-red-600 hover:text-red-900"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </Tooltip>
-                          )}
-                        </div>
+                    {columns
+                      .filter(column => column.key !== 'actions' && visibleColumns.includes(column.key))
+                      .map(column => (
+                        <td key={column.key} className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {column.render ? column.render(row) : row[column.key]}
+                        </td>
+                      ))}
+                    {actions.length > 0 && (
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                        <ActionsCell actions={actions} row={row} index={index} />
                       </td>
                     )}
                   </tr>
                 ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    ) : (
-      // Desktop Regular scrollable Table
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              {showSelection && (
-                <th className="w-12 px-3 py-3 text-left">
-                  <input
-                    type="checkbox"
-                    checked={selectedRows.length === paginatedData.length && paginatedData.length > 0}
-                    onChange={(e) => handleSelectAll(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                </th>
-              )}
-              {filteredColumns.map((column) => {
-                const sortDirection = sortConfig.find((sort) => sort.column === column.key)?.direction;
-                return (
-                  <th
-                    key={column.key}
-                    className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                    onClick={() => handleHeaderSort(column.key)}
+              ) : (
+                <tr>
+                  <td 
+                    colSpan={
+                      columns.filter(col => col.key !== 'actions' && visibleColumns.includes(col.key)).length + 
+                      (showSelection ? 1 : 0) + 
+                      (actions.length > 0 ? 1 : 0)
+                    } 
+                    className="px-4 py-8 text-center text-sm text-gray-500"
                   >
-                    <div className="flex items-center">
-                      {column.label}
-                      {sortDirection && (
-                        <span className="ml-1">
-                          {sortDirection === 'asc' ? (
-                            <ArrowUp className="w-3 h-3" />
-                          ) : (
-                            <ArrowDown className="w-3 h-3" />
-                          )}
-                        </span>
-                      )}
-                    </div>
-                  </th>
-                );
-              })}
-              {hasActions && (
-                <th className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                  Action
-                </th>
-              )}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {paginatedData.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={filteredColumns.length + (showSelection ? 1 : 0) + (hasActions ? 1 : 0)}
-                  className="px-6 py-12 text-center text-gray-500"
-                >
-                  No data available
-                </td>
-              </tr>
-            ) : (
-              paginatedData.map((row, index) => (
-                <tr key={index} className="hover:bg-gray-50">
-                  {showSelection && (
-                    <td className="px-3 py-4">
-                      <input
-                        type="checkbox"
-                        checked={selectedRows.includes(index)}
-                        onChange={(e) => handleRowSelect(index, e.target.checked)}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                    </td>
-                  )}
-                  {filteredColumns.map((column) => (
-                    <td key={column.key} className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {column.render ? column.render(row[column.key], row, index) : row[column.key]}
-                    </td>
-                  ))}
-                  {hasActions && (
-                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end gap-2">
-                        {onView && (
-                          <Tooltip content="View">
-                            <button
-                              onClick={() => onView(row, index)}
-                              className="text-blue-600 hover:text-blue-900"
-                            >
-                              <Eye className="w-4 h-4" />
-                            </button>
-                          </Tooltip>
-                        )}
-                        {onEdit && (
-                          <Tooltip content="Edit">
-                            <button
-                              onClick={() => onEdit(row, index)}
-                              className="text-indigo-600 hover:text-indigo-900"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-                          </Tooltip>
-                        )}
-                        {onDelete && (
-                          <Tooltip content="Delete">
-                            <button
-                              onClick={() => onDelete(row, index)}
-                              className="text-red-600 hover:text-red-900"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </Tooltip>
-                        )}
-                      </div>
-                    </td>
-                  )}
+                    No data found
+                  </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-    )}
-  </div>
+              )}
+            </tbody>
+          </table>
+        </div>
       ) : (
-        /* Mobile view */
-         <div className="p-4">
-    {paginatedData.length === 0 ? (
-      <div className="px-6 py-12 text-center text-gray-500">No data available</div>
-    ) : (
-      paginatedData.map((row, index) => <MobileRowCard key={index} row={row} index={index} />)
-    )}
-  </div>
+        // Mobile card view
+        <div className="p-4 space-y-4">
+          {paginatedData.length > 0 ? (
+            paginatedData.map((row, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg p-4">
+                {showSelection && (
+                  <div className="flex items-center mb-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedRows.includes(index)}
+                      onChange={(e) => handleRowSelect(index, e.target.checked)}
+                      className="w-4 h-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
+                    />
+                    <span className="ml-2 text-sm text-gray-500">Select</span>
+                  </div>
+                )}
+                <div className="space-y-3">
+                  {columns
+                    .filter(column => column.key !== 'actions' && visibleColumns.includes(column.key))
+                    .map(column => (
+                      <div key={column.key} className="flex flex-col">
+                        <span className="text-xs font-medium text-gray-500 uppercase">{column.label}</span>
+                        <span className="text-sm text-gray-900">
+                          {column.render ? column.render(row) : row[column.key]}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+                {actions.length > 0 && (
+                  <MobileActionsCell actions={actions} row={row} index={index} />
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-8 text-sm text-gray-500">
+              No data found
+            </div>
+          )}
+        </div>
       )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="px-6 py-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-700">
-              Showing {startIndex + 1} to {Math.min(startIndex + pageSize, filteredData.length)} of {filteredData.length} entries
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1}
-                className="p-2 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md hover:bg-gray-100 transition-all duration-200"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
-              <div className="flex gap-1">
-                {/* Show first page */}
-                {currentPage > 3 && (
-                  <>
-                    <button
-                      onClick={() => setCurrentPage(1)}
-                      className="px-3 py-1 text-sm rounded text-gray-700 hover:bg-gray-100 transition-all duration-200"
-                    >
-                      1
-                    </button>
-                    {currentPage > 4 && <span className="px-2 py-1 text-gray-500">...</span>}
-                  </>
-                )}
-
-                {/* Show pages around current page */}
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  let pageNum;
-                  if (totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
-                  } else {
-                    pageNum = currentPage - 2 + i;
-                  }
-
-                  if (pageNum < 1 || pageNum > totalPages) return null;
-
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => setCurrentPage(pageNum)}
-                      className={`px-3 py-1 text-sm rounded transition-all duration-200 ${currentPage === pageNum
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-gray-700 hover:bg-gray-100'
-                        }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-
-                {/* Show last page */}
-                {currentPage < totalPages - 2 && (
-                  <>
-                    {currentPage < totalPages - 3 && <span className="px-2 py-1 text-gray-500">...</span>}
-                    <button
-                      onClick={() => setCurrentPage(totalPages)}
-                      className="px-3 py-1 text-sm rounded text-gray-700 hover:bg-gray-100 transition-all duration-200"
-                    >
-                      {totalPages}
-                    </button>
-                  </>
-                )}
-              </div>
-
-              <button
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                disabled={currentPage === totalPages}
-                className="p-2 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md hover:bg-gray-100 transition-all duration-200"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+      <div className="px-4 py-3 flex flex-col sm:flex-row items-center justify-between border-t border-gray-200">
+        <div className="text-sm text-gray-700 mb-4 sm:mb-0">
+          Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
+          <span className="font-medium">{Math.min(startIndex + pageSize, filteredData.length)}</span> of{' '}
+          <span className="font-medium">{filteredData.length}</span> results
         </div>
-      )}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            let pageNum;
+            if (totalPages <= 5) {
+              pageNum = i + 1;
+            } else if (currentPage <= 3) {
+              pageNum = i + 1;
+            } else if (currentPage >= totalPages - 2) {
+              pageNum = totalPages - 4 + i;
+            } else {
+              pageNum = currentPage - 2 + i;
+            }
+            return (
+              <button
+                key={pageNum}
+                onClick={() => setCurrentPage(pageNum)}
+                className={`px-3 py-1.5 border rounded-md text-sm font-medium ${
+                  currentPage === pageNum
+                    ? 'border-cyan-600 bg-cyan-600 text-white'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
 
       {/* Modals */}
       <ColumnSelectionModal
         isOpen={showColumnModal}
         onClose={() => setShowColumnModal(false)}
-        columns={columns}
+        columns={columns.filter(col => col.key !== 'actions')}
         visibleColumns={visibleColumns}
-        onToggleColumn={handleColumnToggle}
+        onToggleColumn={handleToggleColumn}
         onSave={() => setShowColumnModal(false)}
-        onReset={() => {
-          setVisibleColumns(columns.map(col => col.key));
-          setShowColumnModal(false);
-        }}
+        onReset={handleResetColumns}
       />
-
       <SortingModal
         isOpen={showSortModal}
         onClose={() => setShowSortModal(false)}
-        columns={columns}
+        columns={columns.filter(col => col.key !== 'actions')}
         sortConfig={sortConfig}
         onAddSort={handleAddSort}
         onRemoveSort={handleRemoveSort}
         onSave={() => setShowSortModal(false)}
-        onReset={() => {
-          setSortConfig([]);
-          setShowSortModal(false);
-        }}
+        onReset={handleResetSort}
       />
-
       <FilterModal
         isOpen={showFilterModal}
         onClose={() => setShowFilterModal(false)}
-        columns={columns}
+        columns={columns.filter(col => col.key !== 'actions')}
         filters={filters}
         onAddFilter={handleAddFilter}
         onRemoveFilter={handleRemoveFilter}
-        onSave={() => {
-          setCurrentPage(1);
-          setShowFilterModal(false);
-        }}
-        onReset={() => {
-          setFilters([]);
-          setCurrentPage(1);
-          setShowFilterModal(false);
-        }}
+        onSave={() => setShowFilterModal(false)}
+        onReset={handleResetFilters}
       />
     </div>
   );

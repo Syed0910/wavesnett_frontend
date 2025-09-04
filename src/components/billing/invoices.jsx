@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DataTable from "../../components/ui/datatable";
+import DataTable from "../ui/datatable";
 import { Pencil, Trash2, Printer, Mail, FilePlus } from "lucide-react";
 
 const Invoices = () => {
@@ -258,7 +258,76 @@ const Invoices = () => {
         </button>
       </div>
     );
-
+const handleCustomPrint = (data, columns, title) => {
+  // Custom invoice print formatting
+  const printContent = `
+    <html>
+      <head>
+        <title>${title}</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 20px; }
+          .invoice-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+          .company-info { margin-bottom: 20px; }
+          .invoice-details { margin-bottom: 30px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+          th { background-color: #f5f5f5; font-weight: bold; }
+          .total-row { font-weight: bold; background-color: #f9f9f9; }
+          .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #666; }
+          @media print {
+            body { margin: 0; }
+            .no-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="invoice-header">
+          <h1>INVOICE REPORT</h1>
+          <h2>${title}</h2>
+          <p>Generated on ${new Date().toLocaleDateString()}</p>
+        </div>
+        
+        <div class="company-info">
+          <h3>Your Company Name</h3>
+          <p>123 Business Street, City, State 12345</p>
+          <p>Phone: (123) 456-7890 | Email: info@yourcompany.com</p>
+        </div>
+        
+        <table>
+          <thead>
+            <tr>
+              ${columns.map(col => `<th>${col.label}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${data.map(row => `
+              <tr>
+                ${columns.map(col => `<td>${row[col.key] || ''}</td>`).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        
+        <div class="footer">
+          <p>Total Invoices: ${data.length}</p>
+        </div>
+        
+        <div class="no-print" style="margin-top: 20px; text-align: center;">
+          <button onclick="window.print()" style="padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Print Now
+          </button>
+          <button onclick="window.close()" style="padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">
+            Close
+          </button>
+        </div>
+      </body>
+    </html>
+  `;
+  
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(printContent);
+  printWindow.document.close();
+};
   return (
     <div className="p-6">
       {toolbar}
@@ -271,6 +340,7 @@ const Invoices = () => {
         searchable={true}
         showNasDropdown={false}
         showDateFilter={true}
+        customPrintHandler={handleCustomPrint} 
       />
 
       {/* Create Invoice Modal */}

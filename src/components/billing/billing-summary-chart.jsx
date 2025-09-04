@@ -13,18 +13,18 @@ import {
 const BillingSummaryChart = () => {
   // ✅ Example dataset (replace with your backend API data)
   const data = [
-    { month: "Jan", revenue: 0, expense: 0 },
-    { month: "Feb", revenue: 0, expense: 0 },
-    { month: "Mar", revenue: 0, expense: 0 },
-    { month: "Apr", revenue: 0, expense: 0 },
-    { month: "May", revenue: 25000, expense: 2000 },
-    { month: "Jun", revenue: 72000, expense: 50000 },
-    { month: "Jul", revenue: 30000, expense: 20000 },
-    { month: "Aug", revenue: 65000, expense: 48000 },
-    { month: "Sep", revenue: 12000, expense: 5000 },
-    { month: "Oct", revenue: 0, expense: 0 },
-    { month: "Nov", revenue: 0, expense: 0 },
-    { month: "Dec", revenue: 0, expense: 0 }
+    { month: "Jan", invoice: 0, receipt: 0 },
+    { month: "Feb", invoice: 0, receipt: 0 },
+    { month: "Mar", invoice: 0, receipt: 0 },
+    { month: "Apr", invoice: 0, receipt: 0 },
+    { month: "May", invoice: 25000, receipt: 2000 },
+    { month: "Jun", invoice: 72000, receipt: 50000 },
+    { month: "Jul", invoice: 30000, receipt: 20000 },
+    { month: "Aug", invoice: 65000, receipt: 48000 },
+    { month: "Sep", invoice: 12000, receipt: 5000 },
+    { month: "Oct", invoice: 0, receipt: 0 },
+    { month: "Nov", invoice: 0, receipt: 0 },
+    { month: "Dec", invoice: 0, receipt: 0 }
   ];
 
   return (
@@ -37,10 +37,10 @@ const BillingSummaryChart = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          {/* Green bars (Revenue) */}
-          <Bar dataKey="revenue" fill="#16a34a" name="Revenue" />
-          {/* Orange bars (Expense) */}
-          <Bar dataKey="expense" fill="#dc2626" name="Expense" />
+          {/* Green bars (invoice) */}
+          <Bar dataKey="invoice" fill="#16a34a" name="invoice" />
+          {/* Orange bars (receipt) */}
+          <Bar dataKey="receipt" fill="#dc2626" name="receipt" />
         </BarChart>
       </ResponsiveContainer>
     </div>
