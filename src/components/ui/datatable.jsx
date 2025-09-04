@@ -216,7 +216,7 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
   const operators = [
     { value: 'contains', label: 'Contains' },
     { value: 'equals', label: 'Equals' },
-    {value: 'startsWith', label: 'Starts with' },
+    { value: 'startsWith', label: 'Starts with' },
     { value: 'endsWith', label: 'Ends with' },
     { value: 'greater', label: 'Greater than' },
     { value: 'less', label: 'Less than' }
@@ -444,15 +444,27 @@ const DataTable = ({
     if (existingSortIndex >= 0) {
       // Toggle direction if already sorted
       const newSortConfig = [...sortConfig];
-      newSortConfig[existingSortIndex] = {
-        column: columnKey,
-        direction: sortConfig[existingSortIndex].direction === 'asc' ? 'desc' : 'asc'
-      };
+      const currentDirection = sortConfig[existingSortIndex].direction;
+      
+      if (currentDirection === 'asc') {
+        // Change to descending
+        newSortConfig[existingSortIndex] = {
+          column: columnKey,
+          direction: 'desc'
+        };
+      } else {
+        // Remove this sort rule if it was descending
+        newSortConfig.splice(existingSortIndex, 1);
+      }
+      
       setSortConfig(newSortConfig);
     } else {
       // Add new sort
       setSortConfig([...sortConfig, { column: columnKey, direction: 'asc' }]);
     }
+
+    // Reset to first page when sorting changes
+    setCurrentPage(1);
   };
 
   // Filter and search data
@@ -1309,3 +1321,4 @@ useEffect(() => {
 };
 
 export default DataTable;
+

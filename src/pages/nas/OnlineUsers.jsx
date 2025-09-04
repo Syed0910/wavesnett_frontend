@@ -3,7 +3,7 @@ import { LogOut } from "lucide-react";
 import DataTable from "../../components/ui/datatable";
 
 const OnlineUsers = () => {
-  const [users] = useState([
+  const [users,setUsers] = useState([
     {
       user: "abdul",
       ip: "10.10.20.185",
@@ -154,6 +154,27 @@ const OnlineUsers = () => {
     alert(`Opening profile of ${user.user}`);
   };
 
+  // ✅ Logout particular user
+  const handleLogoutUser = async (username) => {
+    try {
+      // 1. Call API to force logout this user
+      await fetch(`/api/logout/${username}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      // 2. Remove that user from local state (so they disappear from table)
+      setUsers((prevUsers) => prevUsers.filter((u) => u.user !== username));
+
+      alert(`${username} has been logged out successfully.`);
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
   const columns = [
     {
       key: "user",
@@ -178,7 +199,7 @@ const OnlineUsers = () => {
       label: "Logout",
       render: (_, row) => (
         <button
-          onClick={() => alert(`Logging out ${row.user}`)}
+          onClick={() => handleLogoutUser(row.user)}
           className="p-2 rounded-full hover:bg-red-100 text-red-600 transition"
         >
           <LogOut className="w-4 h-4" />
@@ -188,7 +209,7 @@ const OnlineUsers = () => {
   ];
 
   return (
-    <div className="p-6 ">
+    <div className="p-6">
       <DataTable
         title="Online Users"
         data={users}
