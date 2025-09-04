@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import NasDashboard from '../components/nas/NasDashboard';
-import OnlineUsers from '../components/nas/OnlineUsers';
-import DhcpLease from '../components/nas/DhcpLease';
-import CpeDevices from '../components/nas/CpeDevices';
+import NasDashboard from './nas/NasDashboard';
+import OnlineUsers from './nas/OnlineUsers';
+import DhcpLease from './nas/DhcpLease';
+import CpeDevices from './nas/CpeDevices';
 
 const Nas = () => {
   return (

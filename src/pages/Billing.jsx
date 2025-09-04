@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Invoices from '../components/billing/invoices';
-import BillingSummaryChart from '../components/billing/billing-summary-chart';
-import OnlineTransaction from '../components/billing/online-transaction';
-import Receipts from '../components/billing/receipts';
+import Invoices from './billing/invoices';
+import BillingSummaryChart from './billing/billing-summary-chart';
+import OnlineTransaction from './billing/online-transaction';
+import Receipts from './billing/receipts';
 
 const Billing = () => {
   return (
