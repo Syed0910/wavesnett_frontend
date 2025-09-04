@@ -42,7 +42,6 @@ const handleView = (user) => {
   const handleAddUser = () => alert("Add user clicked");
 
 const columns = [
-  { key: 'id', label: 'ID', primaryKey: true },
   {
     key: 'username',
     label: 'Username',
@@ -55,6 +54,7 @@ const columns = [
       </span>
     )
   },
+  { key: 'id', label: 'ID', primaryKey: true },
   { key: 'email', label: 'Email' },
   { key: 'phone', label: 'Phone' },
   { key: 'alternatePhone', label: 'Alternate Phone' },
@@ -120,7 +120,7 @@ const columns = [
         data={users}
         columns={columns}
         onEdit={handleEdit}
-        onDelete={handleDelete}
+        onDelete={handleDelete} 
         onView={handleView}
         showSelection={false}
         toolbar={toolbar}
