@@ -6,6 +6,7 @@ import Settings from "./pages/Settings";
 import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
 import NasDashboard from "./pages/nas/NasDashboard";
+import Complaints from "./components/complaint/Complaints";
 
 const App = () => {
   return (
@@ -18,6 +19,9 @@ const App = () => {
         
         {/* User Management Routes */}
         <Route path="/user/*" element={<UsersPage />} />
+
+        {/* Complaints Management Route */}
+        <Route path="/complaints/*" element={<Complaints />} />
         
         {/* NAS Routes - Placeholder for future implementation */}
         <Route path="/nas/*" element={<NasDashboard/>} />
