@@ -287,30 +287,29 @@ const Sidebar = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className={`${isOpen ? "translate-x-0" : "-translate-x-70"} transform transition-transform duration-300` }>
-    <div className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen flex flex-col">
-      {/* Logo and Company Name Section */}
-      <div className="text-white p-6 flex flex-col items-center" style={{ backgroundColor: '#00a1b8' }}>
-        <div className="bg-white p-3 rounded-lg mb-3">
-          <img 
-            src="/wavesnett.png" 
-            alt="WavesNett" 
-            className="w-12 h-12 object-contain"
-          />
+    <div className={`${isOpen ? "translate-x-0" : "-translate-x-70"} transform transition-transform duration-300`}>
+      <div className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen flex flex-col">
+        {/* Logo and Company Name Section */}
+        <div className="text-white p-6 flex flex-col items-center" style={{ backgroundColor: '#00a1b8' }}>
+          <div className="bg-white p-3 rounded-lg mb-3">
+            <img 
+              src="/wavesnett.png" 
+              alt="WavesNett" 
+              className="w-12 h-12 object-contain"
+            />
+          </div>
+          <h2 className="text-lg font-semibold text-center leading-tight">
+            AaniRids Technologies...
+          </h2>
         </div>
-        <h2 className="text-lg font-semibold text-center leading-tight">
-          AaniRids Technologies...
-        </h2>
-      </div>
 
-      <div className="flex-1 overflow-y-auto">
-        <nav className="p-4 space-y-2">
-          {menuItems.map((item) => renderItem(item))}
-        </nav>
+        <div className="flex-1 overflow-y-auto">
+          <nav className="p-4 space-y-2">
+            {menuItems.map((item) => renderItem(item))}
+          </nav>
+        </div>
       </div>
     </div>
-    </div>
-  
   );
 };
 
