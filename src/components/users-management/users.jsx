@@ -33,8 +33,8 @@ const Users = () => {
 const navigate = useNavigate();
 
 const handleView = (user) => {
-  // Navigate to /user/usersDetail and pass user data
-  navigate("/user/usersDetail", { state: { user } });
+  // Navigate to /user/:id dynamically
+  navigate(`/user/userdetails/${user.id}`);
 };
 
 

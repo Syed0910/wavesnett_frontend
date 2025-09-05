@@ -13,7 +13,7 @@ const UsersPage = () => {
       <Route path="/users" element={<Users />} />
       <Route path="/new" element={<NewUser />} />
       <Route path="/bulk" element={<BulkUserLots />} />
-      <Route path="/:username" element={<UserDetail />} />
+      <Route path="/userdetails/:id" element={<UserDetail />} />
     </Routes>
   );
 };
