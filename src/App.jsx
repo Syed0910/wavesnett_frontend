@@ -7,6 +7,7 @@ import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
 import NasDashboard from "./pages/nas/NasDashboard";
 import Complaints from "./components/complaint/Complaints";
+import Packages from "./pages/packages"; // Import the Packages component
 
 const App = () => {
   return (
@@ -23,14 +24,14 @@ const App = () => {
         {/* Complaints Management Route */}
         <Route path="/complaints/*" element={<Complaints />} />
         
-        {/* NAS Routes - Placeholder for future implementation */}
+        {/* NAS Routes */}
         <Route path="/nas/*" element={<NasDashboard/>} />
+        
+        {/* Packages Routes */}
+        <Route path="/packages/*" element={<Packages />} />
         
         {/* Billing Routes - Placeholder for future implementation */}
         <Route path="/billing/*" element={<div className="p-6"><h2 className="text-xl font-semibold">Billing Management</h2><p className="text-gray-600 mt-2">Billing management features will be implemented here.</p></div>} />
-        
-        {/* Packages Routes - Placeholder for future implementation */}
-        <Route path="/packages/*" element={<div className="p-6"><h2 className="text-xl font-semibold">Package Management</h2><p className="text-gray-600 mt-2">Package management features will be implemented here.</p></div>} />
         
         {/* Reports Routes - Placeholder for future implementation */}
         <Route path="/reports/*" element={<div className="p-6"><h2 className="text-xl font-semibold">Reports</h2><p className="text-gray-600 mt-2">Reports will be implemented here.</p></div>} />

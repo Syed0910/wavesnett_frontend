@@ -1,3 +1,4 @@
+// src/components/complaints-management/NewComplaint.jsx
 import React from "react";
 import { TextField, Button, MenuItem, Box, Typography } from "@mui/material";
 
@@ -5,7 +6,7 @@ const NewComplaint = () => {
   return (
     <div className="p-0 pt-0">
       <Typography variant="h6" className="font-semibold mb-4">
-        New Complaint
+       New Complaint
       </Typography>
 
       {/* Zone */}

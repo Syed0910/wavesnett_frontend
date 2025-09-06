@@ -1,9 +1,10 @@
+// src/components/complaints-management/CloseComplaint.jsx
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import DataTable from "../ui/datatable";
 import { PrimaryButton } from "../ui/button";
 
-const CloseComplaint = () => {
+const CloseComplaint = ({ showHeader = true }) => {
     // Sample complaints data
     const [complaints] = useState([
         {
@@ -90,23 +91,23 @@ const CloseComplaint = () => {
 
     return (
         <div className="max-w-8xl mx-auto bg-white p-0 pt-0 min-h-screen">
+            {/* Conditional Header - only show when showHeader is true */}
+            {showHeader && (
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-medium mb-1 text-grey-800">
+                        Close Complaint
+                    </h2>
+                </div>
+            )}
 
-            {/* Header */}
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-medium mb-1 text-gray-700">
-                    Close Complaint
-                </h2>
-
-            </div>
             <DataTable
-
                 data={complaints}
                 columns={columns}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onView={handleView}
                 showSelection={false}
-
+                toolbar={toolbar}
                 pageSize={10}
                 headerClassName="font-semibold"
             />

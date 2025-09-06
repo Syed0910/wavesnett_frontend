@@ -928,7 +928,7 @@ const DataTable = ({
           disabled={currentPage === 1}
           className="p-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-3 h-3" />
         </button>
 
         <div className="flex gap-1">
@@ -1008,7 +1008,7 @@ const DataTable = ({
           disabled={currentPage === totalPages}
           className="p-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
         >
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-3 h-3" />
         </button>
       </div>
     </div>
