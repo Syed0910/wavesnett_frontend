@@ -235,7 +235,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       subItems: [
         { id: "operators", label: "Operators", icon: <Users2 className="w-4 h-4" />, path: "/zone/operators" },
         { id: "zones", label: "Zones", icon: <Target className="w-4 h-4" />, path: "/zone/zones" },
-        { id: "permission", label: "Permission", icon: <Lock className="w-4 h-4" />, path: "/zone/permission" },
+        { id: "permissions", label: "Permissions", icon: <Lock className="w-4 h-4" />, path: "/zone/permissions" },
       ],
     },
 

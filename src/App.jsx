@@ -6,9 +6,15 @@ import Settings from "./pages/Settings";
 import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
 import NasDashboard from "./pages/nas/NasDashboard";
-import AdminPages from "./components/Configuration/Configuration";
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
+import NasManagement from "./components/NasManagement/NasManagement";
+
+// ✅ Import Zone Management pages
+import Operators from "./components/ZoneManagement/operators";
+import Zone from "./components/ZoneManagement/Zone";
+import Permissions from "./components/ZoneManagement/Permissions";
+
 
 const App = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -61,12 +67,6 @@ const App = () => {
 
         {/* Configuration Routes */}
         <Route path="/config/*" element={<Configuration />} />
-        {/* <Route path="/config/change-password" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">Change Password</h2>
-            <p className="text-gray-600 mt-2">Change password functionality will be implemented here.</p>
-          </div>
-        } /> */}
 
         {/* Billing Routes */}
         <Route path="/billing/*" element={
@@ -94,10 +94,7 @@ const App = () => {
 
         {/* NAS Management */}
         <Route path="/nas-mgmt/*" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">NAS Management</h2>
-            <p className="text-gray-600 mt-2">NAS management features will be implemented here.</p>
-          </div>
+          <NasManagement/>
         } />
 
         {/* OLT Management */}
@@ -116,13 +113,10 @@ const App = () => {
           </div>
         } />
 
-        {/* Zone Management */}
-        <Route path="/zone/*" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">Zone Management</h2>
-            <p className="text-gray-600 mt-2">Zone management features will be implemented here.</p>
-          </div>
-        } />
+        {/* ✅ Zone Management Routes */}
+        <Route path="/zone/operators" element={<Operators />} />
+        <Route path="/zone/zones" element={<Zone />} />
+        <Route path="/zone/permissions" element={<Permissions />} />
 
         {/* Active Login */}
         <Route path="/active-login" element={
