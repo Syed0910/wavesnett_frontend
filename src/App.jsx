@@ -44,7 +44,10 @@ const App = () => {
         <Route path="/inventory/*" element={<div className="p-6"><h2 className="text-xl font-semibold">Inventory Management</h2><p className="text-gray-600 mt-2">Inventory management features will be implemented here.</p></div>} />
         
         {/* Zone Management Routes - Placeholder for future implementation */}
-        <Route path="/zone/*" element={<div className="p-6"><h2 className="text-xl font-semibold">Zone Management</h2><p className="text-gray-600 mt-2">Zone management features will be implemented here.</p></div>} />
+        {/* Zone Management */}
+                <Route path="/zone/operators" element={<Operators />} />
+                <Route path="/zone/zones" element={<Zone />} />
+                <Route path="/zone/permissions" element={<Permissions />} /> {/* ✅ new route */}
         
         {/* Active Login Route - Placeholder for future implementation */}
         <Route path="/active-login" element={<div className="p-6"><h2 className="text-xl font-semibold">Active Login</h2><p className="text-gray-600 mt-2">Active login monitoring will be implemented here.</p></div>} />
