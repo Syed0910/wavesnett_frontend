@@ -873,7 +873,7 @@ const DataTable = ({
                       </td>
                     ))}
                     <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-start gap-2">
                         <Tooltip content="View">
                           <button
                             onClick={() => onView && onView(row, index)}
