@@ -9,6 +9,10 @@ import NasDashboard from "./pages/nas/NasDashboard";
 import AdminPages from "./components/Configuration/Configuration";
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
+import Operators from "./components/ZoneManagement/operators";
+import Zone from "./components/ZoneManagement/zone";
+import Permissions from "./components/ZoneManagement/permissions";
+
 
 const App = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
