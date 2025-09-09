@@ -1,36 +1,69 @@
+// NasManagement.jsx - Updated with correct imports and routing
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Nas from "./nas";
 import NasConfiguration from "./nasConfiguration";
+import Interface from "./interface";
+import IpAddress from "./ip-address";
+import Firewall from "./firewall";
+import Queue from "./queue";
+import RouteManagement from "./route";
+import DHCPServer from "./dhcpServer";
+import HotspotServer from "./hotspotServer";
+import HotspotProfile from "./hotspotProfile"; 
+import IpPool from "./ip-pool"; 
+import PPPOEServer from "./pppoeServer"; 
+import PPPOEProfile from "./pppoeProfile";
+import Masquerade from "../NasManagement/Masquerade/masquerade";
 
 const NasManagement = () => {
   return (
     <Routes>
-      {/* Redirect base /nas to /nas/list */}
+      {/* Redirect base /nas-mgmt to /nas-mgmt/config */}
       <Route path="/" element={<Navigate to="/nas-mgmt/config" replace />} />
-      
+
       {/* NAS Configuration */}
       <Route path="/config" element={<NasConfiguration />} />
 
-      {/* NAS List */}
+      {/* NAS */}
       <Route path="/nas" element={<Nas />} />
 
-      
+      {/* Interface */}
+      <Route path="/interface" element={<Interface />} />
 
-      {/* Future routes */}
-      <Route path="/interface" element={<div>Interface Settings Coming Soon...</div>} />
-      <Route path="/ip-address" element={<div>IP Address Settings Coming Soon...</div>} />
-      <Route path="/firewall" element={<div>Firewall Settings Coming Soon...</div>} />
-      <Route path="/queue" element={<div>Queue Config Coming Soon...</div>} />
-      <Route path="/route" element={<div>Route Config Coming Soon...</div>} />
-      <Route path="/dhcp-server" element={<div>DHCP Server Settings...</div>} />
-      <Route path="/ip-pool" element={<div>IP Pool Settings...</div>} />
-      <Route path="/hotspot-server" element={<div>Hotspot Server Settings...</div>} />
-      <Route path="/hotspot-profile" element={<div>Hotspot Profile Settings...</div>} />
-      <Route path="/pppoe-server" element={<div>PPPoE Server Settings...</div>} />
-      <Route path="/pppoe-profile" element={<div>PPPoE Profile Settings...</div>} />
-      <Route path="/masquerade" element={<div>Masquerade Settings...</div>} />
+      {/* IP Address */}
+      <Route path="/ip-address" element={<IpAddress />} />
+
+      {/* Firewall */}
+      <Route path="/firewall" element={<Firewall />} />
+
+      {/* Queue */}
+      <Route path="/queue" element={<Queue />} />
+
+      {/* Route Management */}
+      <Route path="/route" element={<RouteManagement />} />
+
+      {/* DHCP Server */}
+      <Route path="/dhcpServer" element={<DHCPServer />} />
+
+      {/* IP Pool */}
+      <Route path="/ip-pool" element={<IpPool />} /> {/* ✅ use IpPool here */}
+
+      {/* Hotspot Server */}
+      <Route path="/hotspotServer" element={<HotspotServer />} />
+
+      {/* Hotspot Profile */}
+      <Route path="/hotspotProfile" element={<HotspotProfile />} />
+
+      {/* PPPoE Server */}
+      <Route path="/pppoeServer" element={<PPPOEServer />} /> 
+
+       {/* PPPOE Profile */}
+      <Route path="/pppoeProfile" element={<PPPOEProfile />} /> 
+
+      {/* Masquerade */}
+      <Route path="/masquerade" element={<Masquerade />} /> 
     </Routes>
   );
 };
