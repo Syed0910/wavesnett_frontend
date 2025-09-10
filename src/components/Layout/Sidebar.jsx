@@ -220,10 +220,10 @@ const Sidebar = ({ isOpen, onClose }) => {
       label: "Inventory Management",
       icon: <ClipboardList className="w-5 h-5" />,
       subItems: [
-        { id: "inventory-list", label: "Inventory List", icon: <List className="w-4 h-4" />, path: "/inventory/list" },
+        { id: "inventoryList", label: "Inventory List", icon: <List className="w-4 h-4" />, path: "/inventory/inventoryList" },
         { id: "tr069", label: "Tr069", icon: <Zap className="w-4 h-4" />, path: "/inventory/tr069" },
         { id: "map", label: "Map", icon: <MapPin className="w-4 h-4" />, path: "/inventory/map" },
-        { id: "tr069-network", label: "Tr069 Network", icon: <Network className="w-4 h-4" />, path: "/inventory/tr069-network" },
+        { id: "tr069Network", label: "Tr069 Network", icon: <Network className="w-4 h-4" />, path: "/inventory/tr069Network" },
       ],
     },
 

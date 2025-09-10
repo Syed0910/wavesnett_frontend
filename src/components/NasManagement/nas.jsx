@@ -1,18 +1,24 @@
 // src/components/nas/Nas.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import DataTable from "../ui/datatable";
+import { getNas } from "../../services/api"; // ✅ import API
 
 const Nas = () => {
-  const [nasList, setNasList] = useState([
-    {
-      id: 1,
-      name: "NAS_1",
-      ip: "10.10.1.1",
-      type: "Mikrotik",
-      zone: "All",
-    },
-  ]);
+  const [nasList, setNasList] = useState([]);
+
+  // ✅ Fetch NAS from backend
+  useEffect(() => {
+    const fetchNas = async () => {
+      try {
+        const res = await getNas();
+        setNasList(res.data);
+      } catch (err) {
+        console.error("Failed to fetch NAS:", err);
+      }
+    };
+    fetchNas();
+  }, []);
 
   const handleEdit = (nas) => {
     console.log("Edit NAS:", nas);
@@ -26,16 +32,14 @@ const Nas = () => {
     alert("Add new NAS clicked");
   };
 
-  // Columns for NAS table
+  // ✅ Columns must match backend fields
   const columns = [
-    { key: "name", label: "NAS Name" },
-    { key: "ip", label: "IP Address" },
-    { key: "type", label: "Type" },
-    { key: "zone", label: "Zone" },
-   
+    { key: "nasName", label: "NAS Name" },
+    { key: "nasIp", label: "IP Address" },
+    { key: "nasType", label: "Type" },
+    { key: "zoneName", label: "Zone" },
   ];
 
-  // Toolbar (like Users page)
   const toolbar = (
     <div className="flex items-center gap-2">
       <button

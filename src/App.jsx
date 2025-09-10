@@ -9,11 +9,14 @@ import NasDashboard from "./pages/nas/NasDashboard";
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
 import NasManagement from "./components/NasManagement/NasManagement";
+import OltManagement from "./components/OLT-Management/OltManagement";
+
 
 // ✅ Import Zone Management pages
 import Operators from "./components/ZoneManagement/operators";
 import Zone from "./components/ZoneManagement/Zone";
 import Permissions from "./components/ZoneManagement/Permissions";
+import InventoryManagement from "./components/Inventory-Management/InventoryManagement";
 
 
 const App = () => {
@@ -99,18 +102,12 @@ const App = () => {
 
         {/* OLT Management */}
         <Route path="/olt-mgmt/*" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">OLT Management</h2>
-            <p className="text-gray-600 mt-2">OLT management features will be implemented here.</p>
-          </div>
+          <OltManagement/>
         } />
 
         {/* Inventory Management */}
         <Route path="/inventory/*" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">Inventory Management</h2>
-            <p className="text-gray-600 mt-2">Inventory management features will be implemented here.</p>
-          </div>
+          <InventoryManagement/>
         } />
 
         {/* ✅ Zone Management Routes */}
