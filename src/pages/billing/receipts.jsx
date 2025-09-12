@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import DataTable from "../../components/ui/datatable";
 import { Pencil, Trash2, Printer, MoreVertical, FileText, Receipt } from "lucide-react";
-import Modal from "../../components/ui/modal";
 
 const Receipts = () => {
   const [receipts] = useState([
@@ -60,6 +59,7 @@ const Receipts = () => {
   const [showNewReceiptModal, setShowNewReceiptModal] = useState(false);
   const [showNewInvoiceModal, setShowNewInvoiceModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [formData, setFormData] = useState({
     userName: "",
     amount: 0,
@@ -120,8 +120,65 @@ const Receipts = () => {
     setShowNewInvoiceModal(false);
   };
 
+  // Custom Modal Component with lighter background
+  const Modal = ({ isOpen, onClose, title, children }) => {
+    if (!isOpen) return null;
+
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+          <div className="flex justify-between items-center p-4 border-b">
+            <h2 className="text-xl font-semibold">{title}</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700 text-2xl"
+            >
+              &times;
+            </button>
+          </div>
+          <div className="p-4 max-h-96 overflow-y-auto">
+            {children}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="p-6">
+      {/* Options Menu */}
+      <div className="relative flex justify-end mb-4">
+        <button 
+          onClick={() => setShowOptionsMenu(!showOptionsMenu)}
+          className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          <MoreVertical size={20} />
+        </button>
+        
+        {showOptionsMenu && (
+          <div className="absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg z-10 w-48">
+            <button
+              onClick={() => {
+                setShowNewInvoiceModal(true);
+                setShowOptionsMenu(false);
+              }}
+              className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+            >
+              New Invoice
+            </button>
+            <button
+              onClick={() => {
+                setShowNewReceiptModal(true);
+                setShowOptionsMenu(false);
+              }}
+              className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+            >
+              New Receipt
+            </button>
+          </div>
+        )}
+      </div>
+
       <DataTable
         title="Receipts"
         data={receipts}
@@ -262,7 +319,7 @@ const Receipts = () => {
         </form>
       </Modal>
 
-      {/* New Invoice Modal - Similar structure but for invoices */}
+      {/* New Invoice Modal */}
       <Modal
         isOpen={showNewInvoiceModal}
         onClose={() => setShowNewInvoiceModal(false)}
