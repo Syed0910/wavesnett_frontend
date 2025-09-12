@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import DataTable from "../../components/ui/datatable";
-import { Pencil, Trash2, Printer, Mail, FilePlus, X } from "lucide-react";
+import { Pencil, Trash2, Printer, Mail, FilePlus, X, MoreVertical } from "lucide-react";
 import { Tooltip } from "recharts";
 
 const Invoices = () => {
   const [selected, setSelected] = useState([]);
   const [showCreateInvoice, setShowCreateInvoice] = useState(false);
+  const [showCreateReceipt, setShowCreateReceipt] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
 
   const invoices = [
     {
@@ -77,99 +79,99 @@ const Invoices = () => {
   const handleMail = () => alert(`Mailing ${selected.length} invoices`);
 
   // Edit invoice function
-  // Edit invoice function
-const handleEditInvoice = (rowData) => {
-  setSelectedInvoice(rowData);
-  setShowEditModal(true);
-};
+  const handleEditInvoice = (rowData) => {
+    setSelectedInvoice(rowData);
+    setShowEditModal(true);
+  };
 
-// Print invoice function
-const handlePrintInvoice = (rowData) => {
-  const printContent = `
-    <html>
-      <head>
-        <title>Invoice ${rowData.invoiceNo}</title>
-        <style>
-          body { font-family: Arial, sans-serif; margin: 40px; }
-          .invoice-header { text-align: center; margin-bottom: 30px; }
-          .invoice-details { margin-bottom: 20px; }
-          .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-          .invoice-table th, .invoice-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-          .invoice-table th { background-color: #f2f2f2; }
-          .invoice-summary { float: right; width: 300px; border: 1px solid #ddd; padding: 15px; }
-          .text-right { text-align: right; }
-          .text-center { text-align: center; }
-          .company-header { text-align: center; margin-bottom: 20px; }
-          .customer-info { margin-bottom: 20px; }
-        </style>
-      </head>
-      <body>
-        <div class="company-header">
-          <h1>AanRids Technologies Private Limited</h1>
-          <p>Zara Mansion 5-592/5/B Near Water Tank Yokalia</p>
-          <p>Colony Salisburgh - S35104</p>
-          <p>Mo: +91988181152 | Email: info@wavestret.com</p>
-          <p>GSTIN : 29ABDCA2224812C</p>
-        </div>
+  // Print invoice function
+  const handlePrintInvoice = (rowData) => {
+    const printContent = `
+      <html>
+        <head>
+          <title>Invoice ${rowData.invoiceNo}</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 40px; }
+            .invoice-header { text-align: center; margin-bottom: 30px; }
+            .invoice-details { margin-bottom: 20px; }
+            .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            .invoice-table th, .invoice-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            .invoice-table th { background-color: #f2f2f2; }
+            .invoice-summary { float: right; width: 300px; border: 1px solid #ddd; padding: 15px; }
+            .text-right { text-align: right; }
+            .text-center { text-align: center; }
+            .company-header { text-align: center; margin-bottom: 20px; }
+            .customer-info { margin-bottom: 20px; }
+          </style>
+        </head>
+        <body>
+          <div class="company-header">
+            <h1>AanRids Technologies Private Limited</h1>
+            <p>Zara Mansion 5-592/5/B Near Water Tank Yokalia</p>
+            <p>Colony Salisburgh - S35104</p>
+            <p>Mo: +91988181152 | Email: info@wavestret.com</p>
+            <p>GSTIN : 29ABDCA2224812C</p>
+          </div>
 
-        <div class="customer-info">
-          <h2>To: ${rowData.name}</h2>
-          <p><strong>Company Name:</strong> WavezNet</p>
-          <p><strong>Address:</strong> KBN college road-Huma Hotel new bank</p>
-          <p>Colony Gallager Salisburg - S35104</p>
-          <p><strong>Phone:</strong> ${rowData.phone}</p>
-        </div>
+          <div class="customer-info">
+            <h2>To: ${rowData.name}</h2>
+            <p><strong>Company Name:</strong> WavezNet</p>
+            <p><strong>Address:</strong> KBN college road-Huma Hotel new bank</p>
+            <p>Colony Gallager Salisburg - S35104</p>
+            <p><strong>Phone:</strong> ${rowData.phone}</p>
+          </div>
 
-        <table class="invoice-table">
-          <thead>
-            <tr>
-              <th>Description</th>
-              <th>Qty</th>
-              <th>Rate</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <strong>Invoice Type:</strong> ${rowData.type}<br>
-                <strong>Plan Name:</strong> ${rowData.plan}<br>
-                <strong>Duration:</strong> 6 Months<br>
-                <strong>Plan Data:</strong> Unlimited<br>
-                <strong>Invoice Period:</strong> ${rowData.startDate} ~ ${rowData.endDate}
-              </td>
-              <td>${rowData.quantity || 1}</td>
-              <td>₹${rowData.amount}</td>
-            </tr>
-          </tbody>
-        </table>
+          <table class="invoice-table">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Qty</th>
+                <th>Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Invoice Type:</strong> ${rowData.type}<br>
+                  <strong>Plan Name:</strong> ${rowData.plan}<br>
+                  <strong>Duration:</strong> 6 Months<br>
+                  <strong>Plan Data:</strong> Unlimited<br>
+                  <strong>Invoice Period:</strong> ${rowData.startDate} ~ ${rowData.endDate}
+                </td>
+                <td>${rowData.quantity || 1}</td>
+                <td>₹${rowData.amount}</td>
+              </tr>
+            </tbody>
+          </table>
 
-        <div class="invoice-summary">
-          <p><strong>Amount:</strong> ₹${rowData.amount}</p>
-          <p><strong>SGST (9%):</strong> ₹${(rowData.amount * 0.09).toFixed(2)}</p>
-          <p><strong>CGST (9%):</strong> ₹${(rowData.amount * 0.09).toFixed(2)}</p>
-          <p><strong>Total:</strong> ₹${(rowData.amount * 1.18).toFixed(2)}</p>
-        </div>
+          <div class="invoice-summary">
+            <p><strong>Amount:</strong> ₹${rowData.amount}</p>
+            <p><strong>SGST (9%):</strong> ₹${(rowData.amount * 0.09).toFixed(2)}</p>
+            <p><strong>CGST (9%):</strong> ₹${(rowData.amount * 0.09).toFixed(2)}</p>
+            <p><strong>Total:</strong> ₹${(rowData.amount * 1.18).toFixed(2)}</p>
+          </div>
 
-        <div style="clear: both; margin-top: 50px; text-align: center;">
-          <p>Signature</p>
-          <p>About client</p>
-          <p>1/1</p>
-        </div>
-      </body>
-    </html>
-  `;
+          <div style="clear: both; margin-top: 50px; text-align: center;">
+            <p>Signature</p>
+            <p>About client</p>
+            <p>1/1</p>
+          </div>
+        </body>
+      </html>
+    `;
 
-  const printWindow = window.open('', '_blank');
-  printWindow.document.write(printContent);
-  printWindow.document.close();
-  printWindow.print();
-};
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.print();
+  };
 
-// Generate invoice function
-const handleGenerateInvoice = (rowData) => {
-  setSelectedInvoice(rowData);
-  setShowGenerateModal(true);
-};
+  // Generate invoice function
+  const handleGenerateInvoice = (rowData) => {
+    setSelectedInvoice(rowData);
+    setShowGenerateModal(true);
+  };
+  
   // Update invoice function
   const handleUpdateInvoice = (updatedInvoice) => {
     alert(`Invoice ${updatedInvoice.invoiceNo} updated successfully!`);
@@ -219,7 +221,42 @@ const handleGenerateInvoice = (rowData) => {
 
   return (
     <div className="p-6">
-      {toolbar}
+        
+        {/* Options Menu */}
+        <div className="relative flex justify-end">
+  <button 
+    onClick={() => setShowOptionsMenu(!showOptionsMenu)}
+    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+  >
+    <MoreVertical size={20} />
+  </button>
+  
+  {showOptionsMenu && (
+    <div className="absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg z-10 w-48">
+      <button
+        onClick={() => {
+          setShowCreateInvoice(true);
+          setShowOptionsMenu(false);
+        }}
+        className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+      >
+        New Invoice
+      </button>
+      <button
+        onClick={() => {
+          setShowCreateReceipt(true);
+          setShowOptionsMenu(false);
+        }}
+        className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+      >
+        New Receipt
+      </button>
+    </div>
+  )}
+</div>
+
+   
+
 
       <DataTable
         title="Invoices"
@@ -229,9 +266,9 @@ const handleGenerateInvoice = (rowData) => {
         searchable={true}
         showNasDropdown={false}
         showDateFilter={true}
-        onEdit={handleEditInvoice} // pass your handlers here
+        onEdit={handleEditInvoice}
         onGenerate={handleGenerateInvoice}
-        onPrint={handlePrint} // example delete handler
+        onPrint={handlePrint}
         showActionColumn={true}
       />
 
@@ -508,7 +545,12 @@ const handleGenerateInvoice = (rowData) => {
       {showCreateInvoice && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl w-[600px]">
-            <h2 className="text-lg font-semibold mb-4">New Invoice</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">New Invoice</h2>
+              <button onClick={() => setShowCreateInvoice(false)} className="p-1">
+                <X size={20} />
+              </button>
+            </div>
 
             <form className="space-y-4">
               <div>
@@ -589,6 +631,109 @@ const handleGenerateInvoice = (rowData) => {
                 <button
                   type="button"
                   onClick={() => setShowCreateInvoice(false)}
+                  className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600 transition-colors"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Create Receipt Modal */}
+      {showCreateReceipt && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl w-[600px]">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">New Receipt</h2>
+              <button onClick={() => setShowCreateReceipt(false)} className="p-1">
+                <X size={20} />
+              </button>
+            </div>
+
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm">Zone</label>
+                <select className="w-full border rounded px-3 py-2">
+                  <option value="admin">Admin</option>
+                  <option value="user">User</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm">User Name</label>
+                <input
+                  type="text"
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm">Balance</label>
+                <input
+                  type="number"
+                  className="w-full border rounded px-3 py-2"
+                  readOnly
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm">Amount</label>
+                <input
+                  type="number"
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm">Date</label>
+                <input
+                  type="date"
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm">Receipt Notes</label>
+                <input
+                  type="text"
+                  placeholder="This note will be displayed on receipt"
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm">Remarks</label>
+                <input
+                  type="text"
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm">Receipt Type</label>
+                <select className="w-full border rounded px-3 py-2">
+                  <option>Cash</option>
+                  <option>Cheque</option>
+                  <option>Online Transfer</option>
+                  <option>Credit Card</option>
+                  <option>Debit Card</option>
+                  <option>Swipe Machine</option>
+                  <option>Demand Draft (DD)</option>
+                </select>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateReceipt(false)}
                   className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition-colors"
                 >
                   Cancel
