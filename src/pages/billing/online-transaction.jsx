@@ -154,6 +154,7 @@ const OnlineTransactions = () => {
         showNasDropdown={false}
         showDateFilter={true}
         toolbar={toolbar}
+        showActionColumn={false}
       />
     </div>
   );

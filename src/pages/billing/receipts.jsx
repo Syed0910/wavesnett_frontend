@@ -103,6 +103,7 @@ const Receipts = () => {
         searchable={true}
         showNasDropdown={false}
         showDateFilter={true}
+        showActionColumn={true}
       />
     </div>
   );
