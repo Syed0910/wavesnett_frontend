@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import DataTable from '../ui/datatable';
 import { MoreVertical,Plus,FileDown } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 
 const Plans = () => {
+  const navigate = useNavigate();
   const [data] = useState([
     {
       id: 1,
@@ -160,58 +162,7 @@ const Plans = () => {
       planGroup: '',
       zone: 'bharat'
     },
-    {
-      id: 13,
-      planName: 'WavesNett 300mbps UL 12M',
-      validity: '12 Month',
-      bandwidth: '300M/300M',
-      quota: '3500G',
-      amount: '₹8868.00',
-      type: 'Fup',
-      status: 'Active',
-      basePlan: '300Mbps',
-      planGroup: '',
-      zone: 'admin'
-    },
-    {
-      id: 14,
-      planName: 'WavesNett 300mbps UL 12M',
-      validity: '12 Month',
-      bandwidth: '300M/300M',
-      quota: '3500G',
-      amount: '₹8868.00',
-      type: 'Fup',
-      status: 'Active',
-      basePlan: '300Mbps',
-      planGroup: '',
-      zone: 'bharat'
-    },
-    {
-      id: 15,
-      planName: 'WavesNett 300Mbps UL 3M',
-      validity: '3 Month',
-      bandwidth: '300M/300M',
-      quota: '3500G',
-      amount: '₹2697.00',
-      type: 'Fup',
-      status: 'Active',
-      basePlan: '300Mbps',
-      planGroup: '',
-      zone: 'admin'
-    },
-    {
-      id: 16,
-      planName: 'WavesNett 300Mbps UL 3M',
-      validity: '3 Month',
-      bandwidth: '300M/300M',
-      quota: '3500G',
-      amount: '₹2697.00',
-      type: 'Fup',
-      status: 'Active',
-      basePlan: '300Mbps',
-      planGroup: '',
-      zone: 'bharat'
-    }
+    
   ]);
 
   const [showActionsDropdown, setShowActionsDropdown] = useState(false);
@@ -282,19 +233,21 @@ const Plans = () => {
     console.log('Delete:', row);
   };
 
-  const handleNewBasePlan = () => {
-        console.log('New Base Plan');
-        setShowActionsDropdown(false);
-    };
+  const handleNewPlan = () => {
+    setShowActionsDropdown(false);
+    navigate("/packages/plan/new-plan");   
+  };
 
-    const handleNewBaseTopupPlan = () => {
-        console.log('New Base Topup Plan');
-        setShowActionsDropdown(false);
-    };
+   const handleNewTopupPlan = () => {
+  setShowActionsDropdown(false);
+  navigate("/packages/plan/new-topup-plan");   
+};
 
-    const handleImportBasePlans = () => {
-        console.log('Import Base Plans');
+
+    const handleImportPlans = () => {
         setShowActionsDropdown(false);
+        navigate("/packages/plan/import-plans"); 
+
     };
 
   return (
@@ -315,21 +268,21 @@ const Plans = () => {
                         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10">
                             <div className="py-1">
                                 <button
-                                    onClick={handleNewBasePlan}
+                                    onClick={handleNewPlan}
                                     className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                 >
                                     <Plus size={16} className="mr-2" />
                                     New Plan
                                 </button>
                                 <button
-                                    onClick={handleNewBaseTopupPlan}
+                                    onClick={handleNewTopupPlan}
                                     className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                 >
                                     <Plus size={16} className="mr-2" />
                                     New Topup Plan
                                 </button>
                                 <button
-                                    onClick={handleImportBasePlans}
+                                    onClick={handleImportPlans}
                                     className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                 >
                                     <FileDown size={16} className="mr-2" />

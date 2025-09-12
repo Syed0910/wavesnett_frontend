@@ -1,32 +1,17 @@
 // src/components/complaint/Complaints.jsx
 import React, { useState } from "react";
-import StatCard from "../ui/stat-cards";
+import { MoreVertical } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import DataTable from "../ui/datatable";
-import {
-  Grid,
-  Typography,
-  IconButton,
-  Menu,
-  MenuItem,
-  Box,
-} from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-
-import NewComplaint from "./new-complaint";
-import CloseComplaint from "./close-complaint";
-
+import StatCard from "../ui/stat-cards";
+import { Grid } from "@mui/material";
 
 const Complaints = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+  const [showActionsDropdown, setShowActionsDropdown] = useState(false);
 
-  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
-  const handleMenuClose = () => setAnchorEl(null);
-
-  const [selectedView, setSelectedView] = useState("main");
-
-  // Sample complaints data (for dashboard view only)
-  const complaintsData = [
+  // Sample complaints data
+  const [data] = useState([
     {
       id: 5,
       userName: "Issal",
@@ -34,13 +19,13 @@ const Complaints = () => {
       type: "Connectivity issue",
       status: "open",
       zone: "admin",
-      action: "",
     },
-  ];
+  ]);
 
-  const complaintsColumns = [
+  // Columns
+  const columns = [
     { key: "id", label: "Id" },
-    { key: "userName", label: "User name" },
+    { key: "userName", label: "User Name" },
     { key: "creationDate", label: "Creation Date" },
     { key: "type", label: "Type" },
     {
@@ -48,7 +33,7 @@ const Complaints = () => {
       label: "Status",
       render: (value) => (
         <span
-          className={`px-2 py-1 rounded-full text-xs ${
+          className={`px-2 py-1 rounded-full text-xs font-medium ${
             value === "open"
               ? "bg-green-100 text-green-800"
               : "bg-gray-100 text-gray-800"
@@ -61,74 +46,76 @@ const Complaints = () => {
     { key: "zone", label: "Zone" },
   ];
 
-  const renderContent = () => {
-    if (selectedView === "new") return <NewComplaint />;
-    if (selectedView === "close") return <CloseComplaint />;
+  // Handlers
+  const handleView = (row) => console.log("View complaint:", row);
+  const handleEdit = (row) => console.log("Edit complaint:", row);
+  const handleDelete = (row) => console.log("Delete complaint:", row);
 
-    // Default dashboard view
-    return (
-      <>
-        {/* Stats Section */}
-        <Grid container spacing={3} className="mb-4">
-          <Grid item xs={12} sm={6} md={3}>
-            <StatCard title="Open" value="1" />
-          </Grid>
-        </Grid>
+  const handleNewComplaint = () => {
+    setShowActionsDropdown(false);
+    navigate("/complaints/new-complaint");
+  };
 
-        {/* Data Table Section */}
-        <DataTable
-          title=""
-          data={complaintsData}
-          columns={complaintsColumns}
-          pageSize={10}
-          searchable={true}
-          onView={(row) => console.log("View complaint:", row)}
-          onEdit={(row) => console.log("Edit complaint:", row)}
-          onDelete={(row) => console.log("Delete complaint:", row)}
-        />
-      </>
-    );
+  const handleCloseComplaint = () => {
+    setShowActionsDropdown(false);
+    navigate("/complaints/close-complaint");
   };
 
   return (
-    <div className="p-0 pt-0 bg-gray-50 min-h-screen">
-      {/* Header should only show in dashboard */}
-      {selectedView === "main" && (
-        <Box
-          className="flex justify-between items-center mb-2"
-          sx={{ mt: 0, pt: 0 }}
-        >
-          <Typography variant="h6" className="font-semibold">
-            Complaints
-          </Typography>
+    <div className="max-w-8xl mx-auto bg-white p-0 pt-0 min-h-screen">
+      {/* Header */}
+      <div className="mb-2 flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-gray-800">Complaints</h2>
 
-          <IconButton onClick={handleMenuOpen}>
-            <MoreVertIcon />
-          </IconButton>
+        {/* Actions Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setShowActionsDropdown(!showActionsDropdown)}
+            className="p-2 rounded-md hover:bg-gray-100 transition-colors"
+          >
+            <MoreVertical size={20} className="text-gray-600" />
+          </button>
 
-          <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
-            <MenuItem
-              onClick={() => {
-                handleMenuClose();
-                setSelectedView("new");
-              }}
-            >
-              New Complaint
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleMenuClose();
-                setSelectedView("close");
-              }}
-            >
-              Close Complaint
-            </MenuItem>
-          </Menu>
-        </Box>
-      )}
+          {showActionsDropdown && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+              <div className="py-1">
+                <button
+                  onClick={handleNewComplaint}
+                  className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  New Complaint
+                </button>
+                <button
+                  onClick={handleCloseComplaint}
+                  className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                >
+                  Close Complaint
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
-      {/* Page content */}
-      {renderContent()}
+      {/* StatCards (original sizing with MUI Grid) */}
+      <Grid container spacing={3} className="mb-4">
+        <Grid item xs={12} sm={6} md={3}>
+          <StatCard title="Open" value="1" />
+        </Grid>
+        {/* You can add more StatCards here if needed */}
+      </Grid>
+
+      {/* DataTable */}
+      <DataTable
+        title="Complaints"
+        data={data}
+        columns={columns}
+        onView={handleView}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        pageSize={10}
+        searchable={true}
+      />
     </div>
   );
 };

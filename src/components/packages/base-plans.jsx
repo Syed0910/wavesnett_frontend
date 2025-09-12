@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import DataTable from '../ui/datatable';
 import { MoreVertical, Plus, FileDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const BasePlans = () => {
+    const navigate = useNavigate();
     const [data] = useState([
         {
             id: 1,
@@ -61,53 +65,28 @@ const BasePlans = () => {
             key: 'type',
             label: 'Type'
         },
-        {
-            key: 'actions',
-            label: 'Action',
-            render: (_, row) => (
-                <div className="flex space-x-2">
-                    <button
-                        onClick={() => handleEdit(row)}
-                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                    >
-                        Edit
-                    </button>
-                    <button
-                        onClick={() => handleDelete(row)}
-                        className="text-red-600 hover:text-red-800 text-sm font-medium"
-                    >
-                        Delete
-                    </button>
-                </div>
-            )
-        }
     ];
-
-    const handleView = (row) => {
-        console.log('View:', row);
-    };
-
-    const handleEdit = (row) => {
-        console.log('Edit:', row);
-    };
 
     const handleDelete = (row) => {
         console.log('Delete:', row);
     };
 
     const handleNewBasePlan = () => {
-        console.log('New Base Plan');
-        setShowActionsDropdown(false);
-    };
+    console.log('Navigating to New Base Plan');
+    setShowActionsDropdown(false);
+    navigate('/packages/base/new-base-plan'); 
+};
 
-    const handleNewBaseTopupPlan = () => {
-        console.log('New Base Topup Plan');
+     const handleNewBaseTopupPlan = () => {
+        console.log("New Base Topup Plan");
         setShowActionsDropdown(false);
+        navigate("/packages/base/new-base-topup-plan"); 
     };
 
     const handleImportBasePlans = () => {
         console.log('Import Base Plans');
         setShowActionsDropdown(false);
+         navigate("/packages/base/import-base-plan");
     };
 
     return (
@@ -160,9 +139,7 @@ const BasePlans = () => {
                 title="Base Plans"
                 data={data}
                 columns={columns}
-                onView={handleView}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={handleDelete}   /* ✅ Only delete remains */
                 pageSize={10}
                 searchable={true}
             />

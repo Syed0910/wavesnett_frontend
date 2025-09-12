@@ -55,18 +55,18 @@ const ImportPlans = () => {
       
         <div className="mb-6">
           <p className="text-gray-600 mb-2">
-            <span className="font-medium">Note:</span> Please upload .xls or .xlsx file format to retrieve plan's information according to given Sample.xls file format.
+            <span className="font-medium">Note:</span> Please upload .xls or .xlsx file format to retrieve base plan's information according to given Sample.xls file format.{' '}
+            <button
+              onClick={handleSampleDownload}
+              className="text-cyan-600 hover:text-cyan-800 underline inline-flex items-center ml-1"
+            >
+              <Download className="w-4 h-4 mr-1" />
+              Sample.xls
+            </button>
           </p>
-          <button
-            onClick={handleSampleDownload}
-            className="text-cyan-600 hover:text-cyan-800 underline flex items-center"
-          >
-            <Download className="w-4 h-4 mr-1" />
-            Sample.xls
-          </button>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 ">
           <div className="flex items-center space-x-4">
             <label className="text-gray-700 font-medium min-w-[120px]">
               Upload File Here

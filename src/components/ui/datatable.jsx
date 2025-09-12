@@ -914,7 +914,7 @@ const DataTable = ({
       )}
 
       {/* Pagination - Always show when there's data */}
-{filteredData.length > 0 && (
+{filteredData.length >= 0 && (
   <div className="px-4 py-1 border-t border-gray-100 bg-white-50">
     <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
       <div className="text-sm text-gray-700">

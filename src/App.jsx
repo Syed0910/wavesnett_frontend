@@ -7,7 +7,10 @@ import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
 import NasDashboard from "./pages/nas/NasDashboard";
 import Complaints from "./components/complaint/Complaints";
-import Packages from "./pages/packages"; // Import the Packages component
+import NewComplaint from "./components/complaint/new-complaint";
+import CloseComplaint from "./components/complaint/close-complaint";
+import Packages from "./pages/packages"; 
+
 
 const App = () => {
   return (
@@ -23,6 +26,9 @@ const App = () => {
 
         {/* Complaints Management Route */}
         <Route path="/complaints/*" element={<Complaints />} />
+        <Route path="/complaints/new-complaint" element={<NewComplaint />} />
+        <Route path="/complaints/close-complaint" element={<CloseComplaint />} />
+
         
         {/* NAS Routes */}
         <Route path="/nas/*" element={<NasDashboard/>} />
