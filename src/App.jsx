@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/users";
 import Settings from "./pages/Settings";
@@ -11,17 +11,62 @@ import NewComplaint from "./components/complaint/new-complaint";
 import CloseComplaint from "./components/complaint/close-complaint";
 import Packages from "./pages/packages"; 
 
+import AdminConfiguration from "./components/Configuration/adminConfiguration";
+import Configuration from "./components/Configuration/Configuration";
+import NasManagement from "./components/NasManagement/NasManagement";
+
+// ✅ Import Zone Management pages
+import Operators from "./components/ZoneManagement/operators";
+import Zone from "./components/ZoneManagement/Zone";
+import Permissions from "./components/ZoneManagement/Permissions";
+
 
 const App = () => {
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const navigate = useNavigate();
+
+  // Handle Settings button click from Navbar
+  const handleSettingsClick = () => {
+    setActiveSection("config"); // highlight sidebar
+    navigate("/config/admin"); // navigate to admin config page
+  };
+
+  // Handle sidebar navigation
+  const handleSidebarNavigation = (sectionId) => {
+    setActiveSection(sectionId);
+
+    // Map sidebar IDs to routes
+    const routeMap = {
+      "dashboard": "/dashboard",
+      "user-management": "/users",
+      "billing": "/billing",
+      "complaints": "/user/complaints",
+      "packages": "/packages",
+      "reports": "/reports",
+      "config": "/config/admin",
+      "admin-config": "/config/admin",
+      "nas-management": "/nas-mgmt",
+      "olt-management": "/olt-mgmt",
+      "inventory-management": "/inventory",
+      "zone-management": "/zone",
+    };
+
+    if (routeMap[sectionId]) {
+      navigate(routeMap[sectionId]);
+    }
+  };
+
   return (
-    <Layout>
+    <Layout 
+      activeSection={activeSection} 
+      setActiveSection={handleSidebarNavigation} 
+      onSettingsClick={handleSettingsClick}
+    >
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/users" element={<Users />} />
         <Route path="/settings" element={<Settings />} />
-        
-        {/* User Management Routes */}
         <Route path="/user/*" element={<UsersPage />} />
 
         {/* Complaints Management Route */}

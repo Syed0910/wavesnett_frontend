@@ -860,12 +860,12 @@ const DataTable = ({
                       </td>
                     )}
                     {filteredColumns.map((column) => (
-                      <td key={column.key} className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td key={column.key} className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900 ">
                         {column.render ? column.render(row[column.key], row, index) : row[column.key]}
                       </td>
                     ))}
-                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end gap-2">
+                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium w-20">
+                      <div className="flex items-center justify-start gap-2">
                         <Tooltip content="View">
                           <button
                             onClick={() => onView && onView(row, index)}
