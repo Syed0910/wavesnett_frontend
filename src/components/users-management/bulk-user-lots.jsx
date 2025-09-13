@@ -90,9 +90,11 @@ const BulkUserLots = () => {
   );
 
   return (
-    <div className="h-screen p-6 bg-white">
+    <div className="h-screen p-0 pt-0  bg-white">
+      <h2 className="text-xl font-medium mb-1 text-gray-700">
+                    Bulk User Lots
+                </h2>
       <DataTable
-        title="Bulk User Lots"
         data={bulkLots}
         columns={columns}
         onEdit={handleEdit}
