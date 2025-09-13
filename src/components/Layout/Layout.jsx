@@ -37,16 +37,10 @@ const Layout = ({ children }) => {
 
   // Close handler for mobile overlay/click-away
   const closeSidebar = () => setIsSidebarOpen(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   const navigate = useNavigate();
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
-  };
 
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
-  };
 
   const onSettingsClick = () => {
     navigate("/config/admin");

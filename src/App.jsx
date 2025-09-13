@@ -5,7 +5,7 @@ import Users from "./pages/users";
 import Settings from "./pages/Settings";
 import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
-import Nas from "./pages/Nas";
+import NasDashboard from "./pages/Nas";
 import Billing from "./pages/Billing";
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
