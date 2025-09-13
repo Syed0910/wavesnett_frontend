@@ -82,12 +82,7 @@ const App = () => {
         <Route path="/config/*" element={<Configuration />} />
 
         {/* Billing Routes */}
-        <Route path="/billing/*" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">Billing Management</h2>
-            <p className="text-gray-600 mt-2">Billing management features will be implemented here.</p>
-          </div>
-        } />
+        <Route path="/billing/*" element={<Billing/>} />
 
         {/* Packages Routes */}
         <Route path="/packages/*" element={
