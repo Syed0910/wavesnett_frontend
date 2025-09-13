@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar'
+
 import Footer from './Footer';
 import { useNavigate } from "react-router-dom";
 

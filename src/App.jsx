@@ -6,6 +6,7 @@ import Settings from "./pages/Settings";
 import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
 import NasDashboard from "./pages/nas/NasDashboard";
+
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
 import NasManagement from "./components/NasManagement/NasManagement";
@@ -17,6 +18,12 @@ import Operators from "./components/ZoneManagement/operators";
 import Zone from "./components/ZoneManagement/Zone";
 import Permissions from "./components/ZoneManagement/Permissions";
 import InventoryManagement from "./components/Inventory-Management/InventoryManagement";
+
+import Complaints from "./components/complaint/Complaints";
+import NewComplaint from "./components/complaint/new-complaint";
+import CloseComplaint from "./components/complaint/close-complaint";
+import Packages from "./pages/packages"; 
+
 
 
 const App = () => {
@@ -66,6 +73,7 @@ const App = () => {
         <Route path="/users" element={<Users />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/user/*" element={<UsersPage />} />
+
         <Route path="/nas/*" element={<NasDashboard />} />
 
         {/* Configuration Routes */}
@@ -122,6 +130,15 @@ const App = () => {
             <p className="text-gray-600 mt-2">Active login monitoring will be implemented here.</p>
           </div>
         } />
+
+
+        {/* Complaints Management Route */}
+        <Route path="/complaints/*" element={<Complaints />} />
+        <Route path="/complaints/new-complaint" element={<NewComplaint />} />
+        <Route path="/complaints/close-complaint" element={<CloseComplaint />} />
+
+        
+        
       </Routes>
     </Layout>
   );
