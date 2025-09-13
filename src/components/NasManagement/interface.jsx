@@ -12,6 +12,7 @@ const Interface = () => {
   const handleView = (interfaceItem) => navigate(`/interface/details/${interfaceItem.id}`);
   const handleImport = () => alert("Import interfaces clicked");
   const handleAddInterface = () => alert("Add interface clicked");
+  const handleNasChange = (nasId) => alert(`NAS changed to ID: ${nasId}`);
 
   const columns = [
     {
@@ -160,6 +161,7 @@ const Interface = () => {
         toolbar={toolbar}
         pageSize={10}
         searchPlaceholder="Search interfaces..."
+        showNasDropdown={false}  // ✅ Hide NAS dropdown
       />
     </div>
   );

@@ -3,7 +3,7 @@ import {
   Eye, Edit, Trash2, Copy, Settings, Columns,
   ArrowUpDown, X, Search, Printer, ChevronLeft, ChevronRight,
   MoreHorizontal, Check, Download, Upload, Plus, Filter,
-  FileText, ArrowUp, ArrowDown, Menu
+  FileText, ArrowUp, ArrowDown, Menu, ChevronDown
 } from 'lucide-react';
 
 // Tooltip Component
@@ -54,10 +54,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
 
   return (
     <div className="fixed inset-0 z-[100]">
-      {/* Semi-transparent overlay */}
       <div className="fixed inset-0 bg-black bg-opacity-30"></div>
-
-      {/* Modal content */}
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <div className={`bg-white rounded-lg shadow-xl ${sizeClasses[size]} w-full max-h-[90vh] overflow-hidden relative z-[101]`}>
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -131,7 +128,6 @@ const SortingModal = ({ isOpen, onClose, columns, sortConfig, onSort, onAddSort,
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Choose Sorting Order" size="lg">
       <div className="space-y-4">
-        {/* Current Sort Rules */}
         <div>
           <h4 className="text-sm font-medium text-gray-900 mb-3">Current Sorting Rules:</h4>
           <div className="space-y-2">
@@ -159,7 +155,6 @@ const SortingModal = ({ isOpen, onClose, columns, sortConfig, onSort, onAddSort,
           </div>
         </div>
 
-        {/* Add New Sort Rule */}
         <div className="border-t pt-4">
           <h4 className="text-sm font-medium text-gray-900 mb-3">Add New Sort Rule:</h4>
           <div className="flex gap-3">
@@ -243,7 +238,6 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Filter Data" size="lg">
       <div className="space-y-4">
-        {/* Current Filters */}
         <div>
           <h4 className="text-sm font-medium text-gray-900 mb-3">Active Filters:</h4>
           <div className="space-y-2">
@@ -272,7 +266,6 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
           </div>
         </div>
 
-        {/* Add New Filter */}
         <div className="border-t pt-4">
           <h4 className="text-sm font-medium text-gray-900 mb-3">Add New Filter:</h4>
           <div className="space-y-3">
@@ -404,26 +397,21 @@ const sortData = (data, sortConfig) => {
       let aVal = a[sort.column];
       let bVal = b[sort.column];
 
-      // Handle null/undefined values
       if (aVal == null && bVal == null) continue;
       if (aVal == null) return sort.direction === 'asc' ? -1 : 1;
       if (bVal == null) return sort.direction === 'asc' ? 1 : -1;
 
-      // Convert to string and trim for comparison
       aVal = String(aVal).trim();
       bVal = String(bVal).trim();
 
-      // Try to parse as numbers if they look numeric
       const aNum = parseFloat(aVal);
       const bNum = parseFloat(bVal);
       
       if (!isNaN(aNum) && !isNaN(bNum) && 
           aVal === String(aNum) && bVal === String(bNum)) {
-        // Both are valid numbers
         if (aNum < bNum) return sort.direction === 'asc' ? -1 : 1;
         if (aNum > bNum) return sort.direction === 'asc' ? 1 : -1;
       } else {
-        // String comparison (case-insensitive)
         const comparison = aVal.toLowerCase().localeCompare(bVal.toLowerCase());
         if (comparison !== 0) {
           return sort.direction === 'asc' ? comparison : -comparison;
@@ -445,7 +433,13 @@ const DataTable = ({
   showSelection = false,
   toolbar,
   pageSize = 10,
-  searchable = true
+  searchable = true,
+  // Custom header props
+  showCustomHeader = false,
+  nasOptions = [],
+  selectedNas = '',
+  onNasSelect,
+  customHeaderSearch = true
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -454,6 +448,9 @@ const DataTable = ({
   const [sortConfig, setSortConfig] = useState([]);
   const [filters, setFilters] = useState([]);
   const [isMobileView, setIsMobileView] = useState(false);
+
+  // Custom header states
+  const [showNasDropdown, setShowNasDropdown] = useState(false);
 
   // Modal states
   const [showColumnModal, setShowColumnModal] = useState(false);
@@ -478,30 +475,83 @@ const DataTable = ({
     const existingSortIndex = sortConfig.findIndex(sort => sort.column === columnKey);
 
     if (existingSortIndex >= 0) {
-      // If column is already being sorted, toggle direction
       const newSortConfig = [...sortConfig];
       const currentDirection = sortConfig[existingSortIndex].direction;
       
       if (currentDirection === 'asc') {
-        // Change to descending
         newSortConfig[existingSortIndex] = {
           column: columnKey,
           direction: 'desc'
         };
       } else {
-        // Remove this sort rule if it was descending
         newSortConfig.splice(existingSortIndex, 1);
       }
       
       setSortConfig(newSortConfig);
     } else {
-      // Add new sort rule (ascending)
       setSortConfig([...sortConfig, { column: columnKey, direction: 'asc' }]);
     }
 
-    // Reset to first page when sorting changes
     setCurrentPage(1);
   };
+
+  const handleNasSelect = (nas) => {
+    setShowNasDropdown(false);
+    if (onNasSelect) {
+      onNasSelect(nas);
+    }
+  };
+
+  // Custom header with NAS selector and search
+  const customHeader = showCustomHeader ? (
+    <div className="flex items-center justify-between mb-6">
+      {/* Left side - NAS Selector */}
+      <div className="relative">
+        <button
+          onClick={() => setShowNasDropdown(!showNasDropdown)}
+          className="flex items-center gap-2 px-0 py-2 bg-white border-b-2 border-cyan-400 text-gray-800 font-medium hover:bg-gray-50 transition-all duration-200"
+        >
+          <span className="text-lg">{selectedNas}</span>
+          <ChevronDown className={`w-4 h-4 text-cyan-400 transition-transform duration-200 ${showNasDropdown ? 'rotate-180' : ''}`} />
+        </button>
+        
+        {/* Dropdown Menu */}
+        {showNasDropdown && (
+          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-48">
+            {nasOptions.map((nas) => (
+              <button
+                key={nas}
+                onClick={() => handleNasSelect(nas)}
+                className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors duration-200 first:rounded-t-lg last:rounded-b-lg ${
+                  selectedNas === nas ? 'bg-cyan-50 text-cyan-700' : 'text-gray-700'
+                }`}
+              >
+                {nas}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Right side - Search */}
+      {customHeaderSearch && (
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-80"
+            />
+            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600">
+              <Search className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  ) : null;
 
   // Filter and search data
   const filteredData = useMemo(() => {
@@ -707,6 +757,9 @@ const DataTable = ({
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      {/* Custom Header with NAS Selector */}
+      {customHeader}
+
       {/* Header */}
       <div className="px-4 md:px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -793,8 +846,8 @@ const DataTable = ({
             </div>
           </div>
 
-          {/* Search */}
-          {searchable && (
+          {/* Search - only show if custom header search is disabled and searchable is true */}
+          {searchable && !customHeaderSearch && (
             <div className="relative w-full md:w-auto">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
