@@ -106,7 +106,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       ],
     },
 
-    // Billing
+    // Billing - Updated structure
     {
       id: "billing",
       label: "Billing",

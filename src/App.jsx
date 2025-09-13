@@ -6,13 +6,15 @@ import Settings from "./pages/Settings";
 import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
 import NasDashboard from "./pages/Nas";
-import Billing from "./pages/Billing";
+import Billing from "./components/billing/billing";
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
 import NasManagement from "./components/NasManagement/nasManagement";
 import OltManagement from "./components/OLT-Management/OltManagement";
 
+// Import the new Billing component
+import BillingComponent from "./components/billing/billing";
 
 // ✅ Import Zone Management pages
 import Operators from "./components/ZoneManagement/operators";
@@ -24,9 +26,6 @@ import Complaints from "./components/complaint/Complaints";
 import NewComplaint from "./components/complaint/new-complaint";
 import CloseComplaint from "./components/complaint/close-complaint";
 import Packages from "./pages/packages"; 
-
-
-
 
 const App = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -81,7 +80,8 @@ const App = () => {
         {/* Configuration Routes */}
         <Route path="/config/*" element={<Configuration />} />
 
-        {/* Billing Routes */}
+        {/* Billing Routes - Updated to use the new component structure */}
+        <Route path="/billing" element={<BillingComponent />} />
         <Route path="/billing/*" element={<Billing/>} />
 
         {/* Packages Routes */}
@@ -128,14 +128,10 @@ const App = () => {
           </div>
         } />
 
-
         {/* Complaints Management Route */}
         <Route path="/complaints/*" element={<Complaints />} />
         <Route path="/complaints/new-complaint" element={<NewComplaint />} />
         <Route path="/complaints/close-complaint" element={<CloseComplaint />} />
-
-        
-        
       </Routes>
     </Layout>
   );
