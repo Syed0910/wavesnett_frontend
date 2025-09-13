@@ -5,7 +5,8 @@ import Users from "./pages/users";
 import Settings from "./pages/Settings";
 import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
-import NasDashboard from "./pages/nas/NasDashboard";
+import NasDashboard from "./pages/Nas";
+import Billing from "./pages/Billing";
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
@@ -23,6 +24,7 @@ import Complaints from "./components/complaint/Complaints";
 import NewComplaint from "./components/complaint/new-complaint";
 import CloseComplaint from "./components/complaint/close-complaint";
 import Packages from "./pages/packages"; 
+
 
 
 
@@ -80,12 +82,7 @@ const App = () => {
         <Route path="/config/*" element={<Configuration />} />
 
         {/* Billing Routes */}
-        <Route path="/billing/*" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">Billing Management</h2>
-            <p className="text-gray-600 mt-2">Billing management features will be implemented here.</p>
-          </div>
-        } />
+        <Route path="/billing/*" element={<Billing/>} />
 
         {/* Packages Routes */}
         <Route path="/packages/*" element={
