@@ -114,8 +114,8 @@ const Sidebar = ({ isOpen, onClose }) => {
       subItems: [
         { id: "invoices", label: "Invoices", icon: <FileText className="w-4 h-4" />, path: "/billing/invoices" },
         { id: "receipts", label: "Receipts", icon: <Receipt className="w-4 h-4" />, path: "/billing/receipts" },
-        { id: "transactions", label: "Online Transaction", icon: <DollarSign className="w-4 h-4" />, path: "/billing/transactions" },
-        { id: "summary", label: "Billing Summary Chart", icon: <BarChart className="w-4 h-4" />, path: "/billing/summary" },
+        { id: "online-transactions", label: "Online Transaction", icon: <DollarSign className="w-4 h-4" />, path: "/billing/online-transactions" },
+        { id: "billing-summary-chart", label: "Billing Summary Chart", icon: <BarChart className="w-4 h-4" />, path: "/billing/billing-summary-chart" },
       ],
     },
 

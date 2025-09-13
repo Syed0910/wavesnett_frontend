@@ -9,7 +9,7 @@ import NasDashboard from "./pages/nas/NasDashboard";
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
-import NasManagement from "./components/NasManagement/NasManagement";
+import NasManagement from "./components/NasManagement/nasManagement";
 import OltManagement from "./components/OLT-Management/OltManagement";
 
 
