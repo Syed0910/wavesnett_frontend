@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo , useRef, useEffect } from 'react';
 import {
   Eye, Edit, Trash2, Copy, Settings, Columns,
   ArrowUpDown, X, Search, Printer, ChevronLeft, ChevronRight,
@@ -113,7 +113,7 @@ const ColumnSelectionModal = ({ isOpen, onClose, columns, visibleColumns, onTogg
 };
 
 // Sorting Modal
-const SortingModal = ({ isOpen, onClose, columns, sortConfig, onSort, onAddSort, onRemoveSort, onSave, onReset }) => {
+const SortingModal = ({ isOpen, onClose, columns, sortConfig, onAddSort, onRemoveSort, onSave, onReset }) => {
   const [newSortColumn, setNewSortColumn] = useState('');
   const [newSortOrder, setNewSortOrder] = useState('asc');
 
@@ -208,7 +208,7 @@ const SortingModal = ({ isOpen, onClose, columns, sortConfig, onSort, onAddSort,
 };
 
 // Filter Modal
-const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveFilter, onUpdateFilter, onSave, onReset }) => {
+const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveFilter, onSave, onReset }) => {
   const [newFilterColumn, setNewFilterColumn] = useState('');
   const [newFilterOperator, setNewFilterOperator] = useState('contains');
   const [newFilterValue, setNewFilterValue] = useState('');
@@ -216,7 +216,7 @@ const FilterModal = ({ isOpen, onClose, columns, filters, onAddFilter, onRemoveF
   const operators = [
     { value: 'contains', label: 'Contains' },
     { value: 'equals', label: 'Equals' },
-    {value: 'startsWith', label: 'Starts with' },
+    { value: 'startsWith', label: 'Starts with' },
     { value: 'endsWith', label: 'Ends with' },
     { value: 'greater', label: 'Greater than' },
     { value: 'less', label: 'Less than' }
@@ -388,40 +388,6 @@ const MobileActionsMenu = ({ row, onView, onEdit, onDelete }) => {
   );
 };
 
-// Enhanced sorting function
-const sortData = (data, sortConfig) => {
-  if (sortConfig.length === 0) return data;
-
-  return [...data].sort((a, b) => {
-    for (const sort of sortConfig) {
-      let aVal = a[sort.column];
-      let bVal = b[sort.column];
-
-      if (aVal == null && bVal == null) continue;
-      if (aVal == null) return sort.direction === 'asc' ? -1 : 1;
-      if (bVal == null) return sort.direction === 'asc' ? 1 : -1;
-
-      aVal = String(aVal).trim();
-      bVal = String(bVal).trim();
-
-      const aNum = parseFloat(aVal);
-      const bNum = parseFloat(bVal);
-      
-      if (!isNaN(aNum) && !isNaN(bNum) && 
-          aVal === String(aNum) && bVal === String(bNum)) {
-        if (aNum < bNum) return sort.direction === 'asc' ? -1 : 1;
-        if (aNum > bNum) return sort.direction === 'asc' ? 1 : -1;
-      } else {
-        const comparison = aVal.toLowerCase().localeCompare(bVal.toLowerCase());
-        if (comparison !== 0) {
-          return sort.direction === 'asc' ? comparison : -comparison;
-        }
-      }
-    }
-    return 0;
-  });
-};
-
 // Main DataTable Component
 const DataTable = ({
   title,
@@ -434,12 +400,16 @@ const DataTable = ({
   toolbar,
   pageSize = 10,
   searchable = true,
-  // Custom header props
+  showNasDropdown = false,
   showCustomHeader = false,
+  showDateFilter = false,
+  dateRange = { from: "", to: "" },
+  onDateChange = () => {},
+  // Add missing props for custom header
+  onNasSelect = () => {},
   nasOptions = [],
-  selectedNas = '',
-  onNasSelect,
-  customHeaderSearch = true
+  selectedNas = "",
+  customHeaderSearch = false,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -448,20 +418,22 @@ const DataTable = ({
   const [sortConfig, setSortConfig] = useState([]);
   const [filters, setFilters] = useState([]);
   const [isMobileView, setIsMobileView] = useState(false);
-
-  // Custom header states
-  const [showNasDropdown, setShowNasDropdown] = useState(false);
-
-  // Modal states
+  const [isTabletView, setIsTabletView] = useState(false);
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [showSortModal, setShowSortModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Add state for NAS dropdown visibility
+  const [nasDropdownOpen, setNasDropdownOpen] = useState(false);
 
-  // Check screen size on mount and resize
+  const hasActions = onView || onEdit || onDelete;
+
   React.useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobileView(window.innerWidth < 768);
+      const width = window.innerWidth;
+      setIsMobileView(width < 768);
+      setIsTabletView(width >= 768 && width < 1280);
     };
 
     checkScreenSize();
@@ -470,7 +442,6 @@ const DataTable = ({
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Enhanced header sort handler
   const handleHeaderSort = (columnKey) => {
     const existingSortIndex = sortConfig.findIndex(sort => sort.column === columnKey);
 
@@ -496,27 +467,25 @@ const DataTable = ({
   };
 
   const handleNasSelect = (nas) => {
-    setShowNasDropdown(false);
-    if (onNasSelect) {
-      onNasSelect(nas);
-    }
+    setNasDropdownOpen(false);
+    onNasSelect(nas);
   };
 
-  // Custom header with NAS selector and search
+  // Fixed custom header
   const customHeader = showCustomHeader ? (
     <div className="flex items-center justify-between mb-6">
       {/* Left side - NAS Selector */}
       <div className="relative">
         <button
-          onClick={() => setShowNasDropdown(!showNasDropdown)}
+          onClick={() => setNasDropdownOpen(!nasDropdownOpen)}
           className="flex items-center gap-2 px-0 py-2 bg-white border-b-2 border-cyan-400 text-gray-800 font-medium hover:bg-gray-50 transition-all duration-200"
         >
           <span className="text-lg">{selectedNas}</span>
-          <ChevronDown className={`w-4 h-4 text-cyan-400 transition-transform duration-200 ${showNasDropdown ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`w-4 h-4 text-cyan-400 transition-transform duration-200 ${nasDropdownOpen ? 'rotate-180' : ''}`} />
         </button>
         
         {/* Dropdown Menu */}
-        {showNasDropdown && (
+        {nasDropdownOpen && (
           <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-48">
             {nasOptions.map((nas) => (
               <button
@@ -591,8 +560,19 @@ const DataTable = ({
       });
     });
 
-    // Apply enhanced sorting
-    result = sortData(result, sortConfig);
+    // Apply sorting
+    if (sortConfig.length > 0) {
+      result.sort((a, b) => {
+        for (const sort of sortConfig) {
+          const aVal = a[sort.column];
+          const bVal = b[sort.column];
+
+          if (aVal < bVal) return sort.direction === 'asc' ? -1 : 1;
+          if (aVal > bVal) return sort.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
 
     return result;
   }, [data, searchTerm, filters, sortConfig]);
@@ -707,18 +687,6 @@ const DataTable = ({
 
   const filteredColumns = columns.filter(col => visibleColumns.includes(col.key));
 
-  // Get sort indicator for column header
-  const getSortIndicator = (columnKey) => {
-    const sortInfo = sortConfig.find(sort => sort.column === columnKey);
-    if (!sortInfo) {
-      return <ArrowUpDown className="w-3 h-3 opacity-30 group-hover:opacity-70" />;
-    }
-    
-    return sortInfo.direction === 'asc' ? 
-      <ArrowUp className="w-3 h-3 text-blue-600" /> : 
-      <ArrowDown className="w-3 h-3 text-blue-600" />;
-  };
-
   // Mobile card view for each row
   const MobileRowCard = ({ row, index }) => (
     <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm">
@@ -744,20 +712,41 @@ const DataTable = ({
         ))}
       </div>
 
-      <div className="flex justify-end mt-3 pt-3 border-t border-gray-100">
-        <MobileActionsMenu
-          row={row}
-          onView={onView}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      </div>
+      {hasActions && (
+        <div className="flex justify-end mt-3 pt-3 border-t border-gray-100">
+          <MobileActionsMenu
+            row={row}
+            onView={onView}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        </div>
+      )}
     </div>
   );
+ const firstColRef = useRef(null);
+  const middleColsRef = useRef(null);
+  const lastColRef = useRef(null);
+  
+  useEffect(() => {
+    if (isTabletView) {
+      const firstRows = firstColRef.current?.querySelectorAll('tbody tr');
+      const middleRows = middleColsRef.current?.querySelectorAll('tbody tr');
+      const lastRows = lastColRef.current?.querySelectorAll('tbody tr');
+
+      if (!firstRows || !middleRows || !lastRows) return;
+
+      // Remove the height setting logic as it can cause issues
+      // Instead, use CSS for consistent row heights if needed
+    }
+  }, [paginatedData, filteredColumns, isTabletView]);
+
+  // ... rest of your return statement remains mostly the same
+  // Just make sure to use nasDropdownOpen instead of showNasDropdown for the dropdown state
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-      {/* Custom Header with NAS Selector */}
+      {/* Custom Header */}
       {customHeader}
 
       {/* Header */}
@@ -774,7 +763,7 @@ const DataTable = ({
               <Menu className="w-5 h-5" />
             </button>
 
-            {/* Table Action Icons - hidden on mobile when menu is closed */}
+            {/* Table Action Icons */}
             <div className={`${mobileMenuOpen ? 'flex' : 'hidden md:flex'} absolute md:relative left-0 top-full mt-2 md:mt-0 w-full md:w-auto bg-white md:bg-transparent shadow-md md:shadow-none rounded-md p-3 md:p-0 z-10 md:z-auto flex-wrap gap-2 md:gap-1`}>
               {/* Copy */}
               <Tooltip content="Copy Data" placement="bottom">
@@ -837,9 +826,37 @@ const DataTable = ({
               </Tooltip>
             </div>
           </div>
+          
+           
+        {searchable && (
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            {/* NAS IP Dropdown (optional) */}
+            {showNasDropdown && (
+              <select className="border-b p-2 shadow-sm rounded bg-white focus:outline-none">
+                <option>NAS_1 [10.10.1.1]</option>
+                <option>NAS_2 [10.10.1.2]</option>
+              </select>
+            )}
 
-          {/* Search - only show if custom header search is disabled and searchable is true */}
-          {searchable && !customHeaderSearch && (
+ {showDateFilter && (
+          <div className="flex items-center gap-2 mr-4">
+            <input
+              type="date"
+              value={dateRange.from}
+              onChange={(e) => onDateChange("from", e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <span className="text-gray-500">–</span>
+            <input
+              type="date"
+              value={dateRange.to}
+              onChange={(e) => onDateChange("to", e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        )}
+   
+            {/* Search Bar */}
             <div className="relative w-full md:w-auto">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
@@ -850,42 +867,53 @@ const DataTable = ({
                 className="pl-10 pr-4 py-2 border-b border-gray-300 focus:border-b-2 focus:border-blue-400 outline-none w-full md:w-48"
               />
             </div>
-          )}
+          </div>
+        )}
+
         </div>
       </div>
 
       {/* Table */}
       {!isMobileView ? (
-        <div className="overflow-x-auto">
-          <table className="w-full">
+         <div className="overflow-hidden">
+    {isTabletView && filteredColumns.length > 2 ? (
+      <div className="flex">
+        {/* Fixed First Column */}
+        <div className="flex-shrink-0 border-r border-gray-200" ref={firstColRef}>
+          <table className="border-collapse">
             <thead className="bg-gray-50">
               <tr>
                 {showSelection && (
-                  <th className="w-12 px-3 py-3 text-left">
+                  <th className="w-12 px-3 py-3 text-left bg-gray-50">
                     <input
                       type="checkbox"
-                      checked={selectedRows.length === paginatedData.length && paginatedData.length > 0}
+                      checked={
+                        selectedRows.length === paginatedData.length &&
+                        paginatedData.length > 0
+                      }
                       onChange={(e) => handleSelectAll(e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                   </th>
                 )}
-                {filteredColumns.map((column) => (
-                  <th
-                    key={column.key}
-                    className="group px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
-                    onClick={() => handleHeaderSort(column.key)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="select-none">{column.label}</span>
-                      <div className="ml-2 flex-shrink-0">
-                        {getSortIndicator(column.key)}
-                      </div>
-                    </div>
-                  </th>
-                ))}
-                <th className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                  Action
+                <th
+                  className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleHeaderSort(filteredColumns[0].key)}
+                >
+                  <div className="flex items-center">
+                    {filteredColumns[0].label}
+                    {sortConfig.find((sort) => sort.column === filteredColumns[0].key)
+                      ?.direction && (
+                      <span className="ml-1">
+                        {sortConfig.find((sort) => sort.column === filteredColumns[0].key)
+                          ?.direction === 'asc' ? (
+                          <ArrowUp className="w-3 h-3" />
+                        ) : (
+                          <ArrowDown className="w-3 h-3" />
+                        )}
+                      </span>
+                    )}
+                  </div>
                 </th>
               </tr>
             </thead>
@@ -893,10 +921,10 @@ const DataTable = ({
               {paginatedData.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={filteredColumns.length + (showSelection ? 1 : 0) + 1}
+                    colSpan={showSelection ? 2 : 1}
                     className="px-6 py-12 text-center text-gray-500"
                   >
-                    No data available
+                    No data
                   </td>
                 </tr>
               ) : (
@@ -912,38 +940,10 @@ const DataTable = ({
                         />
                       </td>
                     )}
-                    {filteredColumns.map((column) => (
-                      <td key={column.key} className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900 ">
-                        {column.render ? column.render(row[column.key], row, index) : row[column.key]}
-                      </td>
-                    ))}
-                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium w-20">
-                      <div className="flex items-center justify-start gap-2">
-                        <Tooltip content="View">
-                          <button
-                            onClick={() => onView && onView(row, index)}
-                            className="text-blue-600 hover:text-blue-900"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                        </Tooltip>
-                        <Tooltip content="Edit">
-                          <button
-                            onClick={() => onEdit && onEdit(row, index)}
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </button>
-                        </Tooltip>
-                        <Tooltip content="Delete">
-                          <button
-                            onClick={() => onDelete && onDelete(row, index)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </Tooltip>
-                      </div>
+                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {filteredColumns[0].render
+                        ? filteredColumns[0].render(row[filteredColumns[0].key], row, index)
+                        : row[filteredColumns[0].key]}
                     </td>
                   </tr>
                 ))
@@ -951,19 +951,285 @@ const DataTable = ({
             </tbody>
           </table>
         </div>
-      ) : (
-        // Mobile view
-        <div className="p-4">
-          {paginatedData.length === 0 ? (
-            <div className="px-6 py-12 text-center text-gray-500">
-              No data available
-            </div>
-          ) : (
-            paginatedData.map((row, index) => (
-              <MobileRowCard key={index} row={row} index={index} />
-            ))
-          )}
+
+        {/* Scrollable Middle Columns */}
+        <div className="flex-1 overflow-x-auto" ref={middleColsRef}>
+          <table className="border-collapse min-w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                {filteredColumns.slice(1, -1).map((column) => {
+                  const sortDirection = sortConfig.find((sort) => sort.column === column.key)
+                    ?.direction;
+                  return (
+                    <th
+                      key={column.key}
+                      className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100 whitespace-nowrap"
+                      onClick={() => handleHeaderSort(column.key)}
+                    >
+                      <div className="flex items-center">
+                        {column.label}
+                        {sortDirection && (
+                          <span className="ml-1">
+                            {sortDirection === 'asc' ? (
+                              <ArrowUp className="w-3 h-3" />
+                            ) : (
+                              <ArrowDown className="w-3 h-3" />
+                            )}
+                          </span>
+                        )}
+                      </div>
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {paginatedData.length === 0 ? (
+                <tr>
+                  <td colSpan={filteredColumns.length - 2} className="px-6 py-12 text-center text-gray-500">
+                    No data available
+                  </td>
+                </tr>
+              ) : (
+                paginatedData.map((row, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    {filteredColumns.slice(1, -1).map((column) => (
+                      <td
+                        key={column.key}
+                        className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                      >
+                        {column.render ? column.render(row[column.key], row, index) : row[column.key]}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
+
+        {/* Fixed Last Column + Actions */}
+        <div className="flex-shrink-0 border-l border-gray-200" ref={lastColRef}>
+          <table className="border-collapse">
+            <thead className="bg-gray-50">
+              <tr>
+                <th
+                  className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleHeaderSort(filteredColumns[filteredColumns.length - 1].key)}
+                >
+                  <div className="flex items-center">
+                    {filteredColumns[filteredColumns.length - 1].label}
+                    {sortConfig.find(
+                      (sort) => sort.column === filteredColumns[filteredColumns.length - 1].key
+                    )?.direction && (
+                      <span className="ml-1">
+                        {sortConfig.find(
+                          (sort) => sort.column === filteredColumns[filteredColumns.length - 1].key
+                        )?.direction === 'asc' ? (
+                          <ArrowUp className="w-3 h-3" />
+                        ) : (
+                          <ArrowDown className="w-3 h-3" />
+                        )}
+                      </span>
+                    )}
+                  </div>
+                </th>
+                {hasActions && (
+                  <th className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    Action
+                  </th>
+                )}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {paginatedData.length === 0 ? (
+                <tr>
+                  <td colSpan={hasActions ? 2 : 1} className="px-6 py-12 text-center text-gray-500">
+                    No data
+                  </td>
+                </tr>
+              ) : (
+                paginatedData.map((row, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {filteredColumns[filteredColumns.length - 1].render
+                        ? filteredColumns[filteredColumns.length - 1].render(
+                            row[filteredColumns[filteredColumns.length - 1].key],
+                            row,
+                            index
+                          )
+                        : row[filteredColumns[filteredColumns.length - 1].key]}
+                    </td>
+                    {hasActions && (
+                      <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex items-center justify-end gap-2">
+                          {onView && (
+                            <Tooltip content="View">
+                              <button
+                                onClick={() => onView(row, index)}
+                                className="text-blue-600 hover:text-blue-900"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                            </Tooltip>
+                          )}
+                          {onEdit && (
+                            <Tooltip content="Edit">
+                              <button
+                                onClick={() => onEdit(row, index)}
+                                className="text-indigo-600 hover:text-indigo-900"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </button>
+                            </Tooltip>
+                          )}
+                          {onDelete && (
+                            <Tooltip content="Delete">
+                              <button
+                                onClick={() => onDelete(row, index)}
+                                className="text-red-600 hover:text-red-900"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </Tooltip>
+                          )}
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ) : (
+      // Desktop Regular scrollable Table
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              {showSelection && (
+                <th className="w-12 px-3 py-3 text-left">
+                  <input
+                    type="checkbox"
+                    checked={selectedRows.length === paginatedData.length && paginatedData.length > 0}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                </th>
+              )}
+              {filteredColumns.map((column) => {
+                const sortDirection = sortConfig.find((sort) => sort.column === column.key)?.direction;
+                return (
+                  <th
+                    key={column.key}
+                    className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleHeaderSort(column.key)}
+                  >
+                    <div className="flex items-center">
+                      {column.label}
+                      {sortDirection && (
+                        <span className="ml-1">
+                          {sortDirection === 'asc' ? (
+                            <ArrowUp className="w-3 h-3" />
+                          ) : (
+                            <ArrowDown className="w-3 h-3" />
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                );
+              })}
+              {hasActions && (
+                <th className="px-4 md:px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  Action
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {paginatedData.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={filteredColumns.length + (showSelection ? 1 : 0) + (hasActions ? 1 : 0)}
+                  className="px-6 py-12 text-center text-gray-500"
+                >
+                  No data available
+                </td>
+              </tr>
+            ) : (
+              paginatedData.map((row, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  {showSelection && (
+                    <td className="px-3 py-4">
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.includes(index)}
+                        onChange={(e) => handleRowSelect(index, e.target.checked)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                    </td>
+                  )}
+                  {filteredColumns.map((column) => (
+                    <td key={column.key} className="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {column.render ? column.render(row[column.key], row, index) : row[column.key]}
+                    </td>
+                  ))}
+                  {hasActions && (
+                    <td className="px-4 md:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end gap-2">
+                        {onView && (
+                          <Tooltip content="View">
+                            <button
+                              onClick={() => onView(row, index)}
+                              className="text-blue-600 hover:text-blue-900"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                          </Tooltip>
+                        )}
+                        {onEdit && (
+                          <Tooltip content="Edit">
+                            <button
+                              onClick={() => onEdit(row, index)}
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                          </Tooltip>
+                        )}
+                        {onDelete && (
+                          <Tooltip content="Delete">
+                            <button
+                              onClick={() => onDelete(row, index)}
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </Tooltip>
+                        )}
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+      ) : (
+        /* Mobile view */
+         <div className="p-4">
+    {paginatedData.length === 0 ? (
+      <div className="px-6 py-12 text-center text-gray-500">No data available</div>
+    ) : (
+      paginatedData.map((row, index) => <MobileRowCard key={index} row={row} index={index} />)
+    )}
+  </div>
       )}
 
       {/* Pagination - Always show when there's data */}

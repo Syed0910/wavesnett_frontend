@@ -5,13 +5,16 @@ import Users from "./pages/users";
 import Settings from "./pages/Settings";
 import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
-import NasDashboard from "./pages/nas/NasDashboard";
+import NasDashboard from "./pages/Nas";
+import Billing from "./components/billing/billing";
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
-import NasManagement from "./components/NasManagement/NasManagement";
+import NasManagement from "./components/NasManagement/nasManagement";
 import OltManagement from "./components/OLT-Management/OltManagement";
 
+// Import the new Billing component
+import BillingComponent from "./components/billing/billing";
 
 // ✅ Import Zone Management pages
 import Operators from "./components/ZoneManagement/operators";
@@ -23,8 +26,6 @@ import Complaints from "./components/complaint/Complaints";
 import NewComplaint from "./components/complaint/new-complaint";
 import CloseComplaint from "./components/complaint/close-complaint";
 import Packages from "./pages/packages"; 
-
-
 
 const App = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -79,13 +80,9 @@ const App = () => {
         {/* Configuration Routes */}
         <Route path="/config/*" element={<Configuration />} />
 
-        {/* Billing Routes */}
-        <Route path="/billing/*" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">Billing Management</h2>
-            <p className="text-gray-600 mt-2">Billing management features will be implemented here.</p>
-          </div>
-        } />
+        {/* Billing Routes - Updated to use the new component structure */}
+        <Route path="/billing" element={<BillingComponent />} />
+        <Route path="/billing/*" element={<Billing/>} />
 
         {/* Packages Routes */}
          <Route path="/packages/*" element={<Packages />} />
@@ -126,14 +123,10 @@ const App = () => {
           </div>
         } />
 
-
         {/* Complaints Management Route */}
         <Route path="/complaints/*" element={<Complaints />} />
         <Route path="/complaints/new-complaint" element={<NewComplaint />} />
         <Route path="/complaints/close-complaint" element={<CloseComplaint />} />
-
-        
-        
       </Routes>
     </Layout>
   );
