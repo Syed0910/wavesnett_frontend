@@ -66,13 +66,13 @@ const NewUser = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div className="p-0 pt-0 max-w-8xl mx-auto bg-gray-50 min-h-screen">
+      
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="p-0 pt-0 pb-4 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">New User</h2>
         </div>
-
+<div className="bg-white rounded-lg shadow-sm border border-gray-200">
         {/* Tabs */}
         <div className="border-b border-gray-200">
           <div className="flex">

@@ -9,9 +9,10 @@ import Recharges from './Recharges';
 import ConnectionAttempt from './ConnectionAttempt';
 
 const UserDetail = () => {
-  const { username } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('account-info');
+  console.log("UserDetail ID:", id);
 
   const tabs = [
     { id: 'account-info', label: 'ACCOUNT INFO' },
@@ -25,19 +26,19 @@ const UserDetail = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'account-info':
-        return <AccountInfo username={username} />;
+        return <AccountInfo id={id} />;
       case 'user-info':
-        return <UserInfo username={username} />;
+        return <UserInfo id={id} />;
       case 'policy':
-        return <Policy username={username} />;
+        return <Policy id={id} />;
       case 'onu':
-        return <Onu username={username} />;
+        return <Onu id={id} />;
       case 'recharges':
-        return <Recharges username={username} />;
+        return <Recharges id={id} />;
       case 'connection-attempt':
-        return <ConnectionAttempt username={username} />;
+        return <ConnectionAttempt id={id} />;
       default:
-        return <AccountInfo username={username} />;
+        return <AccountInfo id={id} />;
     }
   };
 

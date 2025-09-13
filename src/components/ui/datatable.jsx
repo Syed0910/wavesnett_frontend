@@ -3,7 +3,7 @@ import {
   Eye, Edit, Trash2, Copy, Settings, Columns,
   ArrowUpDown, X, Search, Printer, ChevronLeft, ChevronRight,
   MoreHorizontal, Check, Download, Upload, Plus, Filter,
-  FileText, ArrowUp, ArrowDown, Menu
+  FileText, ArrowUp, ArrowDown, Menu, ChevronDown
 } from 'lucide-react';
 
 // Tooltip Component
@@ -412,6 +412,9 @@ const DataTable = ({
   const [sortConfig, setSortConfig] = useState([]);
   const [filters, setFilters] = useState([]);
   const [isMobileView, setIsMobileView] = useState(false);
+
+  // Custom header states
+  const [showNasDropdown, setShowNasDropdown] = useState(false);
   const [isTabletView, setIsTabletView] = useState(false);
 
   // Modal states
@@ -447,13 +450,11 @@ const DataTable = ({
       const currentDirection = sortConfig[existingSortIndex].direction;
       
       if (currentDirection === 'asc') {
-        // Change to descending
         newSortConfig[existingSortIndex] = {
           column: columnKey,
           direction: 'desc'
         };
       } else {
-        // Remove this sort rule if it was descending
         newSortConfig.splice(existingSortIndex, 1);
       }
       
@@ -463,9 +464,66 @@ const DataTable = ({
       setSortConfig([...sortConfig, { column: columnKey, direction: 'asc' }]);
     }
 
-    // Reset to first page when sorting changes
     setCurrentPage(1);
   };
+
+  const handleNasSelect = (nas) => {
+    setShowNasDropdown(false);
+    if (onNasSelect) {
+      onNasSelect(nas);
+    }
+  };
+
+  // Custom header with NAS selector and search
+  const customHeader = showCustomHeader ? (
+    <div className="flex items-center justify-between mb-6">
+      {/* Left side - NAS Selector */}
+      <div className="relative">
+        <button
+          onClick={() => setShowNasDropdown(!showNasDropdown)}
+          className="flex items-center gap-2 px-0 py-2 bg-white border-b-2 border-cyan-400 text-gray-800 font-medium hover:bg-gray-50 transition-all duration-200"
+        >
+          <span className="text-lg">{selectedNas}</span>
+          <ChevronDown className={`w-4 h-4 text-cyan-400 transition-transform duration-200 ${showNasDropdown ? 'rotate-180' : ''}`} />
+        </button>
+        
+        {/* Dropdown Menu */}
+        {showNasDropdown && (
+          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-48">
+            {nasOptions.map((nas) => (
+              <button
+                key={nas}
+                onClick={() => handleNasSelect(nas)}
+                className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors duration-200 first:rounded-t-lg last:rounded-b-lg ${
+                  selectedNas === nas ? 'bg-cyan-50 text-cyan-700' : 'text-gray-700'
+                }`}
+              >
+                {nas}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Right side - Search */}
+      {customHeaderSearch && (
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-80"
+            />
+            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600">
+              <Search className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  ) : null;
 
   // Filter and search data
   const filteredData = useMemo(() => {
@@ -695,15 +753,10 @@ useEffect(() => {
 }, [paginatedData, filteredColumns, isTabletView]);
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      {/* Custom Header with NAS Selector */}
+      {customHeader}
+
       {/* Header */}
-      <div className="px-4 md:px-6 py-4 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg md:text-xl font-semibold text-gray-900">{title}</h2>
-          <div className="flex items-center gap-2">
-            {toolbar}
-          </div>
-        </div>
-      </div>
 
       {/* Toolbar */}
       <div className="px-4 md:px-6 py-4 border-b border-gray-200">
@@ -1186,90 +1239,107 @@ useEffect(() => {
   </div>
       )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="px-6 py-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-700">
-              Showing {startIndex + 1} to {Math.min(startIndex + pageSize, filteredData.length)} of {filteredData.length} entries
-            </div>
-            <div className="flex items-center gap-2">
+      {/* Pagination - Always show when there's data */}
+{filteredData.length >= 0 && (
+  <div className="px-4 py-1 border-t border-gray-100 bg-white-50">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div className="text-sm text-gray-700">
+        Showing {startIndex + 1} to {Math.min(startIndex + pageSize, filteredData.length)} of {filteredData.length} entries
+      </div>
+      
+      {/* Always show pagination controls when there's data, even if just one page */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+          className="p-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+        >
+          <ChevronLeft className="w-3 h-3" />
+        </button>
+
+        <div className="flex gap-1">
+          {/* Always show at least page 1, even if there's only one page */}
+          {totalPages <= 5 ? (
+            // Show all pages if 5 or fewer
+            Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
               <button
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1}
-                className="p-2 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md hover:bg-gray-100 transition-all duration-200"
+                key={pageNum}
+                onClick={() => setCurrentPage(pageNum)}
+                className={`min-w-[2rem] h-6 px-2 text-sm rounded border transition-all duration-200 ${
+                  currentPage === pageNum
+                    ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                }`}
               >
-                <ChevronLeft className="w-4 h-4" />
+                {pageNum}
+              </button>
+            ))
+          ) : (
+            // Show pagination with ellipsis for more than 5 pages
+            <>
+              {/* First page */}
+              <button
+                onClick={() => setCurrentPage(1)}
+                className={`min-w-[2rem] h-8 px-2 text-sm rounded border transition-all duration-200 ${
+                  currentPage === 1
+                    ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                1
               </button>
 
-              <div className="flex gap-1">
-                {/* Show first page */}
-                {currentPage > 3 && (
-                  <>
-                    <button
-                      onClick={() => setCurrentPage(1)}
-                      className="px-3 py-1 text-sm rounded text-gray-700 hover:bg-gray-100 transition-all duration-200"
-                    >
-                      1
-                    </button>
-                    {currentPage > 4 && <span className="px-2 py-1 text-gray-500">...</span>}
-                  </>
-                )}
+              {/* Ellipsis if current page is far from start */}
+              {currentPage > 3 && <span className="px-2 py-2 text-gray-500">...</span>}
 
-                {/* Show pages around current page */}
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  let pageNum;
-                  if (totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
-                  } else {
-                    pageNum = currentPage - 2 + i;
-                  }
+              {/* Current page and surrounding pages */}
+              {[
+                Math.max(2, currentPage - 1),
+                currentPage > 2 && currentPage < totalPages ? currentPage : null,
+                Math.min(totalPages - 1, currentPage + 1)
+              ].filter(page => page !== null && page > 1 && page < totalPages).map((pageNum) => (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`min-w-[2rem] h-8 px-2 text-sm rounded border transition-all duration-200 ${
+                    currentPage === pageNum
+                      ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              ))}
 
-                  if (pageNum < 1 || pageNum > totalPages) return null;
+              {/* Ellipsis if current page is far from end */}
+              {currentPage < totalPages - 2 && <span className="px-2 py-2 text-gray-500">...</span>}
 
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => setCurrentPage(pageNum)}
-                      className={`px-3 py-1 text-sm rounded transition-all duration-200 ${currentPage === pageNum
-                        ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-gray-700 hover:bg-gray-100'
-                        }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-
-                {/* Show last page */}
-                {currentPage < totalPages - 2 && (
-                  <>
-                    {currentPage < totalPages - 3 && <span className="px-2 py-1 text-gray-500">...</span>}
-                    <button
-                      onClick={() => setCurrentPage(totalPages)}
-                      className="px-3 py-1 text-sm rounded text-gray-700 hover:bg-gray-100 transition-all duration-200"
-                    >
-                      {totalPages}
-                    </button>
-                  </>
-                )}
-              </div>
-
+              {/* Last page */}
               <button
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                disabled={currentPage === totalPages}
-                className="p-2 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md hover:bg-gray-100 transition-all duration-200"
+                onClick={() => setCurrentPage(totalPages)}
+                className={`min-w-[2rem] h-8 px-2 text-sm rounded border transition-all duration-200 ${
+                  currentPage === totalPages
+                    ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                }`}
               >
-                <ChevronRight className="w-4 h-4" />
+                {totalPages}
               </button>
-            </div>
-          </div>
+            </>
+          )}
         </div>
-      )}
+
+        <button
+          onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages}
+          className="p-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+        >
+          <ChevronRight className="w-3 h-3" />
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Modals */}
       <ColumnSelectionModal
@@ -1321,4 +1391,3 @@ useEffect(() => {
 };
 
 export default DataTable;
-

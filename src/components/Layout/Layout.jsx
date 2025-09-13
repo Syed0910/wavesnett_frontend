@@ -2,9 +2,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+
 import Footer from './Footer';
 
 const LG_BREAKPOINT = 1024;
+import { useNavigate } from "react-router-dom";
 
 const Layout = ({ children }) => {
   // Track the sidebar open state for toggles
@@ -35,12 +37,26 @@ const Layout = ({ children }) => {
 
   // Close handler for mobile overlay/click-away
   const closeSidebar = () => setIsSidebarOpen(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const navigate = useNavigate();
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
+  const onSettingsClick = () => {
+    navigate("/config/admin");
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
       {/* Navbar */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <Navbar isSidebarOpen={isSidebarOpen} onMenuToggle={toggleSidebar} />
+        <Navbar isSidebarOpen={isSidebarOpen} onMenuToggle={toggleSidebar} onSettingsClick={onSettingsClick}/>
       </div>
 
       {/* Sidebar */}

@@ -174,7 +174,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       icon: <Settings className="w-5 h-5" />,
       subItems: [
         { id: "admin-config", label: "Admin Configuration", icon: <Wrench className="w-4 h-4" />, path: "/config/admin" },
-        { id: "change-password", label: "Change Password", icon: <Lock className="w-4 h-4" />, path: "/config/change-password" },
+        { id: "changePassword", label: "Change Password", icon: <Lock className="w-4 h-4" />, path: "/config/changePassword" },
       ],
     },
 
@@ -191,12 +191,12 @@ const Sidebar = ({ isOpen, onClose }) => {
         { id: "firewall", label: "Firewall", icon: <Shield className="w-4 h-4" />, path: "/nas-mgmt/firewall" },
         { id: "queue", label: "Queue", icon: <Clock className="w-4 h-4" />, path: "/nas-mgmt/queue" },
         { id: "route", label: "Route", icon: <Router className="w-4 h-4" />, path: "/nas-mgmt/route" },
-        { id: "dhcp-server", label: "Dhcp Server", icon: <Server className="w-4 h-4" />, path: "/nas-mgmt/dhcp-server" },
-        { id: "ip-pool", label: "IP Pool", icon: <Database className="w-4 h-4" />, path: "/nas-mgmt/ip-pool" },
-        { id: "hotspot-server", label: "Hotspot Server", icon: <Wifi className="w-4 h-4" />, path: "/nas-mgmt/hotspot-server" },
-        { id: "hotspot-profile", label: "Hotspot Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/hotspot-profile" },
-        { id: "pppoe-server", label: "PPPOE Server", icon: <Settings className="w-4 h-4" />, path: "/nas-mgmt/pppoe-server" },
-        { id: "pppoe-profile", label: "PPPOE Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/pppoe-profile" },
+        { id: "dhcpServer", label: "Dhcp Server", icon: <Server className="w-4 h-4" />, path: "/nas-mgmt/dhcpServer" },
+        { id: "ip-pool", label: "IP-Pool", icon: <Database className="w-4 h-4" />, path: "/nas-mgmt/ip-pool" },
+        { id: "hotspotServer", label: "Hotspot Server", icon: <Wifi className="w-4 h-4" />, path: "/nas-mgmt/hotspotServer" },
+        { id: "hotspotProfile", label: "Hotspot Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/hotspotProfile" },
+        { id: "pppoeServer", label: "PPPOE Server", icon: <Settings className="w-4 h-4" />, path: "/nas-mgmt/pppoeServer" },
+        { id: "pppoeProfile", label: "PPPOE Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/pppoeProfile" },
         { id: "masquerade", label: "Masquerade", icon: <Share className="w-4 h-4" />, path: "/nas-mgmt/masquerade" },
       ],
     },
@@ -220,10 +220,10 @@ const Sidebar = ({ isOpen, onClose }) => {
       label: "Inventory Management",
       icon: <ClipboardList className="w-5 h-5" />,
       subItems: [
-        { id: "inventory-list", label: "Inventory List", icon: <List className="w-4 h-4" />, path: "/inventory/list" },
+        { id: "inventoryList", label: "Inventory List", icon: <List className="w-4 h-4" />, path: "/inventory/inventoryList" },
         { id: "tr069", label: "Tr069", icon: <Zap className="w-4 h-4" />, path: "/inventory/tr069" },
         { id: "map", label: "Map", icon: <MapPin className="w-4 h-4" />, path: "/inventory/map" },
-        { id: "tr069-network", label: "Tr069 Network", icon: <Network className="w-4 h-4" />, path: "/inventory/tr069-network" },
+        { id: "tr069Network", label: "Tr069 Network", icon: <Network className="w-4 h-4" />, path: "/inventory/tr069Network" },
       ],
     },
 
@@ -235,7 +235,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       subItems: [
         { id: "operators", label: "Operators", icon: <Users2 className="w-4 h-4" />, path: "/zone/operators" },
         { id: "zones", label: "Zones", icon: <Target className="w-4 h-4" />, path: "/zone/zones" },
-        { id: "permission", label: "Permission", icon: <Lock className="w-4 h-4" />, path: "/zone/permission" },
+        { id: "permissions", label: "Permissions", icon: <Lock className="w-4 h-4" />, path: "/zone/permissions" },
       ],
     },
 
@@ -287,30 +287,29 @@ const Sidebar = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className={`${isOpen ? "translate-x-0" : "-translate-x-70"} transform transition-transform duration-300` }>
-    <div className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen flex flex-col">
-      {/* Logo and Company Name Section */}
-      <div className="text-white p-6 flex flex-col items-center" style={{ backgroundColor: '#00a1b8' }}>
-        <div className="bg-white p-3 rounded-lg mb-3">
-          <img 
-            src="/wavesnett.png" 
-            alt="WavesNett" 
-            className="w-12 h-12 object-contain"
-          />
+    <div className={`${isOpen ? "translate-x-0" : "-translate-x-70"} transform transition-transform duration-300`}>
+      <div className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen flex flex-col">
+        {/* Logo and Company Name Section */}
+        <div className="text-white p-6 flex flex-col items-center" style={{ backgroundColor: '#00a1b8' }}>
+          <div className="bg-white p-3 rounded-lg mb-3">
+            <img 
+              src="/wavesnett.png" 
+              alt="WavesNett" 
+              className="w-12 h-12 object-contain"
+            />
+          </div>
+          <h2 className="text-lg font-semibold text-center leading-tight">
+            AaniRids Technologies...
+          </h2>
         </div>
-        <h2 className="text-lg font-semibold text-center leading-tight">
-          AaniRids Technologies...
-        </h2>
-      </div>
 
-      <div className="flex-1 overflow-y-auto">
-        <nav className="p-4 space-y-2">
-          {menuItems.map((item) => renderItem(item))}
-        </nav>
+        <div className="flex-1 overflow-y-auto">
+          <nav className="p-4 space-y-2">
+            {menuItems.map((item) => renderItem(item))}
+          </nav>
+        </div>
       </div>
     </div>
-    </div>
-  
   );
 };
 
