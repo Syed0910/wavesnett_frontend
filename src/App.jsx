@@ -88,12 +88,7 @@ const App = () => {
         } />
 
         {/* Packages Routes */}
-        <Route path="/packages/*" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">Package Management</h2>
-            <p className="text-gray-600 mt-2">Package management features will be implemented here.</p>
-          </div>
-        } />
+         <Route path="/packages/*" element={<Packages />} />
 
         {/* Reports Routes */}
         <Route path="/reports/*" element={
