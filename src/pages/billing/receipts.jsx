@@ -54,6 +54,16 @@ const Receipts = () => {
       type: "Cash",
       zone: "admin",
     },
+     {
+      receiptNo: "75",
+      date: "1/09/2025",
+      userName: "tkvideo",
+      name: "Abubakar",
+      amount: "₹456.00",
+      createdBy: "admin",
+      type: "Cash",
+      zone: "admin",
+    },
   ]);
 
   const [showNewReceiptModal, setShowNewReceiptModal] = useState(false);
