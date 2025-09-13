@@ -117,7 +117,12 @@ const BulkUserLots = () => {
         showSelection={false}
         pageSize={15}
         headerClassName="font-semibold"
+         showDateFilter={true}   // 👈 enables date range filter
+        dateRange={dateRange}
+        onDateChange={handleDateChange}
+ 
       />
+      
     </div>
   );
 };

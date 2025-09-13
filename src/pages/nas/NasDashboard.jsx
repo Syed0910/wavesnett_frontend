@@ -157,42 +157,49 @@ const NasDashboard = () => {
 
         {/* Right: Status Cards */}
         <div className="flex flex-row lg:flex-col xl:flex-row gap-4 w-full max-w-xl">
-          <div className="flex flex-row w-1/2 min-w-[160px] h-16 shadow rounded overflow-hidden bg-white">
-            <div className="flex items-center justify-center w-1/3 bg-white">
-              <svg
-                className="w-8 h-8 text-red-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
-            </div>
-            <div className="flex flex-col items-start justify-center w-2/3 bg-red-500 text-white pl-3 py-2">
-              <span className="text-sm font-semibold leading-tight">
-                {volt}V
-              </span>
-              <span className="text-xs font-normal leading-tight">Volt</span>
-            </div>
-          </div>
+  {/* Volt Button */}
+  <button
+    onClick={() => console.log(`${volt}V clicked`)}
+    className="flex flex-row w-1/2 min-w-[160px] h-16 shadow rounded overflow-hidden bg-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+  >
+    <div className="flex items-center justify-center w-1/3 bg-white">
+      <svg
+        className="w-8 h-8 text-red-500"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M13 10V3L4 14h7v7l9-11h-7z"
+        />
+      </svg>
+    </div>
+    <div className="flex flex-col items-start justify-center w-2/3 bg-red-500 text-white pl-3 py-2">
+      <span className="text-sm font-semibold leading-tight">{volt}V</span>
+      <span className="text-xs font-normal leading-tight">Volt</span>
+    </div>
+  </button>
 
-          <div className="flex flex-row w-1/2 min-w-[160px] h-16 shadow rounded overflow-hidden bg-white">
-            <div className="flex items-center justify-center w-1/3 bg-white">
-              <Icon path={mdiThermometer} size={2} color="#2b7fff" />
-            </div>
-            <div className="flex flex-col items-start justify-center w-2/3 bg-blue-500 text-white pl-3 py-2">
-              <span className="text-sm font-semibold leading-tight">
-                {temp !== null ? `${temp}°C` : "undefined°C"}
-              </span>
-              <span className="text-xs font-normal leading-tight">temp</span>
-            </div>
-          </div>
-        </div>
+  {/* Temp Button */}
+  <button
+    onClick={() => console.log(`${temp}°C clicked`)}
+    className="flex flex-row w-1/2 min-w-[160px] h-16 shadow rounded overflow-hidden bg-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+  >
+    <div className="flex items-center justify-center w-1/3 bg-white">
+      <Icon path={mdiThermometer} size={2} color="#2b7fff" />
+    </div>
+    <div className="flex flex-col items-start justify-center w-2/3 bg-blue-500 text-white pl-3 py-2">
+      <span className="text-sm font-semibold leading-tight">
+        {temp !== null ? `${temp}°C` : "undefined°C"}
+      </span>
+      <span className="text-xs font-normal leading-tight">Temp</span>
+    </div>
+  </button>
+</div>
+
       </div>
 
       {/* Second Row */}

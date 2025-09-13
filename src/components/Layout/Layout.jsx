@@ -1,23 +1,46 @@
 // Layout.jsx
-import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from './Sidebar';
-import Navbar from './Navbar'
+import Navbar from './Navbar';
 
 import Footer from './Footer';
+
+const LG_BREAKPOINT = 1024;
 import { useNavigate } from "react-router-dom";
 
 const Layout = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Track the sidebar open state for toggles
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= LG_BREAKPOINT);
+  // To prevent unnecessary state updates after mount
+  const prevIsLarge = useRef(window.innerWidth >= LG_BREAKPOINT);
+
+  // Responsive: auto sync when crossing the breakpoint
+  useEffect(() => {
+    const handleResize = () => {
+      const isLarge = window.innerWidth >= LG_BREAKPOINT;
+      // Only update when crossing the breakpoint
+      if (isLarge !== prevIsLarge.current) {
+        setIsSidebarOpen(isLarge);
+        prevIsLarge.current = isLarge;
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    // Call once on mount to set correct initial state
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Always allow manual toggle
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+
+  // Close handler for mobile overlay/click-away
+  const closeSidebar = () => setIsSidebarOpen(false);
+
   const navigate = useNavigate();
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
-  };
 
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
-  };
 
   const onSettingsClick = () => {
     navigate("/config/admin");
@@ -32,8 +55,8 @@ const Layout = ({ children }) => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full  transform transition-transform duration-300
-          ${isSidebarOpen ? 'translate-x-0 z-60' : '-translate-x-full z-40'} lg:translate-x-0`}
+        className={`fixed top-0 left-0 h-full transform transition-transform duration-300
+        ${isSidebarOpen ? 'translate-x-0 z-60' : '-translate-x-full z-40'} lg:translate-x-0`}
       >
         <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
       </div>
@@ -41,16 +64,16 @@ const Layout = ({ children }) => {
       {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div
-          className={`${isSidebarOpen ? "-translate-x-100" : "translate-x-0"} flex items-center transform transition-transform duration-300 fixed inset-0  lg:hidden`}
+          className="fixed inset-0 bg-opacity-30 z-40 lg:hidden"
           onClick={closeSidebar}
         />
       )}
 
       {/* Main Content */}
-      <div className={`flex-1 flex flex-col pt-16 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
-        <main className="flex-1 p-4 sm:p-6">
-          {children}
-        </main>
+      <div
+        className={`flex-1 flex flex-col pt-16 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}
+      >
+        <main className="flex-1 p-4 sm:p-6">{children}</main>
         <Footer />
       </div>
     </div>
