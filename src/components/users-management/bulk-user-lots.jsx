@@ -61,48 +61,68 @@ const BulkUserLots = () => {
     console.log('Adding new bulk lot...');
   };
 
-  const toolbar = (
-    <>
-      <div className="flex items-center gap-2 mr-4">
-        <input
-          type="date"
-          value={dateRange.from}
-          onChange={(e) => handleDateChange('from', e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <span className="text-gray-500">–</span>
-        <input
-          type="date"
-          value={dateRange.to}
-          onChange={(e) => handleDateChange('to', e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
+  return (
+    <div className="p-0 pt-0 max-w-8xl mx-auto bg-white min-h-screen">
+      {/* Header section */}
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-xl font-medium mb-1 text-gray-700">
+          Bulk User Lots
+                </h2>
+        <div className="flex items-center gap-2">
+          {/* Date Range Picker */}
+          <div className="flex items-center gap-2 mr-4">
+            <input
+              type="date"
+              value={dateRange.from}
+              onChange={(e) => handleDateChange('from', e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <span className="text-gray-500">–</span>
+            <input
+              type="date"
+              value={dateRange.to}
+              onChange={(e) => handleDateChange('to', e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          
+        
+          
+          <button
+            onClick={handleImport}
+            className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
+          >
+            <Upload className="w-4 h-4" />
+            Import
+          </button>
+          
+          <button
+            onClick={handleAddBulkLot}
+            className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
+          >
+            <Plus className="w-4 h-4" />
+            Add Bulk Lot
+          </button>
+        </div>
       </div>
 
-      <PrimaryButton 
-        icon={<Plus className="w-4 h-4" />}
-        onClick={handleAddBulkLot}
-        tooltip="Add New Bulk Lot"
-      >
-        Add Bulk Lot
-      </PrimaryButton>
-    </>
-  );
-
-  return (
-    <div className="h-screen p-6 bg-white">
+      
+      {/* DataTable without title and toolbar */}
       <DataTable
-        title="Bulk User Lots"
         data={bulkLots}
         columns={columns}
         onEdit={handleEdit}
         onDelete={handleDelete}
         onView={handleView}
         showSelection={false}
-        toolbar={toolbar}
         pageSize={15}
         headerClassName="font-semibold"
+         showDateFilter={true}   // 👈 enables date range filter
+        dateRange={dateRange}
+        onDateChange={handleDateChange}
+ 
       />
+      
     </div>
   );
 };

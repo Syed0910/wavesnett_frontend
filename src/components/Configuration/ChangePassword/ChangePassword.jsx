@@ -1,121 +1,122 @@
-import React, { useState } from 'react';
-import { Key, EyeOff } from 'lucide-react';
+import React, { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 const ChangePassword = () => {
-  const [formData, setFormData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+  const [values, setValues] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+    showCurrent: false,
+    showNew: false,
+    showConfirm: false,
   });
 
-  const [showPasswords, setShowPasswords] = useState({
-    current: false,
-    new: false,
-    confirm: false
-  });
-
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleChange = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });
   };
 
-  const togglePasswordVisibility = (field) => {
-    setShowPasswords(prev => ({
-      ...prev,
-      [field]: !prev[field]
-    }));
+  const handleClickShowPassword = (prop) => () => {
+    setValues({ ...values, [prop]: !values[prop] });
   };
 
-  const handleSubmit = () => {
-    // Add your password change logic here
-    console.log('Password change submitted:', formData);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (values.newPassword !== values.confirmPassword) {
+      alert('New password and confirmation password do not match!');
+      return;
+    }
+    if (values.newPassword.length < 8) {
+      alert('New password must be at least 8 characters long!');
+      return;
+    }
+    console.log('Password change submitted');
+    alert('Password changed successfully!');
   };
 
   const handleCancel = () => {
-    // Reset form or navigate back
-    setFormData({
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: ''
+    setValues({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+      showCurrent: false,
+      showNew: false,
+      showConfirm: false,
     });
   };
 
   return (
-    <div className="p-6 max-w-3xl bg-white">
-      <h1 className="text-2xl font-normal text-gray-800 mb-8">Change Password</h1>
-      
-      <div className="space-y-6 max-w-2xl">
-        {/* Current Password */}
-        <div className="relative">
-          <input
-            type={showPasswords.current ? "text" : "password"}
-            value={formData.currentPassword}
-            onChange={(e) => handleInputChange('currentPassword', e.target.value)}
-            placeholder="Current Password"
-            className="w-full h-14 px-4 pr-12 border border-gray-300 rounded-md text-base text-gray-700 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-          />
-          <button
-            type="button"
-            onClick={() => togglePasswordVisibility('current')}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <Key size={20} />
-          </button>
-        </div>
+    <div className="min-h-screen bg-gray-100 py-10 px-5">
+      <div className="max-w-lg mx-auto bg-white p-10 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-light text-gray-800 mb-8">Change Password</h1>
 
-        {/* New Password */}
-        <div className="relative">
-          <input
-            type={showPasswords.new ? "text" : "password"}
-            value={formData.newPassword}
-            onChange={(e) => handleInputChange('newPassword', e.target.value)}
-            placeholder="New Password"
-            className="w-full h-14 px-4 pr-12 border border-gray-300 rounded-md text-base text-gray-700 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-          />
-          <button
-            type="button"
-            onClick={() => togglePasswordVisibility('new')}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <Key size={20} />
-          </button>
-        </div>
+        <div className="space-y-5">
+          <div className="relative">
+            <input
+              type={values.showCurrent ? "text" : "password"}
+              placeholder="Current Password"
+              value={values.currentPassword}
+              onChange={handleChange("currentPassword")}
+              className="w-full px-4 py-4 pr-12 text-base border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition-colors"
+            />
+            <button
+              type="button"
+              onClick={handleClickShowPassword("showCurrent")}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              {values.showCurrent ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
 
-        {/* Confirm New Password */}
-        <div className="relative">
-          <input
-            type={showPasswords.confirm ? "text" : "password"}
-            value={formData.confirmPassword}
-            onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-            placeholder="Confirm New Password"
-            className="w-full h-14 px-4 pr-12 border border-gray-300 rounded-md text-base text-gray-700 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-          />
-          <button
-            type="button"
-            onClick={() => togglePasswordVisibility('confirm')}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <EyeOff size={20} />
-          </button>
-        </div>
+          <div className="relative">
+            <input
+              type={values.showNew ? "text" : "password"}
+              placeholder="New Password"
+              value={values.newPassword}
+              onChange={handleChange("newPassword")}
+              className="w-full px-4 py-4 pr-12 text-base border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition-colors"
+            />
+            <button
+              type="button"
+              onClick={handleClickShowPassword("showNew")}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              {values.showNew ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-4 pt-8">
-          <button
-            onClick={handleSubmit}
-            className="px-8 py-3 bg-cyan-500 text-white font-medium text-sm rounded-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 transition-colors uppercase tracking-wide"
-          >
-            SUBMIT
-          </button>
-          
-          <button
-            onClick={handleCancel}
-            className="px-8 py-3 border border-gray-300 text-gray-700 font-medium text-sm rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition-colors uppercase tracking-wide"
-          >
-            CANCEL
-          </button>
+          <div className="relative mb-10">
+            <input
+              type={values.showConfirm ? "text" : "password"}
+              placeholder="Confirm New Password"
+              value={values.confirmPassword}
+              onChange={handleChange("confirmPassword")}
+              className="w-full px-4 py-4 pr-12 text-base border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition-colors"
+            />
+            <button
+              type="button"
+              onClick={handleClickShowPassword("showConfirm")}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              {values.showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+
+          <div className="flex gap-4">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white py-3 px-6 rounded-md font-semibold text-sm tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5"
+            >
+              SUBMIT
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="flex-1 bg-transparent hover:bg-gray-50 text-gray-600 hover:text-gray-800 py-3 px-6 rounded-md font-semibold text-sm tracking-wider uppercase border-2 border-gray-300 hover:border-gray-400 transition-all duration-200"
+            >
+              CANCEL
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -166,7 +166,7 @@ const UserInfo = () => {
 
   return (
     <div className="max-w-8xl mx-auto bg-white p-6 space-y-8">
-      {/* ===== Header (same as AccountInfo) ===== */}
+      {/* ===== Header ===== */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">User Info</h2>
         <button className="bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-2">

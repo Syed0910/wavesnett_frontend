@@ -106,7 +106,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       ],
     },
 
-    // Billing
+    // Billing - Updated structure
     {
       id: "billing",
       label: "Billing",
@@ -114,8 +114,8 @@ const Sidebar = ({ isOpen, onClose }) => {
       subItems: [
         { id: "invoices", label: "Invoices", icon: <FileText className="w-4 h-4" />, path: "/billing/invoices" },
         { id: "receipts", label: "Receipts", icon: <Receipt className="w-4 h-4" />, path: "/billing/receipts" },
-        { id: "transactions", label: "Online Transaction", icon: <DollarSign className="w-4 h-4" />, path: "/billing/transactions" },
-        { id: "summary", label: "Billing Summary Chart", icon: <BarChart className="w-4 h-4" />, path: "/billing/summary" },
+        { id: "online-transactions", label: "Online Transaction", icon: <DollarSign className="w-4 h-4" />, path: "/billing/online-transactions" },
+        { id: "billing-summary-chart", label: "Billing Summary Chart", icon: <BarChart className="w-4 h-4" />, path: "/billing/billing-summary-chart" },
       ],
     },
 
@@ -174,7 +174,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       icon: <Settings className="w-5 h-5" />,
       subItems: [
         { id: "admin-config", label: "Admin Configuration", icon: <Wrench className="w-4 h-4" />, path: "/config/admin" },
-        { id: "change-password", label: "Change Password", icon: <Lock className="w-4 h-4" />, path: "/config/change-password" },
+        { id: "changePassword", label: "Change Password", icon: <Lock className="w-4 h-4" />, path: "/config/changePassword" },
       ],
     },
 
@@ -191,12 +191,12 @@ const Sidebar = ({ isOpen, onClose }) => {
         { id: "firewall", label: "Firewall", icon: <Shield className="w-4 h-4" />, path: "/nas-mgmt/firewall" },
         { id: "queue", label: "Queue", icon: <Clock className="w-4 h-4" />, path: "/nas-mgmt/queue" },
         { id: "route", label: "Route", icon: <Router className="w-4 h-4" />, path: "/nas-mgmt/route" },
-        { id: "dhcp-server", label: "Dhcp Server", icon: <Server className="w-4 h-4" />, path: "/nas-mgmt/dhcp-server" },
-        { id: "ip-pool", label: "IP Pool", icon: <Database className="w-4 h-4" />, path: "/nas-mgmt/ip-pool" },
-        { id: "hotspot-server", label: "Hotspot Server", icon: <Wifi className="w-4 h-4" />, path: "/nas-mgmt/hotspot-server" },
-        { id: "hotspot-profile", label: "Hotspot Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/hotspot-profile" },
-        { id: "pppoe-server", label: "PPPOE Server", icon: <Settings className="w-4 h-4" />, path: "/nas-mgmt/pppoe-server" },
-        { id: "pppoe-profile", label: "PPPOE Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/pppoe-profile" },
+        { id: "dhcpServer", label: "Dhcp Server", icon: <Server className="w-4 h-4" />, path: "/nas-mgmt/dhcpServer" },
+        { id: "ip-pool", label: "IP-Pool", icon: <Database className="w-4 h-4" />, path: "/nas-mgmt/ip-pool" },
+        { id: "hotspotServer", label: "Hotspot Server", icon: <Wifi className="w-4 h-4" />, path: "/nas-mgmt/hotspotServer" },
+        { id: "hotspotProfile", label: "Hotspot Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/hotspotProfile" },
+        { id: "pppoeServer", label: "PPPOE Server", icon: <Settings className="w-4 h-4" />, path: "/nas-mgmt/pppoeServer" },
+        { id: "pppoeProfile", label: "PPPOE Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/pppoeProfile" },
         { id: "masquerade", label: "Masquerade", icon: <Share className="w-4 h-4" />, path: "/nas-mgmt/masquerade" },
       ],
     },
@@ -220,10 +220,10 @@ const Sidebar = ({ isOpen, onClose }) => {
       label: "Inventory Management",
       icon: <ClipboardList className="w-5 h-5" />,
       subItems: [
-        { id: "inventory-list", label: "Inventory List", icon: <List className="w-4 h-4" />, path: "/inventory/list" },
+        { id: "inventoryList", label: "Inventory List", icon: <List className="w-4 h-4" />, path: "/inventory/inventoryList" },
         { id: "tr069", label: "Tr069", icon: <Zap className="w-4 h-4" />, path: "/inventory/tr069" },
         { id: "map", label: "Map", icon: <MapPin className="w-4 h-4" />, path: "/inventory/map" },
-        { id: "tr069-network", label: "Tr069 Network", icon: <Network className="w-4 h-4" />, path: "/inventory/tr069-network" },
+        { id: "tr069Network", label: "Tr069 Network", icon: <Network className="w-4 h-4" />, path: "/inventory/tr069Network" },
       ],
     },
 
