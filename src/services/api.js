@@ -14,3 +14,8 @@ export const getAllUserDetails = () => API.get("/userdetails");
 export const getOperators = () => API.get("/operators");
 export const addOperator = (operator) => API.post("/operators", operator);
 export const deleteOperator = (id) => API.delete(`/operators/${id}`);
+
+// Online Users API
+export const getOnlineUsers = () => API.get("/reports/online-users");
+
+export default API;

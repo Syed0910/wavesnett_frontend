@@ -9,6 +9,7 @@ import NasDashboard from "./pages/nas/NasDashboard";
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
 import NasManagement from "./components/NasManagement/NasManagement";
+import OnlineUsersTable from "./components/reports/online-users";
 
 // ✅ Import Zone Management pages
 import Operators from "./components/ZoneManagement/operators";
@@ -86,10 +87,7 @@ const App = () => {
 
         {/* Reports Routes */}
         <Route path="/reports/*" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">Reports</h2>
-            <p className="text-gray-600 mt-2">Reports will be implemented here.</p>
-          </div>
+          <OnlineUsersTable/>
         } />
 
         {/* NAS Management */}
