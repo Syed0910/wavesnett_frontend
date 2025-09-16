@@ -10,6 +10,7 @@ import Billing from "./components/billing/billing";
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
+import ChangePassword from "./components/Configuration/ChangePassword/ChangePassword";
 import NasManagement from "./components/NasManagement/nasManagement";
 import OltManagement from "./components/OLT-Management/OltManagement";
 
@@ -79,6 +80,7 @@ const App = () => {
 
         {/* Configuration Routes */}
         <Route path="/config/*" element={<Configuration />} />
+        <Route path="/config/ChangePassword/*" element={<ChangePassword/>}/>
 
         {/* Billing Routes - Updated to use the new component structure */}
         <Route path="/billing" element={<BillingComponent />} />
