@@ -26,31 +26,31 @@ import InventoryManagement from "./components/Inventory-Management/InventoryMana
 import Complaints from "./components/complaint/Complaints";
 import NewComplaint from "./components/complaint/new-complaint";
 import CloseComplaint from "./components/complaint/close-complaint";
-import Packages from "./pages/packages"; 
+import Packages from "./pages/packages";
+
+// ✅ Import User Detail
+import UserDetail from "./components/users-management/UserDetail";
 
 const App = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
   const navigate = useNavigate();
 
-  // Handle Settings button click from Navbar
   const handleSettingsClick = () => {
-    setActiveSection("config"); // highlight sidebar
-    navigate("/config/admin"); // navigate to admin config page
+    setActiveSection("config");
+    navigate("/config/admin");
   };
 
-  // Handle sidebar navigation
   const handleSidebarNavigation = (sectionId) => {
     setActiveSection(sectionId);
 
-    // Map sidebar IDs to routes
     const routeMap = {
-      "dashboard": "/dashboard",
+      dashboard: "/dashboard",
       "user-management": "/users",
-      "billing": "/billing",
-      "complaints": "/user/complaints",
-      "packages": "/packages",
-      "reports": "/reports",
-      "config": "/config/admin",
+      billing: "/billing",
+      complaints: "/user/complaints",
+      packages: "/packages",
+      reports: "/reports",
+      config: "/config/admin",
       "admin-config": "/config/admin",
       "nas-management": "/nas-mgmt",
       "olt-management": "/olt-mgmt",
@@ -64,9 +64,9 @@ const App = () => {
   };
 
   return (
-    <Layout 
-      activeSection={activeSection} 
-      setActiveSection={handleSidebarNavigation} 
+    <Layout
+      activeSection={activeSection}
+      setActiveSection={handleSidebarNavigation}
       onSettingsClick={handleSettingsClick}
     >
       <Routes>
@@ -82,53 +82,50 @@ const App = () => {
         <Route path="/config/*" element={<Configuration />} />
         <Route path="/config/ChangePassword/*" element={<ChangePassword/>}/>
 
-        {/* Billing Routes - Updated to use the new component structure */}
+        {/* Billing Routes */}
         <Route path="/billing" element={<BillingComponent />} />
-        <Route path="/billing/*" element={<Billing/>} />
+        <Route path="/billing/*" element={<Billing />} />
 
-        {/* Packages Routes */}
-         <Route path="/packages/*" element={<Packages />} />
+        {/* Packages */}
+        <Route path="/packages/*" element={<Packages />} />
 
-        {/* Reports Routes */}
-        <Route path="/reports/*" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">Reports</h2>
-            <p className="text-gray-600 mt-2">Reports will be implemented here.</p>
-          </div>
-        } />
+        {/* Reports */}
+        <Route
+          path="/reports/*"
+          element={
+            <div className="p-6">
+              <h2 className="text-xl font-semibold">Reports</h2>
+              <p className="text-gray-600 mt-2">
+                Reports will be implemented here.
+              </p>
+            </div>
+          }
+        />
 
         {/* NAS Management */}
-        <Route path="/nas-mgmt/*" element={
-          <NasManagement/>
-        } />
+        <Route path="/nas-mgmt/*" element={<NasManagement />} />
 
         {/* OLT Management */}
-        <Route path="/olt-mgmt/*" element={
-          <OltManagement/>
-        } />
+        <Route path="/olt-mgmt/*" element={<OltManagement />} />
 
         {/* Inventory Management */}
-        <Route path="/inventory/*" element={
-          <InventoryManagement/>
-        } />
+        <Route path="/inventory/*" element={<InventoryManagement />} />
 
-        {/* ✅ Zone Management Routes */}
+        {/* Zone Management */}
         <Route path="/zone/operators" element={<Operators />} />
         <Route path="/zone/zones" element={<Zone />} />
         <Route path="/zone/permissions" element={<Permissions />} />
 
-        {/* Active Login */}
-        <Route path="/active-login" element={
-          <div className="p-6">
-            <h2 className="text-xl font-semibold">Active Login</h2>
-            <p className="text-gray-600 mt-2">Active login monitoring will be implemented here.</p>
-          </div>
-        } />
-
-        {/* Complaints Management Route */}
+        {/* Complaints */}
         <Route path="/complaints/*" element={<Complaints />} />
         <Route path="/complaints/new-complaint" element={<NewComplaint />} />
-        <Route path="/complaints/close-complaint" element={<CloseComplaint />} />
+        <Route
+          path="/complaints/close-complaint"
+          element={<CloseComplaint />}
+        />
+
+        {/* ✅ User Detail Route */}
+        <Route path="/userdetails/:id" element={<UserDetail />} />
       </Routes>
     </Layout>
   );
