@@ -1,26 +1,29 @@
 // components/Configuration/billing.jsx
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import axios from "axios"; 
 
 const Billing = () => {
   const [printingSettings, setPrintingSettings] = useState({
-    defaultInvoiceSeries: "wNetinv (WT) (Inv -)",
-    defaultInvoiceWithoutTax: "Default Invoice Series Without Tax",
+    defaultInvoiceSeries: "",
+    defaultInvoiceWithoutTax: "",
     totalRoundOff: true,
     discountDisplayInPrint: true
   });
 
-  const [taxSettings, setTaxSettings] = useState({
-    selectedTax: "GST",
-    gstNumber: "29ABDCA2224R1ZC",
-    igstName: "IGST",
-    igstRate: 18,
-    sgstName: "SGST",
-    sgstRate: 9,
-    cgstName: "CGST",
-    cgstRate: 9,
+ const [taxSettings, setTaxSettings] = useState({
+    selectedTax: "None",
+    gstNumber: "",
+    taxRate: 0,
+    tax1Name: "",
+    tax1Rate: 0,
+    tax2Name: "",
+    tax2Rate: 0,
+    tax3Name: "",
+    tax3Rate: 0,
     acrTax: 0,
-    hsnSacCode: "9984"
+    hsnSacCode: "",
   });
+ const [loading, setLoading] = useState(true);
 
   const [invoiceSettings, setInvoiceSettings] = useState({
     autoInvoiceRecharge: true,
@@ -34,16 +37,8 @@ const Billing = () => {
     disableOutstandingUpdate: false
   });
 
-  const [invoiceSeries, setInvoiceSeries] = useState({
-    name: "",
-    title: "",
-    prefix: "",
-    terms: "",
-    template: "Invoice Template 1",
-    startingNumber: "1",
-    withTax: true
-  });
-
+  
+  const [invoiceSeries, setInvoiceSeries] = useState([]);
   const handlePrintingChange = (field, value) => {
     setPrintingSettings(prev => ({ ...prev, [field]: value }));
   };
@@ -59,7 +54,68 @@ const Billing = () => {
   const handleSeriesChange = (field, value) => {
     setInvoiceSeries(prev => ({ ...prev, [field]: value }));
   };
+   const handleApply = async () => {
+    try {
+      const payload = {
+        tax_type: taxSettings.selectedTax,
+        tax_number: taxSettings.gstNumber,
+        taxRate: taxSettings.taxRate,
+        tax_1: [taxSettings.tax1Name, taxSettings.tax1Rate],
+        tax_2: [taxSettings.tax2Name, taxSettings.tax2Rate],
+        tax_3: [taxSettings.tax3Name, taxSettings.tax3Rate],
+        agr: taxSettings.acrTax,
+        HSNCode: taxSettings.hsnSacCode,
+      };
 
+      await axios.put("http://localhost:3000/api/configs/tax/config", payload);
+      alert("Tax configuration updated successfully!");
+    } catch (error) {
+      console.error("Failed to update tax config:", error);
+      alert("Failed to update tax config");
+    }
+  };
+useEffect(() => {
+    const fetchInvoiceSeries = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/billbooks"); // Replace with your API
+        // Make sure to assign array to state
+        setInvoiceSeries(Array.isArray(response.data) ? response.data : []);
+      } catch (err) {
+        console.error("Failed to fetch invoice series:", err);
+        setInvoiceSeries([]); // fallback empty array
+      }
+    };
+
+    fetchInvoiceSeries();
+  }, [])
+    useEffect(() => {
+    const fetchTaxConfig = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/configs/tax/config");
+        const data = response.data;
+
+        setTaxSettings({
+          selectedTax: data.tax_type || "None",
+          gstNumber: data.tax_number || "",
+          taxRate: data.taxRate || 0,
+          tax1Name: data.tax_1 ? data.tax_1[0] : "",
+          tax1Rate: data.tax_1 ? parseInt(data.tax_1[1]) : 0,
+          tax2Name: data.tax_2 ? data.tax_2[0] : "",
+          tax2Rate: data.tax_2 ? parseInt(data.tax_2[1]) : 0,
+          tax3Name: data.tax_3 ? data.tax_3[0] : "",
+          tax3Rate: data.tax_3 ? parseInt(data.tax_3[1]) : 0,
+          acrTax: data.agr || 0,
+          hsnSacCode: data.HSNCode || "",
+        });
+      } catch (error) {
+        console.error("Failed to fetch tax config:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTaxConfig();
+  }, []);
   return (
     <div className="space-y-6">
       {/* Printing Settings */}
@@ -69,32 +125,52 @@ const Billing = () => {
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm text-gray-600 mb-2">Default Invoice Series</label>
-            <select 
+            <select
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
               value={printingSettings.defaultInvoiceSeries}
               onChange={(e) => handlePrintingChange('defaultInvoiceSeries', e.target.value)}
             >
-              <option value="wNetinv (WT) (Inv -)">wNetinv (WT) (Inv -)</option>
+              {invoiceSeries
+                .filter((series) => series.withTax === 1) // only series withTax = 1
+                .map((series) => (
+                  <option key={series.id} value={series.name}>
+                    {series.name} {series.prefix ? `(${series.prefix})` : ""}
+                  </option>
+                ))}
             </select>
           </div>
+
           <div>
             <input 
               type="text"
               placeholder="Receipt terms"
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-            />
+            />  
           </div>
         </div>
 
-        <div className="mb-4">
-          <select 
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-            value={printingSettings.defaultInvoiceWithoutTax}
-            onChange={(e) => handlePrintingChange('defaultInvoiceWithoutTax', e.target.value)}
-          >
-            <option value="Default Invoice Series Without Tax">Default Invoice Series Without Tax</option>
-          </select>
+        <div className="mt-4">
+            <select
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              value={printingSettings.defaultInvoiceWithoutTax || ""} // start empty
+              onChange={(e) => handlePrintingChange('defaultInvoiceWithoutTax', e.target.value)}
+            >
+              {/* Placeholder (disabled so it cannot be selected again) */}
+              <option value="" disabled>
+                Default invoice series without tax
+              </option>
+
+              {/* Dynamically render options from backend */}
+              {invoiceSeries
+                .filter(series => series.withTax === 0) // only without tax
+                .map(series => (
+                  <option key={series.id} value={series.name}>
+                    {series.name} {series.prefix ? `(${series.prefix})` : ""}
+                  </option>
+                ))}
+            </select>
         </div>
+
 
         <div className="space-y-2 mb-4">
           <label className="flex items-center space-x-3">
@@ -123,154 +199,148 @@ const Billing = () => {
       </div>
 
       {/* Tax Settings */}
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h2 className="text-xl font-semibold text-gray-800 mb-6">Tax Settings</h2>
-        
-        <div className="mb-6">
-          <div className="flex items-center space-x-6 mb-4">
-            <span className="text-sm text-gray-700">Select Tax</span>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="taxType"
-                value="None"
-                checked={taxSettings.selectedTax === "None"}
-                onChange={(e) => handleTaxChange('selectedTax', e.target.value)}
-                className="w-4 h-4 text-cyan-400"
-              />
-              <span className="text-sm text-gray-700">None</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="taxType"
-                value="GST"
-                checked={taxSettings.selectedTax === "GST"}
-                onChange={(e) => handleTaxChange('selectedTax', e.target.value)}
-                className="w-4 h-4 text-cyan-400"
-              />
-              <span className="text-sm text-gray-700">GST</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="taxType"
-                value="Service"
-                checked={taxSettings.selectedTax === "Service"}
-                onChange={(e) => handleTaxChange('selectedTax', e.target.value)}
-                className="w-4 h-4 text-cyan-400"
-              />
-              <span className="text-sm text-gray-700">Service</span>
-            </label>
-          </div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+      <h2 className="text-xl font-semibold text-gray-800 mb-6">Tax Settings</h2>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <input 
-                type="text"
-                placeholder="GST Number"
-                value={taxSettings.gstNumber}
-                onChange={(e) => handleTaxChange('gstNumber', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-700">Tax Rate</span>
-              <input 
-                type="number"
-                value={18}
-                className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
-              />
-              <span className="text-sm text-gray-700">%</span>
-            </div>
-          </div>
+      {/* TAX TYPE SELECTION */}
+      <div className="flex items-center space-x-6 mb-6">
+        <span className="text-sm text-gray-700 font-medium">Select Tax</span>
+        {["None", "GST", "Service"].map((type) => (
+          <label key={type} className="flex items-center space-x-2">
+            <input
+              type="radio"
+              name="taxType"
+              value={type}
+              checked={taxSettings.selectedTax === type}
+              onChange={(e) => handleTaxChange("selectedTax", e.target.value)}
+              className="w-4 h-4 text-cyan-400"
+            />
+            <span className="text-sm text-gray-700">{type}</span>
+          </label>
+        ))}
+      </div>
 
-          <div className="grid grid-cols-4 gap-4 mt-4">
-            <div>
-              <input 
-                type="text"
-                placeholder="Tax Name"
-                value={taxSettings.igstName}
-                onChange={(e) => handleTaxChange('igstName', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <input 
-                type="number"
-                value={taxSettings.igstRate}
-                onChange={(e) => handleTaxChange('igstRate', parseInt(e.target.value))}
-                className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
-              />
-              <span className="text-sm text-gray-700">%</span>
-            </div>
-            <div>
-              <input 
-                type="text"
-                placeholder="Tax Name"
-                value={taxSettings.sgstName}
-                onChange={(e) => handleTaxChange('sgstName', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <input 
-                type="number"
-                value={taxSettings.sgstRate}
-                onChange={(e) => handleTaxChange('sgstRate', parseInt(e.target.value))}
-                className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
-              />
-              <span className="text-sm text-gray-700">%</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-4 gap-4 mt-4">
-            <div>
-              <input 
-                type="text"
-                placeholder="Tax Name"
-                value={taxSettings.cgstName}
-                onChange={(e) => handleTaxChange('cgstName', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <input 
-                type="number"
-                value={taxSettings.cgstRate}
-                onChange={(e) => handleTaxChange('cgstRate', parseInt(e.target.value))}
-                className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
-              />
-              <span className="text-sm text-gray-700">%</span>
-            </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-700">ACR Tax</span>
-                <input 
-                  type="number"
-                  value={taxSettings.acrTax}
-                  onChange={(e) => handleTaxChange('acrTax', parseInt(e.target.value))}
-                  className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
-                />
-                <span className="text-sm text-gray-700">%</span>
-              </div>
-            </div>
-            <div>
-              <input 
-                type="text"
-                placeholder="HSN/SAC Code"
-                value={taxSettings.hsnSacCode}
-                onChange={(e) => handleTaxChange('hsnSacCode', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-              />
-            </div>
+      {/* CONDITIONAL FIELDS */}
+      {taxSettings.selectedTax === "None" && (
+        <div className="grid grid-cols-1 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              HSN/SAC Code
+            </label>
+            <input
+              type="text"
+              placeholder="Enter HSN/SAC Code"
+              value={taxSettings.hsnSacCode}
+              onChange={(e) => handleTaxChange("hsnSacCode", e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+            />
           </div>
         </div>
+      )}
 
-        <button className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium">
-          APPLY
-        </button>
-      </div>
+      {(taxSettings.selectedTax === "GST" ||
+        taxSettings.selectedTax === "Service") && (
+        <>
+          {/* GST NUMBER + TAX RATE */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                GST Number
+              </label>
+              <input
+                type="text"
+                placeholder="Enter GST Number"
+                value={taxSettings.gstNumber}
+                onChange={(e) => handleTaxChange("gstNumber", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Overall Tax Rate (%)
+              </label>
+              <input
+                type="number"
+                value={taxSettings.taxRate}
+                onChange={(e) => handleTaxChange("taxRate", parseInt(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              />
+            </div>
+          </div>
+
+          {/* IGST, SGST, CGST */}
+          <div className="grid grid-cols-4 gap-4 mb-4">
+            {[1, 2, 3].map((num) => (
+              <React.Fragment key={num}>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tax Name
+                  </label>
+                  <input
+                    type="text"
+                    value={taxSettings[`tax${num}Name`]}
+                    onChange={(e) => handleTaxChange(`tax${num}Name`, e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tax Rate (%)
+                  </label>
+                  <input
+                    type="number"
+                    value={taxSettings[`tax${num}Rate`]}
+                    onChange={(e) =>
+                      handleTaxChange(`tax${num}Rate`, parseInt(e.target.value))
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  />
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+
+          {/* ACR TAX + HSN/SAC */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {taxSettings.selectedTax === "GST" && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  ACR Tax (%)
+                </label>
+                <input
+                  type="number"
+                  value={taxSettings.acrTax}
+                  onChange={(e) => handleTaxChange("acrTax", parseInt(e.target.value))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                />
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                HSN/SAC Code
+              </label>
+              <input
+                type="text"
+                placeholder="Enter HSN/SAC Code"
+                value={taxSettings.hsnSacCode}
+                onChange={(e) => handleTaxChange("hsnSacCode", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      <button
+        onClick={handleApply}
+        className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium"
+      >
+        APPLY
+      </button>
+    </div>
+
 
       {/* Invoice & Plan Setting */}
       <div className="bg-white rounded-lg p-6 shadow-sm">
@@ -476,7 +546,7 @@ const Billing = () => {
         {/* Invoice Series Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-4 py-2 text-left">Name</th>
                 <th className="px-4 py-2 text-left">Prefix</th>
@@ -487,32 +557,29 @@ const Billing = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="px-4 py-2">wNetinv</td>
-                <td className="px-4 py-2">Inv -</td>
-                <td className="px-4 py-2">Invoice</td>
-                <td className="px-4 py-2">110</td>
-                <td className="px-4 py-2">No</td>
-                <td className="px-4 py-2">
-                  <div className="flex space-x-2">
-                    <button className="text-green-600 hover:text-green-800">✓</button>
-                    <button className="text-red-600 hover:text-red-800">✗</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2">wNetinv (WT)</td>
-                <td className="px-4 py-2">Inv -</td>
-                <td className="px-4 py-2">Invoice</td>
-                <td className="px-4 py-2">1</td>
-                <td className="px-4 py-2">Yes</td>
-                <td className="px-4 py-2">
-                  <div className="flex space-x-2">
-                    <button className="text-green-600 hover:text-green-800">✓</button>
-                    <button className="text-red-600 hover:text-red-800">✗</button>
-                  </div>
-                </td>
-              </tr>
+              {Array.isArray(invoiceSeries) && invoiceSeries.length > 0 ? (
+                invoiceSeries.map((series) => (
+                  <tr key={series.id} className="border-b border-gray-300">
+                    <td className="px-4 py-2">{series.name}</td>
+                    <td className="px-4 py-2">{series.prefix ?? "-"}</td>
+                    <td className="px-4 py-2">{series.title}</td>
+                    <td className="px-4 py-2">{series.startingNumber}</td>
+                    <td className="px-4 py-2">{series.withTax === 1 ? "Yes" : "No"}</td>
+                    <td className="px-4 py-2">
+                      <div className="flex space-x-2">
+                        <button className="text-green-600 hover:text-green-800">✓</button>
+                        <button className="text-red-600 hover:text-red-800">✗</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center py-4 text-gray-500">
+                    No invoice series found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
