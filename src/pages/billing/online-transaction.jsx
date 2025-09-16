@@ -145,9 +145,6 @@ const OnlineTransactions = () => {
 
   return (
     <div className="p-6">
-      <div className="mb-4 flex items-center justify-between">
-      <h3 className="text-xl font-semibold">Online Transactions</h3>
-      </div>
       <DataTable
         title="Online Transactions"
         data={transactions}
