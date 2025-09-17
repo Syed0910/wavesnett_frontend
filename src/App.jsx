@@ -6,12 +6,19 @@ import Settings from "./pages/Settings";
 import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
 import NasDashboard from "./pages/Nas";
+
 import Billing from "./pages/Billing";
+
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
 import NasManagement from "./components/NasManagement/NasManagement";
 import OltManagement from "./components/OLT-Management/OltManagement";
+
+
+// Import the new Billing component
+import BillingComponent from "./components/billing/billing";
+import OnlineUsersTable from "./components/reports/online-users";
 
 
 // ✅ Import Zone Management pages
@@ -82,6 +89,7 @@ const App = () => {
         <Route path="/config/*" element={<Configuration />} />
 
         {/* Billing Routes */}
+
         <Route path="/billing/*" element={<Billing/>} />
 
         {/* Packages Routes */}
@@ -99,6 +107,7 @@ const App = () => {
             <p className="text-gray-600 mt-2">Reports will be implemented here.</p>
           </div>
         } />
+
 
         {/* NAS Management */}
         <Route path="/nas-mgmt/*" element={
@@ -129,7 +138,14 @@ const App = () => {
         } />
 
 
+        {/* Reports Routes */}
+<Route path="/reports/online-users" element={<OnlineUsersTable />} />
+<Route path="/reports/recharge-summary" element={<RechargeSummary />} />
+
+
         {/* Complaints Management Route */}
+
+
         <Route path="/complaints/*" element={<Complaints />} />
         <Route path="/complaints/new-complaint" element={<NewComplaint />} />
         <Route path="/complaints/close-complaint" element={<CloseComplaint />} />
