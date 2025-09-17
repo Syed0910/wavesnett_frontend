@@ -86,7 +86,8 @@ const PaymentGateway = () => {
               <button
                 type="button"
                 onClick={() => setShowApiKey(!showApiKey)}
-                className="ml-2 text-gray-500 hover:text-gray-700"
+                style={{ backgroundColor: "var(--primary)" }}
+                className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
               >
                 {showApiKey ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -107,7 +108,8 @@ const PaymentGateway = () => {
               <button
                 type="button"
                 onClick={() => setShowMerchantSecret(!showMerchantSecret)}
-                className="ml-2 text-gray-500 hover:text-gray-700"
+                 style={{ backgroundColor: "var(--primary)" }}
+                 className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
               >
                 {showMerchantSecret ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -138,7 +140,8 @@ const PaymentGateway = () => {
         <div className="flex space-x-4">
           <button 
             onClick={() => handleSubmit('SUBMIT')}
-            className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium"
+             style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
           >
             SUBMIT
           </button>

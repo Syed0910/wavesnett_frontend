@@ -17,6 +17,7 @@ const ChangePassword = () => {
             type="password"
             placeholder="Current Password"
             className="flex-1 p-2 outline-none"
+            style={{ outlineColor: "var(--primary)" }}
           />
           <Key className="text-gray-500" size={18} />
         </div>
@@ -29,6 +30,7 @@ const ChangePassword = () => {
             type={showPassword ? "text" : "password"}
             placeholder="New Password"
             className="flex-1 p-2 outline-none"
+            style={{ outlineColor: "var(--primary)" }}
           />
           <button
             type="button"
@@ -51,6 +53,7 @@ const ChangePassword = () => {
             type={showConfirmPassword ? "text" : "password"}
             placeholder="Confirm New Password"
             className="flex-1 p-2 outline-none"
+            style={{ outlineColor: "var(--primary)" }}
           />
           <button
             type="button"
@@ -68,10 +71,15 @@ const ChangePassword = () => {
 
       {/* Buttons */}
       <div className="flex gap-3">
-        <button className="bg-cyan-500 text-white px-3 py-1 rounded shadow">
+        <button
+          className="text-white px-3 py-1 rounded shadow hover:opacity-90 transition-colors"
+          style={{ backgroundColor: "var(--primary)" }}
+        >
           SUBMIT
         </button>
-        <button className="border px-3 py-1 rounded">CANCEL</button>
+        <button className="border px-3 py-1 rounded hover:bg-gray-100 transition-colors">
+          CANCEL
+        </button>
       </div>
     </div>
   );

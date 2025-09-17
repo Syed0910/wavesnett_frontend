@@ -45,7 +45,8 @@ const KycConfiguration = () => {
             <select
               value={kycSettings.provider}
               onChange={(e) => handleInputChange("provider", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1"
+              style={{ outlineColor: "var(--primary)" }}
             >
               <option value="QuickEKyc">QuickEKyc</option>
               <option value="OtherKyc">OtherKyc</option>
@@ -62,42 +63,43 @@ const KycConfiguration = () => {
                 type="text"
                 value={kycSettings.apiKey}
                 onChange={(e) => handleInputChange("apiKey", e.target.value)}
-                
+                className="w-full focus:outline-none"
+                style={{ outlineColor: "var(--primary)" }}
               />
-              
             </div>
           </div>
         </div>
 
         {/* Enable/Disable Toggle */}
         <div className="flex items-center gap-4 mb-6">
-  {/* Disable Label */}
-  <span className="text-sm font-medium text-gray-700">Disable</span>
+          <span className="text-sm font-medium text-gray-700">Disable</span>
 
-  {/* Toggle Switch */}
-  <div
-    onClick={handleToggleEnable}
-    className={`relative inline-flex h-6 w-12 cursor-pointer rounded-full transition-colors duration-200 ease-in-out ${
-      kycSettings.isEnabled ? "bg-cyan-400" : "bg-gray-300"
-    }`}
-  >
-    <span
-      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-        kycSettings.isEnabled ? "translate-x-6" : "translate-x-0.5"
-      } mt-0.5`}
-    />
-  </div>
+          {/* Toggle Switch */}
+          <div
+            onClick={handleToggleEnable}
+            className={`relative inline-flex h-6 w-12 cursor-pointer rounded-full transition-colors duration-200 ease-in-out`}
+            style={{
+              backgroundColor: kycSettings.isEnabled
+                ? "var(--primary)"
+                : "#d1d5db",
+            }}
+          >
+            <span
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                kycSettings.isEnabled ? "translate-x-6" : "translate-x-0.5"
+              } mt-0.5`}
+            />
+          </div>
 
-  {/* Enable Label */}
-  <span className="text-sm font-medium text-gray-700">Enable</span>
-</div>
-
+          <span className="text-sm font-medium text-gray-700">Enable</span>
+        </div>
 
         {/* Buttons */}
         <div className="flex space-x-4">
           <button
             onClick={() => handleSubmit("SUBMIT")}
-            className="bg-cyan-400 hover:bg-cyan-500 text-white px-5 py-1 rounded-md font-medium"
+            style={{ backgroundColor: "var(--primary)" }}
+            className="text-white px-5 py-1 rounded-md font-medium hover:opacity-90 transition-colors"
           >
             SUBMIT
           </button>

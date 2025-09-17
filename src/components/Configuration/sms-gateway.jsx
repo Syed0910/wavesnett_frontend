@@ -461,7 +461,10 @@ const SMSGateway = () => {
 
       {/* Action Buttons */}
       <div className="flex gap-3">
-        <button className="bg-cyan-500 text-white px-5 py-1 rounded hover:bg-cyan-600">
+        <button 
+         style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
+        >
           APPLY
         </button>
         <button className="bg-gray-500 text-white px-5 py-1 rounded hover:bg-gray-600">

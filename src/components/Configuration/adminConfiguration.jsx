@@ -200,7 +200,8 @@ const AdminConfiguration = () => {
           <div className="col-span-1 md:col-span-2">
             <button
               type="submit"
-              className="bg-cyan-500 text-white px-6 py-2 rounded hover:bg-cyan-600"
+               style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
             >
               APPLY
             </button>
@@ -232,7 +233,8 @@ const AdminConfiguration = () => {
         <div className="mt-4 flex space-x-3">
           <button
             onClick={() => alert("Logo Uploaded")}
-            className="bg-cyan-500 text-white px-6 py-2 rounded hover:bg-cyan-600"
+             style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
           >
             UPLOAD
           </button>

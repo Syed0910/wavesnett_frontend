@@ -48,7 +48,8 @@ const OperatorNotification = () => {
           onChange={() =>
             setSettings((prev) => ({ ...prev, sendToZone: !prev.sendToZone }))
           }
-          className="h-4 w-4 text-cyan-500 border-gray-300 rounded focus:ring-cyan-500"
+          style={{ accentColor: "var(--primary)" }}
+          className="h-4 w-4 border-gray-300 rounded"
         />
         <label htmlFor="sendToZone" className="ml-2 text-sm text-gray-700">
           User complaint notification sent to zone if operator not assigned
@@ -56,91 +57,96 @@ const OperatorNotification = () => {
       </div>
 
       {/* Notification Events Table */}
-      
-        <table className="w-full border-collapse">
-          <thead>
-           <tr className="border-b border-gray-200">
-              <th className="text-left py-2 text-sm font-medium text-gray-600">
-                Event
-              </th>
-              <th className="text-center py-2 text-sm font-medium text-gray-600">
-                Mail
-              </th>
-              <th className="text-center py-2 text-sm font-medium text-gray-600">
-                SMS
-              </th>
-              <th className="text-center py-2 text-sm font-medium text-gray-600">
-                Whatsapp
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* NAS Connection Row */}
-            <tr className="border-b border-gray-200">
-              <td className="py-3 text-sm text-gray-700">NAS Connection</td>
-              <td className="text-center">
-                <input
-                  type="checkbox"
-                  checked={settings.events.nasConnection.mail}
-                  onChange={() => handleToggle("nasConnection", "mail")}
-                  className="h-4 w-4 text-cyan-500 border-gray-300 rounded focus:ring-cyan-500"
-                />
-              </td>
-              <td className="text-center">
-                <input
-                  type="checkbox"
-                  checked={settings.events.nasConnection.sms}
-                  onChange={() => handleToggle("nasConnection", "sms")}
-                  className="h-4 w-4 text-cyan-500 border-gray-300 rounded focus:ring-cyan-500"
-                />
-              </td>
-              <td className="text-center">
-                <input
-                  type="checkbox"
-                  checked={settings.events.nasConnection.whatsapp}
-                  onChange={() => handleToggle("nasConnection", "whatsapp")}
-                  className="h-4 w-4 text-cyan-500 border-gray-300 rounded focus:ring-cyan-500"
-                />
-              </td>
-            </tr>
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="border-b border-gray-200">
+            <th className="text-left py-2 text-sm font-medium text-gray-600">
+              Event
+            </th>
+            <th className="text-center py-2 text-sm font-medium text-gray-600">
+              Mail
+            </th>
+            <th className="text-center py-2 text-sm font-medium text-gray-600">
+              SMS
+            </th>
+            <th className="text-center py-2 text-sm font-medium text-gray-600">
+              Whatsapp
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* NAS Connection Row */}
+          <tr className="border-b border-gray-200">
+            <td className="py-3 text-sm text-gray-700">NAS Connection</td>
+            <td className="text-center">
+              <input
+                type="checkbox"
+                checked={settings.events.nasConnection.mail}
+                onChange={() => handleToggle("nasConnection", "mail")}
+                style={{ accentColor: "var(--primary)" }}
+                className="h-4 w-4 border-gray-300 rounded"
+              />
+            </td>
+            <td className="text-center">
+              <input
+                type="checkbox"
+                checked={settings.events.nasConnection.sms}
+                onChange={() => handleToggle("nasConnection", "sms")}
+                style={{ accentColor: "var(--primary)" }}
+                className="h-4 w-4 border-gray-300 rounded"
+              />
+            </td>
+            <td className="text-center">
+              <input
+                type="checkbox"
+                checked={settings.events.nasConnection.whatsapp}
+                onChange={() => handleToggle("nasConnection", "whatsapp")}
+                style={{ accentColor: "var(--primary)" }}
+                className="h-4 w-4 border-gray-300 rounded"
+              />
+            </td>
+          </tr>
 
-            {/* User Complaint Row */}
-            <tr>
-              <td className="py-3 text-sm text-gray-700">User Complaint</td>
-              <td className="text-center">
-                <input
-                  type="checkbox"
-                  checked={settings.events.userComplaint.mail}
-                  onChange={() => handleToggle("userComplaint", "mail")}
-                  className="h-4 w-4 text-cyan-500 border-gray-300 rounded focus:ring-cyan-500"
-                />
-              </td>
-              <td className="text-center">
-                <input
-                  type="checkbox"
-                  checked={settings.events.userComplaint.sms}
-                  onChange={() => handleToggle("userComplaint", "sms")}
-                  className="h-4 w-4 text-cyan-500 border-gray-300 rounded focus:ring-cyan-500"
-                />
-              </td>
-              <td className="text-center">
-                <input
-                  type="checkbox"
-                  checked={settings.events.userComplaint.whatsapp}
-                  onChange={() => handleToggle("userComplaint", "whatsapp")}
-                  className="h-4 w-4 text-cyan-500 border-gray-300 rounded focus:ring-cyan-500"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      
+          {/* User Complaint Row */}
+          <tr>
+            <td className="py-3 text-sm text-gray-700">User Complaint</td>
+            <td className="text-center">
+              <input
+                type="checkbox"
+                checked={settings.events.userComplaint.mail}
+                onChange={() => handleToggle("userComplaint", "mail")}
+                style={{ accentColor: "var(--primary)" }}
+                className="h-4 w-4 border-gray-300 rounded"
+              />
+            </td>
+            <td className="text-center">
+              <input
+                type="checkbox"
+                checked={settings.events.userComplaint.sms}
+                onChange={() => handleToggle("userComplaint", "sms")}
+                style={{ accentColor: "var(--primary)" }}
+                className="h-4 w-4 border-gray-300 rounded"
+              />
+            </td>
+            <td className="text-center">
+              <input
+                type="checkbox"
+                checked={settings.events.userComplaint.whatsapp}
+                onChange={() => handleToggle("userComplaint", "whatsapp")}
+                style={{ accentColor: "var(--primary)" }}
+                className="h-4 w-4 border-gray-300 rounded"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
       {/* Action Buttons */}
-      <div className="flex space-x-3">
+      <div className="flex space-x-3 mt-4">
         <button
           onClick={handleApply}
-          className="px-5 py-1 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors"
+          style={{ backgroundColor: "var(--primary)" }}
+          className="px-5 py-1 text-white rounded hover:opacity-90 transition-colors"
         >
           APPLY
         </button>

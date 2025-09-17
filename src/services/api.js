@@ -43,3 +43,33 @@ export const updateOnlineTransaction = (id, transaction) =>
   API.put(`/online-transactions/${id}`, transaction);
 export const deleteOnlineTransaction = (id) =>
   API.delete(`/online-transactions/${id}`);
+
+/* -------------------- CONFIGS -------------------- */
+// Generic config operations
+export const getAllConfigs = () => API.get("/configs");
+export const getConfigById = (id) => API.get(`/configs/${id}`);
+export const addConfig = (config) => API.post("/configs", config);
+export const updateConfig = (id, config) => API.put(`/configs/${id}`, config);
+export const deleteConfig = (id) => API.delete(`/configs/${id}`);
+
+// Specific config operations
+export const getTaxConfig = () => API.get("/configs/tax/config");
+export const updateTaxConfig = (config) => API.put("/configs/tax/config", config);
+
+export const getKycConfig = () => API.get("/configs/kyc/config");
+export const updateKycConfig = (config) => API.put("/configs/kyc/config", config);
+
+export const getThemeConfig = () => API.get("/configs/theme/config");
+export const updateThemeConfig = (config) => API.put("/configs/theme/config", config);
+
+export const getExtraConfig = () => API.get("/configs/extra/config");
+export const updateExtraConfig = (config) => API.put("/configs/extra/config", config);
+
+export const getPortalConfig = () => API.get("/configs/portal/config");
+export const updatePortalConfig = (config) => API.put("/configs/portal/config", config);
+
+export const getHotspotConfig = () => API.get("/configs/hotspot/config");
+export const updateHotspotConfig = (config) => API.put("/configs/hotspot/config", config);
+
+export const getPermissionsConfig = () => API.get("/configs/permissions/config");
+export const updatePermissionsConfig = (config) => API.put("/configs/permissions/config", config);

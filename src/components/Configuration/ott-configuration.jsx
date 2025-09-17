@@ -54,7 +54,8 @@ const OttConfiguration = () => {
         <select
           value={selectedOtt}
           onChange={(e) => setSelectedOtt(e.target.value)}
-          className="w-1/2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+          className="w-1/2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1"
+          style={{ focusRingColor: "var(--primary)" }}
         >
           <option value="">Select OTT</option>
           <option value="ottplay">OTTPlay</option>
@@ -71,7 +72,8 @@ const OttConfiguration = () => {
               value={formData.loginId}
               onChange={handleInputChange}
               placeholder="Ott LoginId"
-              className="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-cyan-500"
+              className="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-1"
+              style={{ borderColor: "#d1d5db", outlineColor: "var(--primary)" }}
             />
             <input
               type="text"
@@ -79,7 +81,8 @@ const OttConfiguration = () => {
               value={formData.operCode}
               onChange={handleInputChange}
               placeholder="Ott OperCode"
-              className="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-cyan-500"
+              className="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-1"
+              style={{ borderColor: "#d1d5db", outlineColor: "var(--primary)" }}
             />
           </div>
 
@@ -90,7 +93,8 @@ const OttConfiguration = () => {
               value={formData.apiToken}
               onChange={handleInputChange}
               placeholder="Ott ApiToken"
-              className="border border-gray-300 rounded px-3 py-2 w-full md:w-1/2 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+              className="border border-gray-300 rounded px-3 py-2 w-full md:w-1/2 focus:outline-none focus:ring-1"
+              style={{ borderColor: "#d1d5db", outlineColor: "var(--primary)" }}
             />
           </div>
 
@@ -104,7 +108,14 @@ const OttConfiguration = () => {
                 onChange={handleToggle}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-cyan-500 transition"></div>
+              <div
+                className="w-11 h-6 bg-gray-200 rounded-full peer transition"
+                style={{
+                  backgroundColor: formData.enabled
+                    ? "var(--primary)"
+                    : "#e5e7eb",
+                }}
+              ></div>
               <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition peer-checked:translate-x-5"></div>
             </label>
             <span className="text-sm text-gray-700">Enable</span>
@@ -125,7 +136,8 @@ const OttConfiguration = () => {
                     value="phone"
                     checked={formData.subscribeWith === "phone"}
                     onChange={handleInputChange}
-                    className="text-cyan-500 focus:ring-cyan-500"
+                    style={{ accentColor: "var(--primary)" }}
+                    className="h-4 w-4"
                   />
                   <span className="text-sm">Phone</span>
                 </label>
@@ -136,7 +148,8 @@ const OttConfiguration = () => {
                     value="email"
                     checked={formData.subscribeWith === "email"}
                     onChange={handleInputChange}
-                    className="text-cyan-500 focus:ring-cyan-500"
+                    style={{ accentColor: "var(--primary)" }}
+                    className="h-4 w-4"
                   />
                   <span className="text-sm">Email</span>
                 </label>
@@ -154,7 +167,8 @@ const OttConfiguration = () => {
           <div className="flex space-x-3">
             <button
               onClick={handleSubmit}
-              className="px-5 py-1 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors"
+              style={{ backgroundColor: "var(--primary)" }}
+              className="px-5 py-1 text-white rounded hover:opacity-90 transition-colors"
             >
               SUBMIT
             </button>
