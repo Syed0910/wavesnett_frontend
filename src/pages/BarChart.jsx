@@ -1,5 +1,6 @@
 import * as React from "react";
 import { BarChart } from "@mui/x-charts/BarChart";   // ✅ Fixed import
+import {useTheme } from "../context/ThemeContext";
 import {
   Card,
   Typography,
@@ -19,12 +20,13 @@ function DashboardCard({
   subtitle,
   value,
   chartData,
-  showViewButton = false,
-  color = "#32cbe3", // default cyan
+  showViewButton = false, 
   icon = null,
   progressData = null,
   stats = [],
 }) {
+  const { primaryColor } = useTheme();
+  const color =primaryColor;
   return (
     <Card
       sx={{
@@ -45,7 +47,7 @@ function DashboardCard({
               width: 48,
               height: 48,
               borderRadius: "50%",
-              backgroundColor: "#00C4CC",
+              backgroundColor: primaryColor,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
