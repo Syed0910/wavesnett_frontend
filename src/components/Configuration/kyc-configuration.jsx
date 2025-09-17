@@ -1,68 +1,168 @@
 // components/Configuration/KycConfiguration.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Key } from "lucide-react";
 
 const KycConfiguration = () => {
-  const [kycSettings, setKycSettings] = useState({
-    provider: "QuickEKyc",
-    apiKey: "022f5d34-f06c-4f51-bdfa-255b5a040ef3",
-    isEnabled: true,
-  });
+  const [kycData, setKycData] = useState(null); // Full API response
+  const [loading, setLoading] = useState(true);
 
+  const [kycSettings, setKycSettings] = useState({
+    provider: "",
+    apiKey: "",
+    isEnabled: false,
+    toggleDisabled: false,
+  });
+  console.log("apikey",kycSettings.apiKey);
+  // Static dropdown options
+  const kycOptions = [
+    { label: "QuickEKyc", value: "quickekyc" },
+    { label: "Surepass", value: "surepass" },
+  ];
+
+  // Fetch KYC config from backend for API keys
+useEffect(() => {
+  const fetchKycConfig = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("http://localhost:3000/api/configs/kyc/config");
+      setKycData(response.data);
+
+      // Find first enabled provider
+      const enabledProvider = Object.entries(response.data.Ekyc).find(
+        ([key, value]) => value === true
+      );
+
+      let provider, apiKey, toggleDisabled, isEnabled;
+
+      if (enabledProvider) {
+        provider = enabledProvider[0];
+        apiKey = response.data[provider]?.apiKey || "";
+        isEnabled = true;
+        toggleDisabled = false;
+      } else {
+        // default to first dropdown
+        provider = kycOptions[0].value;
+        apiKey = response.data[provider]?.apiKey || "";
+        isEnabled = true;
+        toggleDisabled = false;
+      }
+      console.log("Fetched KYC config:", { provider, apiKey, isEnabled, toggleDisabled });
+
+      setKycSettings({ provider, apiKey, isEnabled, toggleDisabled });
+
+    } catch (error) {
+      console.error("Error fetching KYC config:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchKycConfig();
+}, []);
+
+
+  // Update API key whenever provider or backend data changes
+  useEffect(() => {
+    if (!kycData) return;
+
+    if (kycSettings.provider === "surepass") {
+      setKycSettings(prev => ({
+        ...prev,
+        apiKey: "",
+        isEnabled: false,
+        toggleDisabled: true,
+      }));
+    } else {
+      const apiKey = kycData[kycSettings.provider]?.apiKey || "";
+      setKycSettings(prev => ({
+        ...prev,
+        apiKey,
+        isEnabled: true,
+        toggleDisabled: false,
+      }));
+    }
+  }, [kycSettings.provider, kycData]);
+
+  // Handle provider selection
+  const handleProviderChange = (value) => {
+    setKycSettings(prev => ({
+      ...prev,
+      provider: value,
+    }));
+  };
+
+  // Handle API key input
   const handleInputChange = (field, value) => {
-    setKycSettings((prev) => ({
+    setKycSettings(prev => ({
       ...prev,
       [field]: value,
     }));
   };
 
+  // Toggle enable/disable
   const handleToggleEnable = () => {
-    setKycSettings((prev) => ({
-      ...prev,
-      isEnabled: !prev.isEnabled,
-    }));
+    if (!kycSettings.toggleDisabled) {
+      setKycSettings(prev => ({
+        ...prev,
+        isEnabled: !prev.isEnabled,
+      }));
+    }
   };
 
+  // Submit handler
   const handleSubmit = (action) => {
     console.log(`${action} clicked with settings:`, kycSettings);
+    // Call update API here if needed
   };
+
+  if (loading) {
+    return (
+      <div className="p-6 bg-white rounded shadow text-gray-700">
+        Loading KYC configuration...
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      {/* KYC Configuration */}
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-gray-800 mb-6">
-          Kyc Configuration
+          KYC Configuration
         </h2>
 
-        {/* Fields stacked vertically */}
         <div className="grid grid-cols-1 gap-6 mb-6">
-          {/* KYC Provider */}
+          {/* KYC Provider Dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Select Kyc Config
+              Select KYC Provider
             </label>
             <select
               value={kycSettings.provider}
-              onChange={(e) => handleInputChange("provider", e.target.value)}
+              onChange={(e) => handleProviderChange(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
             >
-              <option value="QuickEKyc">QuickEKyc</option>
-              <option value="OtherKyc">OtherKyc</option>
+              {kycOptions.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* API Key */}
+          {/* API Key Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Api Key
+              API Key
             </label>
             <div className="flex items-center border rounded px-3 py-2">
               <input
                 type="text"
+                placeholder={kycSettings.provider === "surepass" ? "Token" : "Enter API key"}
                 value={kycSettings.apiKey}
                 onChange={(e) => handleInputChange("apiKey", e.target.value)}
                 className="w-full outline-none text-sm"
+              
               />
               <Key className="ml-2 text-gray-500" size={16} />
             </div>
@@ -76,7 +176,7 @@ const KycConfiguration = () => {
             onClick={handleToggleEnable}
             className={`relative inline-flex h-6 w-12 cursor-pointer rounded-full transition-colors duration-200 ease-in-out ${
               kycSettings.isEnabled ? "bg-cyan-400" : "bg-gray-300"
-            }`}
+            } ${kycSettings.toggleDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             <span
               className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
