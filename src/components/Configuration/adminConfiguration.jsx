@@ -192,10 +192,7 @@ const handleSubmit = async (e) => {
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-gray-800 mb-6">Admin</h2>
 
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Company Name */}
           <div className="flex items-center border rounded px-3 py-2">
             <User className="w-4 h-4 mr-2 text-gray-500" />
@@ -275,7 +272,7 @@ const handleSubmit = async (e) => {
           </div>
 
           {/* Time Zone */}
-          <div className="flex items-center border rounded px-3 py-2">
+          <div className="flex items-center border rounded px-3 py-2 col-span-1 md:col-span-1">
             <Globe className="w-4 h-4 mr-2 text-gray-500" />
             <select
               name="timezone"
@@ -302,7 +299,7 @@ const handleSubmit = async (e) => {
           </div>
 
           {/* Currency */}
-          <div className="flex items-center border rounded px-3 py-2">
+          <div className="flex items-center border rounded px-3 py-2 col-span-1 md:col-span-1">
             <Globe className="w-4 h-4 mr-2 text-gray-500" />
             <select
               name="currency"
@@ -319,18 +316,12 @@ const handleSubmit = async (e) => {
           <div className="flex items-center col-span-1 md:col-span-2 mt-2">
             <input
               type="checkbox"
-              id="showCompanyName"
               name="showCompanyName"
               checked={formData.showCompanyName}
               onChange={handleInputChange}
-              className="h-4 w-4 text-cyan-500 border-gray-300 rounded focus:ring-cyan-500"
+              className="mr-2"
             />
-            <label
-              htmlFor="showCompanyName"
-              className="ml-2 text-gray-700 cursor-pointer"
-            >
-              Company name show in login page
-            </label>
+            <span className="text-gray-700">Company name show in login page</span>
           </div>
 
           {/* Submit Button */}
