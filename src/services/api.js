@@ -43,17 +43,3 @@ export const updateOnlineTransaction = (id, transaction) =>
   API.put(`/online-transactions/${id}`, transaction);
 export const deleteOnlineTransaction = (id) =>
   API.delete(`/online-transactions/${id}`);
-
-//*---------------------- configurations ----------------------------- */
-export const getAdminConfiguration = () => API.get("/configs");
-export const getAdminConfigurationById = (id) => API.get(`/configs/${id}`);
-export const addAdminConfiguration = (adminConfiguration) =>
-  API.post("/configs", adminConfiguration);
-export const updateAdminConfiguration = (id, data) => {
-  return API.put(`/configs/${id}`, data);  // remove 'admin' if not in backend
-};
-
-/*--------------------------otts------------------------------------*/
- export const getOtts = () => API.get("/otts");
-
-
