@@ -7,6 +7,7 @@ import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
 import NasDashboard from "./pages/Nas";
 import Billing from "./components/billing/billing";
+import RechargeSummary from "./components/reports/RechargeSummary";
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
@@ -120,6 +121,11 @@ const App = () => {
             <p className="text-gray-600 mt-2">Active login monitoring will be implemented here.</p>
           </div>
         } />
+
+        {/* Reports Routes */}
+<Route path="/reports/online-users" element={<OnlineUsersTable />} />
+<Route path="/reports/recharge-summary" element={<RechargeSummary />} />
+
 
         {/* Complaints Management Route */}
         <Route path="/complaints/*" element={<Complaints />} />
