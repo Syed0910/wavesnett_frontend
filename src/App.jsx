@@ -7,6 +7,7 @@ import UsersPage from "./pages/users";
 import Layout from "./components/Layout/Layout";
 import NasDashboard from "./pages/Nas";
 import Billing from "./components/billing/billing";
+import RechargeSummary from "./components/reports/RechargeSummary";
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
@@ -16,6 +17,7 @@ import OltManagement from "./components/OLT-Management/OltManagement";
 
 // Import the new Billing component
 import BillingComponent from "./components/billing/billing";
+import OnlineUsersTable from "./components/reports/online-users";
 
 // ✅ Import Zone Management pages
 import Operators from "./components/ZoneManagement/operators";
@@ -84,23 +86,17 @@ const App = () => {
 
         {/* Billing Routes */}
         <Route path="/billing" element={<BillingComponent />} />
-        <Route path="/billing/*" element={<Billing />} />
 
-        {/* Packages */}
-        <Route path="/packages/*" element={<Packages />} />
+        <Route path="/billing/*" element={<Billing/>} />
 
-        {/* Reports */}
-        <Route
-          path="/reports/*"
-          element={
-            <div className="p-6">
-              <h2 className="text-xl font-semibold">Reports</h2>
-              <p className="text-gray-600 mt-2">
-                Reports will be implemented here.
-              </p>
-            </div>
-          }
-        />
+        {/* Packages Routes */}
+         <Route path="/packages/*" element={<Packages />} />
+
+        {/* Reports Routes */}
+        <Route path="/reports/*" element={
+          <OnlineUsersTable/>
+        } />
+
 
         {/* NAS Management */}
         <Route path="/nas-mgmt/*" element={<NasManagement />} />
@@ -116,7 +112,21 @@ const App = () => {
         <Route path="/zone/zones" element={<Zone />} />
         <Route path="/zone/permissions" element={<Permissions />} />
 
-        {/* Complaints */}
+        {/* Active Login */}
+        <Route path="/active-login" element={
+          <div className="p-6">
+            <h2 className="text-xl font-semibold">Active Login</h2>
+            <p className="text-gray-600 mt-2">Active login monitoring will be implemented here.</p>
+          </div>
+        } />
+
+        {/* Reports Routes */}
+<Route path="/reports/online-users" element={<OnlineUsersTable />} />
+<Route path="/reports/recharge-summary" element={<RechargeSummary />} />
+
+
+        {/* Complaints Management Route */}
+
         <Route path="/complaints/*" element={<Complaints />} />
         <Route path="/complaints/new-complaint" element={<NewComplaint />} />
         <Route
