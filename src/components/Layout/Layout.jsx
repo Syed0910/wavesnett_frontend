@@ -1,55 +1,38 @@
-// Layout.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
-
 import Footer from './Footer';
-
-const LG_BREAKPOINT = 1024;
 import { useNavigate } from "react-router-dom";
 
+const LG_BREAKPOINT = 1024;
+
 const Layout = ({ children }) => {
-  // Track the sidebar open state for toggles
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= LG_BREAKPOINT);
-  // To prevent unnecessary state updates after mount
   const prevIsLarge = useRef(window.innerWidth >= LG_BREAKPOINT);
 
-  // Responsive: auto sync when crossing the breakpoint
   useEffect(() => {
     const handleResize = () => {
       const isLarge = window.innerWidth >= LG_BREAKPOINT;
-      // Only update when crossing the breakpoint
       if (isLarge !== prevIsLarge.current) {
         setIsSidebarOpen(isLarge);
         prevIsLarge.current = isLarge;
       }
     };
-
     window.addEventListener('resize', handleResize);
-    // Call once on mount to set correct initial state
     handleResize();
-
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Always allow manual toggle
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
-
-  // Close handler for mobile overlay/click-away
   const closeSidebar = () => setIsSidebarOpen(false);
 
   const navigate = useNavigate();
-
-
-
-  const onSettingsClick = () => {
-    navigate("/config/admin");
-  }
+  const onSettingsClick = () => navigate("/config/admin");
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
       {/* Navbar */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 dark:border-gray-700">
         <Navbar isSidebarOpen={isSidebarOpen} onMenuToggle={toggleSidebar} onSettingsClick={onSettingsClick}/>
       </div>
 
@@ -64,7 +47,7 @@ const Layout = ({ children }) => {
       {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-opacity-30 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/30 z-40 lg:hidden"
           onClick={closeSidebar}
         />
       )}
