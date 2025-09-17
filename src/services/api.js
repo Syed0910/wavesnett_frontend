@@ -24,6 +24,7 @@ export const updateNas = (id, nas) => API.put(`/nas/${id}`, nas);
 export const deleteNas = (id) => API.delete(`/nas/${id}`);
 
 
+
 /* -------------------- RECHARGES -------------------- */
 export const getOnlineUsers = () => API.get("/reports/online-users"); // online users
 export const getRechargeSummary = () => API.get("/reports/recharge-summary");
@@ -37,3 +38,4 @@ export const getEmailTemplateByName = (notifyName) =>
 export const getMailConfig = () => API.get("/configs/mail/config");
 
 export default API;
+

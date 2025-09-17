@@ -11,9 +11,6 @@ import PaymentGateway from "./payment-gateway";
 import SMSGateway from "./sms-gateway";
 import NotificationSettings from "./notification";
 import KycConfiguration from "./kyc-configuration"; // ✅ matches file name now
-import AutoUser from "./auto-user";
-import OperatorNotification from "./operator-notification";
-import OttConfiguration from "./ott-configuration";
 
 const Configuration = () => {
   return (
@@ -28,10 +25,10 @@ const Configuration = () => {
         <Route path="payment-gateway" element={<PaymentGateway />} />
         <Route path="sms-gateway" element={<SMSGateway />} />
         <Route path="notification" element={<NotificationSettings />} />
-        <Route path="auto-user" element={<AutoUser/>} />
+        <Route path="auto-user" element={<div>Auto User Settings Coming Soon...</div>} />
         <Route path="whatsapp-gateway" element={<div>WhatsApp Gateway Coming Soon...</div>} />
-        <Route path="operator-notification" element={<OperatorNotification/>} />
-        <Route path="ott-configuration" element={<OttConfiguration/>} />
+        <Route path="operator-notification" element={<div>Operator Notifications Coming Soon...</div>} />
+        <Route path="ott-configuration" element={<div>OTT Config Coming Soon...</div>} />
         <Route path="kyc-configuration" element={<KycConfiguration />} /> {/* ✅ */}
       </Route>
     </Routes>
