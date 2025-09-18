@@ -37,5 +37,22 @@ export const getEmailTemplateByName = (notifyName) =>
 /* -------------------- CONFIGS -------------------- */
 export const getMailConfig = () => API.get("/configs/mail/config");
 
+
+
+//*---------------------- configurations ----------------------------- */
+export const getAdminConfiguration = () => API.get("/configs");
+export const getAdminConfigurationById = (id) => API.get(`/configs/${id}`);
+export const addAdminConfiguration = (adminConfiguration) =>
+  API.post("/configs", adminConfiguration);
+export const updateAdminConfiguration = (id, data) => {
+  return API.put(`/configs/${id}`, data);  // remove 'admin' if not in backend
+};
+
+/*--------------------------otts------------------------------------*/
+ export const getOtts = () => API.get("/otts");
+
+
+
+
 export default API;
 

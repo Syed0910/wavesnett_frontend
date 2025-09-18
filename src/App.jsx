@@ -11,15 +11,15 @@ import Billing from "./pages/Billing";
 
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
-import Configuration from "./components/Configuration/Configuration";
+import Configuration from "./components/Configuration/configuration";
 import NasManagement from "./components/NasManagement/NasManagement";
 import OltManagement from "./components/OLT-Management/OltManagement";
 
 
 // Import the new Billing component
-import BillingComponent from "./components/billing/billing";
-import OnlineUsersTable from "./components/reports/online-users";
 
+import OnlineUsersTable from "./components/reports/online-users";
+import RechargeSummary from "./components/reports/RechargeSummary";
 
 // ✅ Import Zone Management pages
 import Operators from "./components/ZoneManagement/operators";

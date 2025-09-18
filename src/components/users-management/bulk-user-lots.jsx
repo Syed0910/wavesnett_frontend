@@ -8,7 +8,7 @@ const BulkUserLots = () => {
     {
       lotName: 'BULK_LOT_001',
       usernameLength: 8,
-      passwordLength: 12,
+      passwordLength: 12, 
       planName: 'WavesNett 50mbps UL 6M',
       users: 25,
       expDate: '2026-03-01',
