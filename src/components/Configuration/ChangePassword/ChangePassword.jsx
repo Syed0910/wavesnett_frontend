@@ -1,123 +1,77 @@
+// configuration/changepassword/change-password.jsx
 import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Key, EyeOff, Eye } from "lucide-react";
 
 const ChangePassword = () => {
-  const [values, setValues] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-    showCurrent: false,
-    showNew: false,
-    showConfirm: false,
-  });
-
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
-
-  const handleClickShowPassword = (prop) => () => {
-    setValues({ ...values, [prop]: !values[prop] });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (values.newPassword !== values.confirmPassword) {
-      alert('New password and confirmation password do not match!');
-      return;
-    }
-    if (values.newPassword.length < 8) {
-      alert('New password must be at least 8 characters long!');
-      return;
-    }
-    console.log('Password change submitted');
-    alert('Password changed successfully!');
-  };
-
-  const handleCancel = () => {
-    setValues({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-      showCurrent: false,
-      showNew: false,
-      showConfirm: false,
-    });
-  };
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-5">
-      <div className="max-w-lg mx-auto bg-white p-10 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-light text-gray-800 mb-8">Change Password</h1>
+    <div className="max-w-8xl mx-auto bg-white p-0 pt-0 min-h-screen">
+      <h2 className="text-lg font-semibold mb-4">Change Password</h2>
 
-        <div className="space-y-5">
-          <div className="relative">
-            <input
-              type={values.showCurrent ? "text" : "password"}
-              placeholder="Current Password"
-              value={values.currentPassword}
-              onChange={handleChange("currentPassword")}
-              className="w-full px-4 py-4 pr-12 text-base border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition-colors"
-            />
-            <button
-              type="button"
-              onClick={handleClickShowPassword("showCurrent")}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              {values.showCurrent ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
-
-          <div className="relative">
-            <input
-              type={values.showNew ? "text" : "password"}
-              placeholder="New Password"
-              value={values.newPassword}
-              onChange={handleChange("newPassword")}
-              className="w-full px-4 py-4 pr-12 text-base border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition-colors"
-            />
-            <button
-              type="button"
-              onClick={handleClickShowPassword("showNew")}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              {values.showNew ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
-
-          <div className="relative mb-10">
-            <input
-              type={values.showConfirm ? "text" : "password"}
-              placeholder="Confirm New Password"
-              value={values.confirmPassword}
-              onChange={handleChange("confirmPassword")}
-              className="w-full px-4 py-4 pr-12 text-base border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition-colors"
-            />
-            <button
-              type="button"
-              onClick={handleClickShowPassword("showConfirm")}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              {values.showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
-
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white py-3 px-6 rounded-md font-semibold text-sm tracking-wider uppercase transition-all duration-200 hover:-translate-y-0.5"
-            >
-              SUBMIT
-            </button>
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="flex-1 bg-transparent hover:bg-gray-50 text-gray-600 hover:text-gray-800 py-3 px-6 rounded-md font-semibold text-sm tracking-wider uppercase border-2 border-gray-300 hover:border-gray-400 transition-all duration-200"
-            >
-              CANCEL
-            </button>
-          </div>
+      {/* Current Password */}
+      <div className="mb-3">
+        <div className="flex items-center w-1/2 border border-gray-300 rounded px-2">
+          <input
+            type="password"
+            placeholder="Current Password"
+            className="flex-1 p-2 outline-none"
+          />
+          <Key className="text-gray-500" size={18} />
         </div>
+      </div>
+
+      {/* New Password */}
+      <div className="mb-3">
+        <div className="flex items-center w-1/2 border border-gray-300 rounded px-2">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="New Password"
+            className="flex-1 p-2 outline-none"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="p-1"
+          >
+            {showPassword ? (
+              <Eye className="text-gray-500" size={18} />
+            ) : (
+              <Key className="text-gray-500" size={18} />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Confirm Password */}
+      <div className="mb-5">
+        <div className="flex items-center w-1/2 border border-gray-300 rounded px-2">
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Confirm New Password"
+            className="flex-1 p-2 outline-none"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="p-1"
+          >
+            {showConfirmPassword ? (
+              <Eye className="text-gray-500" size={18} />
+            ) : (
+              <EyeOff className="text-gray-500" size={18} />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex gap-3">
+        <button className="bg-cyan-500 text-white px-3 py-1 rounded shadow">
+          SUBMIT
+        </button>
+        <button className="border px-3 py-1 rounded">CANCEL</button>
       </div>
     </div>
   );

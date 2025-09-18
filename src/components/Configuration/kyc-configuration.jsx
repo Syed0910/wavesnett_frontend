@@ -45,7 +45,7 @@ const KycConfiguration = () => {
             <select
               value={kycSettings.provider}
               onChange={(e) => handleInputChange("provider", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md text-sm"
             >
               <option value="QuickEKyc">QuickEKyc</option>
               <option value="OtherKyc">OtherKyc</option>
@@ -57,47 +57,53 @@ const KycConfiguration = () => {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Api Key
             </label>
-            <div className="flex items-center border rounded px-3 py-2">
+            <div className="flex items-center w-1/2 px-3 py-2 border border-gray-300 rounded-md text-sm">
               <input
                 type="text"
                 value={kycSettings.apiKey}
                 onChange={(e) => handleInputChange("apiKey", e.target.value)}
-                className="w-full outline-none text-sm"
+                
               />
-              <Key className="ml-2 text-gray-500" size={16} />
+              
             </div>
           </div>
         </div>
 
         {/* Enable/Disable Toggle */}
-        <div className="flex items-center justify-between mb-6">
-          <span className="text-sm font-medium text-gray-700">Disable</span>
-          <div
-            onClick={handleToggleEnable}
-            className={`relative inline-flex h-6 w-12 cursor-pointer rounded-full transition-colors duration-200 ease-in-out ${
-              kycSettings.isEnabled ? "bg-cyan-400" : "bg-gray-300"
-            }`}
-          >
-            <span
-              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                kycSettings.isEnabled ? "translate-x-6" : "translate-x-0.5"
-              } mt-0.5`}
-            />
-          </div>
-          <span className="text-sm font-medium text-gray-700">Enable</span>
-        </div>
+        <div className="flex items-center gap-4 mb-6">
+  {/* Disable Label */}
+  <span className="text-sm font-medium text-gray-700">Disable</span>
+
+  {/* Toggle Switch */}
+  <div
+    onClick={handleToggleEnable}
+    className={`relative inline-flex h-6 w-12 cursor-pointer rounded-full transition-colors duration-200 ease-in-out ${
+      kycSettings.isEnabled ? "bg-cyan-400" : "bg-gray-300"
+    }`}
+  >
+    <span
+      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+        kycSettings.isEnabled ? "translate-x-6" : "translate-x-0.5"
+      } mt-0.5`}
+    />
+  </div>
+
+  {/* Enable Label */}
+  <span className="text-sm font-medium text-gray-700">Enable</span>
+</div>
+
 
         {/* Buttons */}
         <div className="flex space-x-4">
           <button
             onClick={() => handleSubmit("SUBMIT")}
-            className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium"
+            className="bg-cyan-400 hover:bg-cyan-500 text-white px-5 py-1 rounded-md font-medium"
           >
             SUBMIT
           </button>
           <button
             onClick={() => handleSubmit("CANCEL")}
-            className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-md font-medium"
+            className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-5 py-1 rounded-md font-medium"
           >
             CANCEL
           </button>
