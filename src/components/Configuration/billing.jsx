@@ -16,17 +16,6 @@ const Billing = () => {
     totalRoundOff: true,
     discountDisplayInPrint: true
   });
-
- const [taxSettings, setTaxSettings] = useState({
-    selectedTax: "None",
-    gstNumber: "",
-    taxRate: 0,
-    tax1Name: "",
-    tax1Rate: 0,
-    tax2Name: "",
-    tax2Rate: 0,
-    tax3Name: "",
-    tax3Rate: 0,
  const [taxSettings, setTaxSettings] = useState({
     selectedTax: "None",
     gstNumber: "",
@@ -40,7 +29,6 @@ const Billing = () => {
     acrTax: 0,
     hsnSacCode: "",
   });
- const [loading, setLoading] = useState(true);
  const [loading, setLoading] = useState(true);
 
   const [invoiceSettings, setInvoiceSettings] = useState({
@@ -180,20 +168,6 @@ useEffect(() => {
               value={printingSettings.defaultInvoiceWithoutTax || ""} // start empty
               onChange={(e) => handlePrintingChange('defaultInvoiceWithoutTax', e.target.value)}
             >
-              {/* Placeholder (disabled so it cannot be selected again) */}
-              <option value="" disabled>
-                Default invoice series without tax
-              </option>
-
-              {/* Dynamically render options from backend */}
-              {invoiceSeries
-                .filter(series => series.withTax === 0) // only without tax
-                .map(series => (
-                  <option key={series.id} value={series.name}>
-                    {series.name} {series.prefix ? `(${series.prefix})` : ""}
-                  </option>
-                ))}
-            </select>
               {/* Placeholder (disabled so it cannot be selected again) */}
               <option value="" disabled>
                 Default invoice series without tax
