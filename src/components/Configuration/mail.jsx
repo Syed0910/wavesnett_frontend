@@ -37,82 +37,100 @@ const MailConfiguration = () => {
   ]);
 
   const handleInputChange = (field, value) => {
-    setMailSettings(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setMailSettings(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = (action) => {
     console.log(`${action} clicked with settings:`, mailSettings);
   };
 
+  // ✅ Fixed Reusable Input Component
+  const InputField = ({ icon, type, placeholder, value, onChange, extra }) => (
+    <div className="flex items-center border rounded px-3 py-2">
+      {icon && React.cloneElement(icon, { className: "w-4 h-4 mr-2 text-gray-500" })}
+      {type === 'select' ? (
+        <select
+          value={value}
+          onChange={onChange}
+          className="w-full outline-none text-sm"
+          {...extra}
+        >
+          {extra?.children}
+        </select>
+      ) : (
+        <input
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          className="w-full outline-none text-sm"
+          {...extra}
+        />
+      )}
+    </div>
+  );
+
+  const actionButtons = [
+    { label: "Apply", color: "bg-cyan-400 hover:bg-cyan-500 text-white" },
+    { label: "Cancel", color: "bg-gray-300 hover:bg-gray-400 text-gray-700" },
+    { label: "Test&Apply", color: "bg-green-500 hover:bg-green-600 text-white" },
+    { label: "Clear", color: "bg-yellow-400 hover:bg-yellow-500 text-white" }
+  ];
+
   return (
     <div className="space-y-6">
-      {/* Mail Configuration */}
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-gray-800 mb-6">Mail Configuration</h2>
-        
+
+        {/* Mail & SMTP Inputs */}
         <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="flex items-center border rounded px-3 py-2">
-            <Mail className="w-4 h-4 mr-2 text-gray-500" />
-            <input
-              type="email"
-              placeholder="From Email Address"
-              value={mailSettings.fromEmail}
-              onChange={(e) => handleInputChange('fromEmail', e.target.value)}
-              className="w-full outline-none text-sm"
-            />
-          </div>
-          
-          <div className="flex items-center border rounded px-3 py-2">
-            <User className="w-4 h-4 mr-2 text-gray-500" />
-            <input
-              type="text"
-              placeholder="SMTP Server Address"
-              value={mailSettings.smtpServer}
-              onChange={(e) => handleInputChange('smtpServer', e.target.value)}
-              className="w-full outline-none text-sm"
-            />
-          </div>
+          <InputField
+            icon={<Mail />}
+            type="email"
+            placeholder="From Email Address"
+            value={mailSettings.fromEmail}
+            onChange={(e) => handleInputChange('fromEmail', e.target.value)}
+          />
+          <InputField
+            icon={<User />}
+            type="text"
+            placeholder="SMTP Server Address"
+            value={mailSettings.smtpServer}
+            onChange={(e) => handleInputChange('smtpServer', e.target.value)}
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="flex items-center border rounded px-3 py-2">
-            <select
-              value={mailSettings.smtpSecure}
-              onChange={(e) => handleInputChange('smtpSecure', e.target.value)}
-              className="w-full outline-none text-sm"
-            >
-              <option value="SSL">SSL</option>
-              <option value="TLS">TLS</option>
-              <option value="None">None</option>
-            </select>
-          </div>
-          
-          <div className="flex items-center border rounded px-3 py-2">
-            <input
-              type="text"
-              placeholder="SMTP Server Port"
-              value={mailSettings.smtpPort}
-              onChange={(e) => handleInputChange('smtpPort', e.target.value)}
-              className="w-full outline-none text-sm"
-            />
-          </div>
+          <InputField
+            type="select"
+            value={mailSettings.smtpSecure}
+            onChange={(e) => handleInputChange('smtpSecure', e.target.value)}
+            extra={{
+              children: (
+                <>
+                  <option value="SSL">SSL</option>
+                  <option value="TLS">TLS</option>
+                  <option value="None">None</option>
+                </>
+              )
+            }}
+          />
+          <InputField
+            type="text"
+            placeholder="SMTP Server Port"
+            value={mailSettings.smtpPort}
+            onChange={(e) => handleInputChange('smtpPort', e.target.value)}
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="flex items-center border rounded px-3 py-2">
-            <User className="w-4 h-4 mr-2 text-gray-500" />
-            <input
-              type="text"
-              placeholder="User name"
-              value={mailSettings.username}
-              onChange={(e) => handleInputChange('username', e.target.value)}
-              className="w-full outline-none text-sm"
-            />
-          </div>
-          
+          <InputField
+            icon={<User />}
+            type="text"
+            placeholder="User name"
+            value={mailSettings.username}
+            onChange={(e) => handleInputChange('username', e.target.value)}
+          />
           <div className="flex items-center border rounded px-3 py-2">
             <input
               type={showPassword ? "text" : "password"}
@@ -123,6 +141,7 @@ const MailConfiguration = () => {
             />
             <button
               type="button"
+              aria-label={showPassword ? "Hide Password" : "Show Password"}
               onClick={() => setShowPassword(!showPassword)}
               className="ml-2 text-gray-500 hover:text-gray-700"
             >
@@ -131,39 +150,25 @@ const MailConfiguration = () => {
           </div>
         </div>
 
+        {/* Action Buttons */}
         <div className="flex space-x-4 mb-6">
-          <button 
-            onClick={() => handleSubmit('Apply')}
-            className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium text-sm"
-          >
-            Apply
-          </button>
-          <button 
-            onClick={() => handleSubmit('Cancel')}
-            className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-md font-medium text-sm"
-          >
-            Cancel
-          </button>
-          <button 
-            onClick={() => handleSubmit('Test&Apply')}
-            className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md font-medium text-sm"
-          >
-            Test&Apply
-          </button>
-          <button 
-            onClick={() => handleSubmit('Clear')}
-            className="bg-yellow-400 hover:bg-yellow-500 text-white px-6 py-2 rounded-md font-medium text-sm"
-          >
-            Clear
-          </button>
+          {actionButtons.map(({ label, color }) => (
+            <button
+              key={label}
+              onClick={() => handleSubmit(label)}
+              className={`${color} px-6 py-2 rounded-md font-medium text-sm`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
         {/* Email Templates Table */}
         <div>
-          <div className="grid grid-cols-3 gap-4 mb-4">
-            <div className="text-sm font-medium text-gray-700">Email Type</div>
-            <div className="text-sm font-medium text-gray-700">Email Sender Configuration</div>
-            <div className="text-sm font-medium text-gray-700">Mail Template</div>
+          <div className="grid grid-cols-3 gap-4 mb-4 font-medium text-gray-700">
+            <div className="text-sm">Email Type</div>
+            <div className="text-sm">Email Sender Configuration</div>
+            <div className="text-sm">Mail Template</div>
           </div>
 
           <div className="space-y-2">
