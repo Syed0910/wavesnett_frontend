@@ -17,7 +17,7 @@ import OltManagement from "./components/OLT-Management/OltManagement";
 
 
 // Import the new Billing component
-import BillingComponent from "./components/billing/billing";
+import RechargeSummary from "./components/reports/RechargeSummary";
 import OnlineUsersTable from "./components/reports/online-users";
 
 
