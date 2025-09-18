@@ -247,47 +247,49 @@ const SMSGateway = () => {
             </div>
           </div>
 
-          <div className="flex gap-6 pb-2">
-            <label className="text-sm text-gray-600 mb-2">SMS Gateway Method</label>
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="smsMethod"
-                value="Get"
-                checked={smsMethod === 'Get'}
-                onChange={(e) => setSmsMethod(e.target.value)}
-                className="mr-2"
-              />
-              Get
-            </label>
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="smsMethod"
-                value="Post"
-                checked={smsMethod === 'Post'}
-                onChange={(e) => setSmsMethod(e.target.value)}
-                className="mr-2"
-              />
-              Post
-            </label>
-          </div>
+       <div className="flex gap-6 pb-2">
+  <label className="text-sm text-gray-600 mb-2">SMS Gateway Method</label>
+  <label className="flex items-center">
+    <input
+      type="radio"
+      name="smsMethod"
+      value="Get"
+      checked={smsMethod === "Get"}
+      onChange={(e) => setSmsMethod(e.target.value)}
+      className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)] mr-2"
+    />
+    Get
+  </label>
+  <label className="flex items-center">
+    <input
+      type="radio"
+      name="smsMethod"
+      value="Post"
+      checked={smsMethod === "Post"}
+      onChange={(e) => setSmsMethod(e.target.value)}
+      className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)] mr-2"
+    />
+    Post
+  </label>
+</div>
+
         </div>
 
-        <div className="mb-4">
-          <p className="text-sm text-gray-600 mb-2">
-            To provide SMS header, enable SMS header option below and fill provided input boxes
-          </p>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={provideSmsHeader}
-              onChange={(e) => setProvideSmsHeader(e.target.checked)}
-              className="mr-2"
-            />
-            Provide SMS header
-          </label>
-        </div>
+      <div className="mb-4">
+  <p className="text-sm text-gray-600 mb-2">
+    To provide SMS header, enable SMS header option below and fill provided input boxes
+  </p>
+  <label className="flex items-center">
+    <input
+      type="checkbox"
+      checked={provideSmsHeader}
+      onChange={(e) => setProvideSmsHeader(e.target.checked)}
+      className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)] mr-2"
+    />
+    Provide SMS header
+  </label>
+</div>
+
 
         {provideSmsHeader && (
           <div className="mb-6">
@@ -461,7 +463,10 @@ const SMSGateway = () => {
 
       {/* Action Buttons */}
       <div className="flex gap-3">
-        <button className="bg-cyan-500 text-white px-5 py-1 rounded hover:bg-cyan-600">
+        <button 
+         style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
+        >
           APPLY
         </button>
         <button className="bg-gray-500 text-white px-5 py-1 rounded hover:bg-gray-600">

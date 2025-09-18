@@ -8,9 +8,6 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Billing = () => {
-  const navigate = useNavigate();
-  const [showActionsDropdown, setShowActionsDropdown] = useState(false);
-
   const [printingSettings, setPrintingSettings] = useState({
 
     defaultInvoiceSeries: "",
@@ -30,9 +27,20 @@ const Billing = () => {
     tax2Rate: 0,
     tax3Name: "",
     tax3Rate: 0,
+ const [taxSettings, setTaxSettings] = useState({
+    selectedTax: "None",
+    gstNumber: "",
+    taxRate: 0,
+    tax1Name: "",
+    tax1Rate: 0,
+    tax2Name: "",
+    tax2Rate: 0,
+    tax3Name: "",
+    tax3Rate: 0,
     acrTax: 0,
     hsnSacCode: "",
   });
+ const [loading, setLoading] = useState(true);
  const [loading, setLoading] = useState(true);
 
   const [invoiceSettings, setInvoiceSettings] = useState({
@@ -130,10 +138,10 @@ useEffect(() => {
   }, []);
 
   return (
-    <div className="max-w-8xl mx-auto bg-gray-50 p-0 pt-0 min-h-screen">
+    <div className="space-y-6">
       {/* Printing Settings */}
-      <div className="bg-white rounded-lg p-6 shadow-sm mb-4">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Printing Setting</h2>
+      <div className="bg-white rounded-lg p-6 shadow-sm">
+        <h2 className="text-xl font-semibold text-gray-800 mb-6">Printing Setting</h2>
         
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
@@ -155,7 +163,6 @@ useEffect(() => {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-2">Receipt terms</label>
             <input 
               type="text"
               placeholder="Receipt terms"
@@ -187,6 +194,20 @@ useEffect(() => {
                   </option>
                 ))}
             </select>
+              {/* Placeholder (disabled so it cannot be selected again) */}
+              <option value="" disabled>
+                Default invoice series without tax
+              </option>
+
+              {/* Dynamically render options from backend */}
+              {invoiceSeries
+                .filter(series => series.withTax === 0) // only without tax
+                .map(series => (
+                  <option key={series.id} value={series.name}>
+                    {series.name} {series.prefix ? `(${series.prefix})` : ""}
+                  </option>
+                ))}
+            </select>
         </div>
 
 
@@ -197,7 +218,7 @@ useEffect(() => {
               type="checkbox"
               checked={printingSettings.totalRoundOff}
               onChange={(e) => handlePrintingChange('totalRoundOff', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-400"
+             className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Total round off</span>
           </label>
@@ -206,15 +227,15 @@ useEffect(() => {
               type="checkbox"
               checked={printingSettings.discountDisplayInPrint}
               onChange={(e) => handlePrintingChange('discountDisplayInPrint', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-400"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Discount display in invoice print</span>
           </label>
         </div>
 
-        <button 
-          onClick={handleApplyPrinting}
-          className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium transition-colors"
+        <button
+        style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
         >
           APPLY
         </button>
@@ -365,7 +386,7 @@ useEffect(() => {
     </div>
 
       {/* Invoice & Plan Setting */}
-      <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+      <div className="bg-white rounded-lg p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-gray-800 mb-6">Invoice & Plan Setting</h2>
         
         <div className="space-y-3 mb-4">
@@ -374,7 +395,7 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.autoInvoiceRecharge}
               onChange={(e) => handleInvoiceChange('autoInvoiceRecharge', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-400"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Auto invoice generate during recharge and new user creation time</span>
           </label>
@@ -384,30 +405,24 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.autoInvoiceOnlineRecharge}
               onChange={(e) => handleInvoiceChange('autoInvoiceOnlineRecharge', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-400"
+             className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
+
             />
             <span className="text-sm text-gray-700">Auto invoice generate during online recharge from the client portal</span>
           </label>
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm text-gray-600 mb-2">Auto renew plan</label>
-          <div className="relative">
-            <select 
-              value={invoiceSettings.autoRenewPlan}
-              onChange={(e) => handleInvoiceChange('autoRenewPlan', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm appearance-none bg-white pr-8"
-            >
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
+          <label className="block text-sm text-gray-700 mb-2">Auto renew plan</label>
+          <select 
+            value={invoiceSettings.autoRenewPlan}
+            onChange={(e) => handleInvoiceChange('autoRenewPlan', e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+          >
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
           <p className="text-xs text-gray-500 mt-1">Automatically renew the plan and generate an invoice on this day</p>
         </div>
 
@@ -417,7 +432,7 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.planCostDisplay}
               onChange={(e) => handleInvoiceChange('planCostDisplay', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-400"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Plan cost & plan name together displaying in recharge</span>
           </label>
@@ -427,7 +442,7 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.gracePeriod}
               onChange={(e) => handleInvoiceChange('gracePeriod', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-400"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Grace period in days</span>
           </label>
@@ -443,7 +458,7 @@ useEffect(() => {
                 value="full"
                 checked={invoiceSettings.zoneRefundType === "full"}
                 onChange={(e) => handleInvoiceChange('zoneRefundType', e.target.value)}
-                className="w-4 h-4 text-cyan-400 focus:ring-cyan-400"
+                className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
               />
               <span className="text-sm text-gray-700">Full</span>
             </label>
@@ -454,20 +469,20 @@ useEffect(() => {
                 value="partial"
                 checked={invoiceSettings.zoneRefundType === "partial"}
                 onChange={(e) => handleInvoiceChange('zoneRefundType', e.target.value)}
-                className="w-4 h-4 text-cyan-400 focus:ring-cyan-400"
+                className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
               />
               <span className="text-sm text-gray-700">Partial [Hourly basis]</span>
             </label>
           </div>
         </div>
 
-        <div className="space-y-3 mb-6">
+        <div className="space-y-3 mb-4">
           <label className="flex items-center space-x-3">
             <input
               type="checkbox"
               checked={invoiceSettings.outstandingAmount}
               onChange={(e) => handleInvoiceChange('outstandingAmount', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-400"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">The outstanding amount is added when online recharge</span>
           </label>
@@ -477,7 +492,7 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.midNightExpiry}
               onChange={(e) => handleInvoiceChange('midNightExpiry', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-400"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Mid night expiry display one day before if mid night set is start of day</span>
           </label>
@@ -487,15 +502,15 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.disableOutstandingUpdate}
               onChange={(e) => handleInvoiceChange('disableOutstandingUpdate', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-400"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">The outstanding amount is disable for update when online recharge</span>
           </label>
         </div>
 
         <button 
-          onClick={handleApplyInvoice}
-          className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium transition-colors"
+         style={{ backgroundColor: "var(--primary)" }}
+          className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
         >
           APPLY
         </button>
@@ -503,10 +518,7 @@ useEffect(() => {
 
       {/* Invoice Series */}
       <div className="bg-white rounded-lg p-6 shadow-sm">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-800">Invoice Series</h2>
-          
-        </div>
+        <h2 className="text-xl font-semibold text-gray-800 mb-6">Invoice Series</h2>
         
         <div className="grid grid-cols-2 gap-4 mb-4">
           <input 
@@ -517,24 +529,12 @@ useEffect(() => {
             className="px-3 py-2 border border-gray-300 rounded-md text-sm"
           />
           <div className="flex items-center space-x-2">
-            <div className="relative flex-1">
-              <select 
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm appearance-none bg-white pr-8"
-                value={invoiceSeries.template}
-                onChange={(e) => handleSeriesChange('template', e.target.value)}
-              >
-                <option value="Invoice Template 1">Invoice Template 1</option>
-                <option value="Invoice Template 2">Invoice Template 2</option>
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-            </div>
+            <select className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm">
+              <option>Invoice Template 1</option>
+            </select>
             <button 
-              onClick={handleViewTemplate}
-              className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-md text-sm transition-colors"
+             style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
             >
               VIEW
             </button>
@@ -566,12 +566,12 @@ useEffect(() => {
             onChange={(e) => handleSeriesChange('prefix', e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-md text-sm"
           />
-          <label className="flex items-center space-x-3 pt-2">
+          <label className="flex items-center space-x-3">
             <input
               type="checkbox"
               checked={invoiceSeries.withTax}
               onChange={(e) => handleSeriesChange('withTax', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-400"
+              className="w-4 h-4 text-cyan-400 border-gray-300 rounded"
             />
             <span className="text-sm text-gray-700">Invoice With Tax</span>
           </label>
@@ -581,22 +581,19 @@ useEffect(() => {
           placeholder="Invoice Terms"
           value={invoiceSeries.terms}
           onChange={(e) => handleSeriesChange('terms', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm h-20 mb-4 resize-none"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm h-20 mb-4"
         />
 
         <div className="flex space-x-4 mb-6">
           <button 
-            onClick={handleApplySeries}
-            className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium transition-colors"
-          >
+           style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
+            >
             APPLY
           </button>
-          <button 
-            onClick={handleClear}
-            className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-md font-medium transition-colors"
-          >
-            Clear
-          </button>
+          <button className="bg-yellow-500 text-white px-5 py-1 rounded hover:bg-yellow-600">
+          CLEAR
+        </button>
         </div>
 
         {/* Invoice Series Table */}

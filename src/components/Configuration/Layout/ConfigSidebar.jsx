@@ -1,8 +1,12 @@
 // components/Configuration/Layout/ConfigSidebar.jsx
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useTheme } from "../../../context/ThemeContext";
 
 const ConfigSidebar = () => {
+  const { primaryColor } = useTheme();
+  const [hovered, setHovered] = useState(null);
+
   const links = [
     { label: "ADMIN", path: "/config/admin" },
     { label: "PORTAL", path: "/config/portal" },
@@ -15,7 +19,7 @@ const ConfigSidebar = () => {
     { label: "WHATSAPP GATEWAY", path: "/config/whatsapp-gateway" },
     { label: "OPERATOR NOTIFICATION", path: "/config/operator-notification" },
     { label: "OTT CONFIGURATION", path: "/config/ott-configuration" },
-    { label: "KYC-CONFIGURATION", path: "/config/kyc-configuration" }, // ✅ hyphen route
+    { label: "KYC-CONFIGURATION", path: "/config/kyc-configuration" },
   ];
 
   return (
@@ -27,11 +31,16 @@ const ConfigSidebar = () => {
             to={link.path}
             className={({ isActive }) =>
               `px-3 py-2 rounded-md transition-colors ${
-                isActive
-                  ? "bg-gray-100 font-semibold text-cyan-600"
-                  : "hover:text-cyan-500"
+                isActive ? "bg-gray-100 font-semibold" : ""
               }`
             }
+            style={({ isActive }) => {
+              if (isActive) return { color: primaryColor };
+              if (hovered === link.path) return { color: primaryColor };
+              return {};
+            }}
+            onMouseEnter={() => setHovered(link.path)}
+            onMouseLeave={() => setHovered(null)}
           >
             {link.label}
           </NavLink>
