@@ -1,62 +1,20 @@
 import React, { useState } from "react";
 import {
-  Home,
-  Server,
-  Users,
-  CreditCard,
-  AlertCircle,
-  Laptop,
-  BarChart2,
-  Settings,
-  HardDrive,
-  Layers,
-  ClipboardList,
-  Box,
-  LogIn,
-  ChevronDown,
-  ChevronRight,
-  Monitor,
-  User,
-  Upload,
-  Router,
-  FileText,
-  Receipt,
-  DollarSign,
-  BarChart,
-  List,
-  FileInput,
-  Grid,
-  Network,
-  Ticket,
-  UserPlus,
-  Users2,
-  MessageSquare,
-  Mail,
-  Smartphone,
-  Ban,
-  Percent,
-  Globe,
-  Database,
-  TrendingUp,
-  Info,
-  Table,
-  Wrench,
-  Shield,
-  Clock,
-  Activity,
-  Wifi,
-  MapPin,
-  Lock,
-  Target,
-  Share,
-  Zap
+  Home, Server, Users, CreditCard, AlertCircle, Laptop, BarChart2, Settings,
+  HardDrive, Layers, ClipboardList, Box, LogIn, ChevronDown, ChevronRight, Monitor,
+  User, Upload, Router, FileText, Receipt, DollarSign, BarChart, List, FileInput,
+  Grid, Network, Ticket, UserPlus, Users2, MessageSquare, Mail, Smartphone, Ban,
+  Percent, Globe, Database, TrendingUp, Info, Table, Wrench, Shield, Clock,
+  Activity, Wifi, MapPin, Lock, Target, Share, Zap
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTheme } from "../../context/ThemeContext"; // ✅ import theme
 
 const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [expanded, setExpanded] = useState(['user']); // Default expand user management
+  const [expanded, setExpanded] = useState(["user"]);
+  const { primaryColor } = useTheme(); // ✅ use primary color
 
   const toggleExpand = (id) => {
     setExpanded((prev) =>
@@ -75,13 +33,26 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const isActive = (item) => {
     if (item.path === "/dashboard" && location.pathname === "/") return true;
-    return location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+    return (
+      location.pathname === item.path ||
+      location.pathname.startsWith(item.path + "/")
+    );
   };
 
+  // Helper function to get hover color with opacity
+  const getHoverColor = () => {
+    // Convert hex to RGB and add opacity
+    const hex = primaryColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    return `rgba(${r}, ${g}, ${b}, 0.1)`;
+  };
+  
+  // ✅ Full menuItems restored
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: <Home className="w-5 h-5" />, path: "/dashboard" },
 
-    // NAS Section
     {
       id: "nas",
       label: "NAS",
@@ -94,7 +65,6 @@ const Sidebar = ({ isOpen, onClose }) => {
       ],
     },
 
-    // User Management
     {
       id: "user",
       label: "User Management",
@@ -106,7 +76,6 @@ const Sidebar = ({ isOpen, onClose }) => {
       ],
     },
 
-    // Billing
     {
       id: "billing",
       label: "Billing",
@@ -114,12 +83,11 @@ const Sidebar = ({ isOpen, onClose }) => {
       subItems: [
         { id: "invoices", label: "Invoices", icon: <FileText className="w-4 h-4" />, path: "/billing/invoices" },
         { id: "receipts", label: "Receipts", icon: <Receipt className="w-4 h-4" />, path: "/billing/receipts" },
-        { id: "transactions", label: "Online Transaction", icon: <DollarSign className="w-4 h-4" />, path: "/billing/transactions" },
-        { id: "summary", label: "Billing Summary Chart", icon: <BarChart className="w-4 h-4" />, path: "/billing/summary" },
+        { id: "online-transactions", label: "Online Transaction", icon: <DollarSign className="w-4 h-4" />, path: "/billing/online-transactions" },
+        { id: "billing-summary-chart", label: "Billing Summary Chart", icon: <BarChart className="w-4 h-4" />, path: "/billing/billing-summary-chart" },
       ],
     },
 
-    // Packages
     {
       id: "packages",
       label: "Packages",
@@ -134,10 +102,8 @@ const Sidebar = ({ isOpen, onClose }) => {
       ],
     },
 
-    // Complaints
     { id: "complaints", label: "Complaints", icon: <AlertCircle className="w-5 h-5" />, path: "/complaints" },
 
-    // Reports
     {
       id: "reports",
       label: "Reports",
@@ -167,18 +133,16 @@ const Sidebar = ({ isOpen, onClose }) => {
       ],
     },
 
-    // Configuration
     {
       id: "config",
       label: "Configuration",
       icon: <Settings className="w-5 h-5" />,
       subItems: [
         { id: "admin-config", label: "Admin Configuration", icon: <Wrench className="w-4 h-4" />, path: "/config/admin" },
-        { id: "change-password", label: "Change Password", icon: <Lock className="w-4 h-4" />, path: "/config/change-password" },
+        { id: "changePassword", label: "Change Password", icon: <Lock className="w-4 h-4" />, path: "/config/changePassword" },
       ],
     },
 
-    // NAS Management
     {
       id: "nas-management",
       label: "NAS Management",
@@ -191,17 +155,16 @@ const Sidebar = ({ isOpen, onClose }) => {
         { id: "firewall", label: "Firewall", icon: <Shield className="w-4 h-4" />, path: "/nas-mgmt/firewall" },
         { id: "queue", label: "Queue", icon: <Clock className="w-4 h-4" />, path: "/nas-mgmt/queue" },
         { id: "route", label: "Route", icon: <Router className="w-4 h-4" />, path: "/nas-mgmt/route" },
-        { id: "dhcp-server", label: "Dhcp Server", icon: <Server className="w-4 h-4" />, path: "/nas-mgmt/dhcp-server" },
-        { id: "ip-pool", label: "IP Pool", icon: <Database className="w-4 h-4" />, path: "/nas-mgmt/ip-pool" },
-        { id: "hotspot-server", label: "Hotspot Server", icon: <Wifi className="w-4 h-4" />, path: "/nas-mgmt/hotspot-server" },
-        { id: "hotspot-profile", label: "Hotspot Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/hotspot-profile" },
-        { id: "pppoe-server", label: "PPPOE Server", icon: <Settings className="w-4 h-4" />, path: "/nas-mgmt/pppoe-server" },
-        { id: "pppoe-profile", label: "PPPOE Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/pppoe-profile" },
+        { id: "dhcpServer", label: "Dhcp Server", icon: <Server className="w-4 h-4" />, path: "/nas-mgmt/dhcpServer" },
+        { id: "ip-pool", label: "IP-Pool", icon: <Database className="w-4 h-4" />, path: "/nas-mgmt/ip-pool" },
+        { id: "hotspotServer", label: "Hotspot Server", icon: <Wifi className="w-4 h-4" />, path: "/nas-mgmt/hotspotServer" },
+        { id: "hotspotProfile", label: "Hotspot Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/hotspotProfile" },
+        { id: "pppoeServer", label: "PPPOE Server", icon: <Settings className="w-4 h-4" />, path: "/nas-mgmt/pppoeServer" },
+        { id: "pppoeProfile", label: "PPPOE Profile", icon: <User className="w-4 h-4" />, path: "/nas-mgmt/pppoeProfile" },
         { id: "masquerade", label: "Masquerade", icon: <Share className="w-4 h-4" />, path: "/nas-mgmt/masquerade" },
       ],
     },
 
-    // OLT Management
     {
       id: "olt-management",
       label: "OLT Management",
@@ -214,20 +177,18 @@ const Sidebar = ({ isOpen, onClose }) => {
       ],
     },
 
-    // Inventory Management
     {
       id: "inventory",
       label: "Inventory Management",
       icon: <ClipboardList className="w-5 h-5" />,
       subItems: [
-        { id: "inventory-list", label: "Inventory List", icon: <List className="w-4 h-4" />, path: "/inventory/list" },
+        { id: "inventoryList", label: "Inventory List", icon: <List className="w-4 h-4" />, path: "/inventory/inventoryList" },
         { id: "tr069", label: "Tr069", icon: <Zap className="w-4 h-4" />, path: "/inventory/tr069" },
         { id: "map", label: "Map", icon: <MapPin className="w-4 h-4" />, path: "/inventory/map" },
-        { id: "tr069-network", label: "Tr069 Network", icon: <Network className="w-4 h-4" />, path: "/inventory/tr069-network" },
+        { id: "tr069Network", label: "Tr069 Network", icon: <Network className="w-4 h-4" />, path: "/inventory/tr069Network" },
       ],
     },
 
-    // Zone Management
     {
       id: "zone",
       label: "Zone Management",
@@ -235,51 +196,90 @@ const Sidebar = ({ isOpen, onClose }) => {
       subItems: [
         { id: "operators", label: "Operators", icon: <Users2 className="w-4 h-4" />, path: "/zone/operators" },
         { id: "zones", label: "Zones", icon: <Target className="w-4 h-4" />, path: "/zone/zones" },
-        { id: "permission", label: "Permission", icon: <Lock className="w-4 h-4" />, path: "/zone/permission" },
+        { id: "permissions", label: "Permissions", icon: <Lock className="w-4 h-4" />, path: "/zone/permissions" },
       ],
     },
 
     { id: "active-login", label: "Active Login", icon: <LogIn className="w-5 h-5" />, path: "/active-login" },
   ];
 
+  // ✅ Enhanced renderItem logic with hover effects
   const renderItem = (item) => {
     const expandedItem = expanded.includes(item.id);
     const hasSubItems = item.subItems && item.subItems.length > 0;
+    const isItemActive = isActive(item);
     
     return (
       <div key={item.id}>
         <button
           onClick={() => handleClick(item)}
           className={`
-            w-full flex items-center justify-between px-4 py-2 rounded-full transition-colors
-            ${isActive(item) ? "bg-gray-200 text-gray-900" : "text-gray-700 hover:bg-gray-100"}
+            w-full flex items-center justify-between px-4 py-2 rounded-full transition-all duration-200
+            hover:scale-105 hover:shadow-md
+            ${isItemActive ? "bg-gray-200 shadow-sm" : "hover:bg-opacity-10"}
           `}
+          style={{
+            color: isItemActive ? primaryColor : undefined,
+            backgroundColor: !isItemActive ? 'transparent' : undefined,
+          }}
+          onMouseEnter={(e) => {
+            if (!isItemActive) {
+              e.target.style.backgroundColor = getHoverColor();
+              e.target.style.color = primaryColor;
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isItemActive) {
+              e.target.style.backgroundColor = 'transparent';
+              e.target.style.color = '';
+            }
+          }}
         >
           <div className="flex items-center gap-3">
             {item.icon}
             <span className="text-sm font-medium whitespace-nowrap">{item.label}</span>
           </div>
           {hasSubItems && (
-            <span className="text-gray-500">
+            <span className="text-gray-500 transition-transform duration-200">
               {expandedItem ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </span>
           )}
         </button>
         {hasSubItems && expandedItem && (
           <div className="ml-8 mt-1 space-y-1">
-            {item.subItems.map((sub) => (
-              <button
-                key={sub.id}
-                onClick={() => handleClick(sub)}
-                className={`
-                  w-full flex items-center gap-2 px-2 py-1 text-sm rounded transition-colors
-                  ${isActive(sub) ? "bg-gray-200 text-gray-900" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"}
-                `}
-              >
-                {sub.icon}
-                <span className="whitespace-nowrap">{sub.label}</span>
-              </button>
-            ))}
+            {item.subItems.map((sub) => {
+              const isSubActive = isActive(sub);
+              return (
+                <button
+                  key={sub.id}
+                  onClick={() => handleClick(sub)}
+                  className={`
+                    w-full flex items-center gap-2 px-2 py-1 text-sm rounded transition-all duration-200
+                    hover:scale-105 hover:shadow-sm
+                    ${isSubActive ? "bg-gray-200 shadow-sm" : "hover:bg-opacity-10"}
+                  `}
+                  style={{
+                    color: isSubActive ? primaryColor : undefined,
+                    backgroundColor: !isSubActive ? 'transparent' : undefined,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSubActive) {
+                      e.target.style.backgroundColor = getHoverColor();
+                      e.target.style.color = primaryColor;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSubActive) {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.color = '';
+                    }
+                  }}
+                >
+                  {sub.icon}
+                  <span className="whitespace-nowrap">{sub.label}</span>
+                </button>
+              );
+            })}
           </div>
         )}
       </div>
@@ -287,30 +287,34 @@ const Sidebar = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className={`${isOpen ? "translate-x-0" : "-translate-x-70"} transform transition-transform duration-300` }>
-    <div className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen flex flex-col">
-      {/* Logo and Company Name Section */}
-      <div className="text-white p-6 flex flex-col items-center" style={{ backgroundColor: '#00a1b8' }}>
-        <div className="bg-white p-3 rounded-lg mb-3">
-          <img 
-            src="/wavesnett.png" 
-            alt="WavesNett" 
-            className="w-12 h-12 object-contain"
-          />
+    <div
+      className={`${isOpen ? "translate-x-0" : "-translate-x-70"} transform transition-transform duration-300`}
+    >
+      <div className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen flex flex-col">
+        {/* Logo and Company Name Section */}
+        <div
+          className="text-white p-6 flex flex-col items-center"
+          style={{ backgroundColor: primaryColor }} // ✅ dynamic color
+        >
+          <div className="bg-white p-3 rounded-lg mb-3">
+            <img
+              src="/wavesnett.png"
+              alt="WavesNett"
+              className="w-12 h-12 object-contain"
+            />
+          </div>
+          <h2 className="text-lg font-semibold text-center leading-tight">
+            AaniRids Technologies...
+          </h2>
         </div>
-        <h2 className="text-lg font-semibold text-center leading-tight">
-          AaniRids Technologies...
-        </h2>
-      </div>
 
-      <div className="flex-1 overflow-y-auto">
-        <nav className="p-4 space-y-2">
-          {menuItems.map((item) => renderItem(item))}
-        </nav>
+        <div className="flex-1 overflow-y-auto">
+          <nav className="p-4 space-y-2">
+            {menuItems.map((item) => renderItem(item))}
+          </nav>
+        </div>
       </div>
     </div>
-    </div>
-  
   );
 };
 
