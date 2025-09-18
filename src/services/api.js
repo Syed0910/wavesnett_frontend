@@ -1,7 +1,9 @@
-// app.js
+// src/services/api.js
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:3000/api" });
+const API = axios.create({
+  baseURL: "http://localhost:3000/api", // backend prefix
+});
 
 /* -------------------- USERS -------------------- */
 export const getUsers = () => API.get("/users");
@@ -23,14 +25,14 @@ export const addNas = (nas) => API.post("/nas", nas);
 export const updateNas = (id, nas) => API.put(`/nas/${id}`, nas);
 export const deleteNas = (id) => API.delete(`/nas/${id}`);
 
-/* -------------------- RECHARGES -------------------- */
-export const getOnlineUsers = () => API.get("/reports/online-users"); // online users
+/* -------------------- RECHARGES / REPORTS -------------------- */
+export const getOnlineUsers = () => API.get("/reports/online-users");
 export const getRechargeSummary = () => API.get("/reports/recharge-summary");
+export const getConnectionAttempts = () => API.get("/connection-attempts");
 
 /* -------------------- EMAIL TEMPLATES -------------------- */
 export const getEmailTemplateByName = (notifyName) =>
   API.get(`/emailtemplates/byName/${encodeURIComponent(notifyName)}`);
-
 
 /* -------------------- CONFIGS -------------------- */
 export const getMailConfig = () => API.get("/configs/mail/config");

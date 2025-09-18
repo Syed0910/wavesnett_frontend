@@ -8,6 +8,7 @@ import Layout from "./components/Layout/Layout";
 import NasDashboard from "./pages/Nas";
 import Billing from "./components/billing/billing";
 import RechargeSummary from "./components/reports/RechargeSummary";
+import ConnectionAttempt from "./components/reports/ConnectionAttempt";
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
@@ -125,6 +126,7 @@ const App = () => {
         {/* Reports Routes */}
 <Route path="/reports/online-users" element={<OnlineUsersTable />} />
 <Route path="/reports/recharge-summary" element={<RechargeSummary />} />
+<Route path="/reports/connection-attempt" element={<ConnectionAttempt />} />
 
 
         {/* Complaints Management Route */}
