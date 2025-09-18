@@ -25,7 +25,6 @@ export const addNas = (nas) => API.post("/nas", nas);
 export const updateNas = (id, nas) => API.put(`/nas/${id}`, nas);
 export const deleteNas = (id) => API.delete(`/nas/${id}`);
 
-
 /* -------------------- RECHARGES / REPORTS -------------------- */
 export const getOnlineUsers = () => API.get("/reports/online-users");
 export const getRechargeSummary = () => API.get("/reports/recharge-summary");
