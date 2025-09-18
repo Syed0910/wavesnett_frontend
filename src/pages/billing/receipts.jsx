@@ -156,6 +156,7 @@ const Receipts = () => {
 
   return (
     <div className="p-6">
+       <h3 className="text-xl font-semibold">Receipts</h3>
       {/* Options Menu */}
       <div className="relative flex justify-end mb-4">
         <button 

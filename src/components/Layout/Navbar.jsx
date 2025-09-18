@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Search,
   Bell,
@@ -10,15 +10,52 @@ import {
   Camera,
   Maximize2,
   Menu,
+  Moon,
 } from "lucide-react";
-import { useTheme } from "../../context/ThemeContext"; // ✅ import ThemeContext
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
   const { primaryColor } = useTheme(); // ✅ get selected theme color
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-  const fileInputRef = useRef(null);
+  const [activeMenu, setActiveMenu] = useState("profile");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const fileInputRef = useRef();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+      setIsDarkMode(true);
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const html = document.documentElement;
+    if (isDarkMode) {
+      html.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setIsDarkMode(false);
+    } else {
+      html.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setIsDarkMode(true);
+    }
+  };
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  const triggerFileUpload = () => {
+    fileInputRef.current.click();
+  };
 
   const handleImageUpload = (event) => {
     const file = event.target.files?.[0];
@@ -32,8 +69,17 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
       reader.readAsDataURL(file);
     }
   };
+const [query, setQuery] = useState("");
+const [filteredUsers, setFilteredUsers] = useState([]);
+const [isOpen, setIsOpen] = useState(false);
 
-  const triggerFileUpload = () => fileInputRef.current?.click();
+// Temporary dummy data (replace with API later)
+const usersList = [
+  { id: 1, name: "John Doe" },
+  { id: 2, name: "Jane Smith" },
+  { id: 3, name: "Mike Johnson" },
+  { id: 4, name: "Alice Walker" },
+];
 
   return (
     <nav
@@ -50,32 +96,80 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
           >
             <button
               onClick={onMenuToggle}
-              className="p-2 rounded-md hover:opacity-80 transition-colors duration-200"
+              className="p-2 rounded-md hover:bg-cyan-500 transition-colors duration-200"
             >
               <Menu className="w-5 h-5 text-white" />
             </button>
           </div>
 
-          {/* Center - Search */}
-          <div className="flex items-center">
-            <div className="relative w-full max-w-2xl">
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
-                <User className="w-4 h-4 text-gray-400 mr-2" />
-                <span className="text-gray-400 text-sm">Search Users</span>
-              </div>
-              <input
-                type="text"
-                className="w-full pl-20 pr-12 py-2.5 bg-white rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-white/20 text-gray-700 shadow-sm"
-              />
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <ChevronDown className="w-4 h-4 text-gray-400" />
-              </div>
-            </div>
-          </div>
-
           {/* Right - Actions */}
           <div className="flex items-center gap-3">
-            <button className="p-2 rounded-md hover:opacity-80 transition-colors duration-200">
+            {/* Search */}
+            <div className="flex items-center">
+              <div className="relative w-full max-w-2xl">
+                  {/* Left Icon & Placeholder */}
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
+                    <User className="w-4 h-4 text-gray-400 mr-2" />
+                    {!query && <span className="text-gray-400 text-sm">Search Users</span>}
+                  </div>
+
+                  {/* Input */}
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setFilteredUsers(
+                        e.target.value.trim()
+                          ? usersList.filter((u) =>
+                              u.name.toLowerCase().includes(e.target.value.toLowerCase())
+                            )
+                          : []
+                      );
+                    }}
+                    onFocus={() => setIsOpen(true)}
+                    onBlur={() => setTimeout(() => setIsOpen(false), 150)}
+                    className="w-full pl-20 pr-12 py-2.5 bg-white rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-white/20 text-gray-700 shadow-sm"
+                  />
+
+                  {/* Right Dropdown Icon */}
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  </div>
+
+                  {/* Suggestions Dropdown */}
+                  {isOpen && filteredUsers.length > 0 && (
+                    <div className="absolute mt-2 w-full bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50">
+                      {filteredUsers.map((user) => (
+                        <button
+                          key={user.id}
+                          onClick={() => {
+                            setQuery(user.name);
+                            setIsOpen(false);
+                          }}
+                          className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 text-sm"
+                        >
+                          {user.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+              </div>
+            </div>
+
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-md hover:bg-cyan-500 transition-colors duration-200"
+            >
+              <Moon className="w-5 h-5 text-white" />
+            </button>
+
+            {/* Fullscreen Button */}
+            <button
+              onClick={toggleFullScreen}
+              className="p-2 rounded-md hover:bg-cyan-500 transition-colors duration-200"
+            >
               <Maximize2 className="w-5 h-5 text-white" />
             </button>
 
@@ -83,7 +177,7 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
             <div className="relative">
               <button
                 onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-                className="p-2 rounded-md hover:opacity-80 transition-colors duration-200 relative"
+                className="p-2 rounded-md hover:bg-cyan-500 transition-colors duration-200 relative"
               >
                 <Bell className="w-5 h-5 text-white" />
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
@@ -92,13 +186,13 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
               </button>
             </div>
 
-            {/* Profile */}
+            {/* Profile Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center gap-2 p-1 rounded-full hover:opacity-80 transition-colors duration-200"
+                className="flex items-center gap-2 p-1 rounded-full hover:bg-cyan-500 transition-colors duration-200"
               >
-                <div className="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
                   <span className="text-white text-sm font-bold">A</span>
                 </div>
               </button>
@@ -108,7 +202,7 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
                   <div className="flex flex-col items-center px-4 mb-4">
                     <div className="relative mb-3">
                       <div
-                        className="w-20 h-20 rounded-full overflow-hidden bg-[var(--primary)] flex items-center justify-center border-4 border-gray-200 shadow-lg cursor-pointer hover:opacity-80 transition-opacity"
+                        className="w-20 h-20 rounded-full overflow-hidden bg-blue-600 flex items-center justify-center border-4 border-gray-200 shadow-lg cursor-pointer hover:opacity-80 transition-opacity"
                         onClick={triggerFileUpload}
                       >
                         {profileImage ? (
@@ -123,7 +217,7 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
                       </div>
                       <button
                         onClick={triggerFileUpload}
-                        className="absolute -bottom-1 -right-1 bg-[var(--primary)] hover:opacity-90 text-white rounded-full p-1.5 shadow-lg transition-colors"
+                        className="absolute -bottom-1 -right-1 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-1.5 shadow-lg transition-colors"
                       >
                         <Camera className="w-3 h-3" />
                       </button>
@@ -138,17 +232,29 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
 
                   {/* Dropdown Menu */}
                   <div className="px-2">
-                    <button className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 rounded-lg transition-colors">
+                    <button
+                      onClick={() => {
+                        setActiveMenu("profile");
+                        navigate("/users/users");
+                        setIsProfileOpen(false);
+                      }}
+                      className={`w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 rounded-lg transition-colors ${
+                        activeMenu === "profile" ? "bg-gray-100" : ""
+                      }`}
+                    >
                       <User className="w-4 h-4 text-gray-600" />
                       <span className="text-sm text-gray-700">My Profile</span>
                     </button>
 
                     <button
                       onClick={() => {
+                        setActiveMenu("settings");
                         if (onSettingsClick) onSettingsClick();
                         setIsProfileOpen(false);
                       }}
-                      className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 rounded-lg transition-colors"
+                      className={`w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 rounded-lg transition-colors ${
+                        activeMenu === "settings" ? "bg-gray-100" : ""
+                      }`}
                     >
                       <Settings className="w-4 h-4 text-gray-600" />
                       <span className="text-sm text-gray-700">Settings</span>
