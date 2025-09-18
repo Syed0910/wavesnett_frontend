@@ -574,50 +574,53 @@ Reason: {{REASON}}
           <label className="block text-sm font-medium text-gray-700 mb-2">
             WhatsApp Gateway Method
           </label>
-          <div className="flex space-x-4">
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                checked={whatsappSettings.method === "GET"}
-                onChange={() => handleInputChange('method', "GET")}
-                className="form-radio h-4 w-4 text-cyan-400"
-              />
-              <span className="ml-2 text-sm text-gray-700">GET</span>
-            </label>
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                checked={whatsappSettings.method === "POST"}
-                onChange={() => handleInputChange('method', "POST")}
-                className="form-radio h-4 w-4 text-cyan-400"
-              />
-              <span className="ml-2 text-sm text-gray-700">POST</span>
-            </label>
-          </div>
-        </div>
-        <p className="text-sm text-gray-600 py-2">To provide Whatsapp header, enable Whatsapp header option below and fill provided input boxes</p>
-       <div className="mb-6">
- <label className="inline-flex items-center cursor-pointer">
-   <div
-     onClick={handleToggleHeader}
-     className="mr-2"
-   >
-     {whatsappSettings.provideHeader ? (
-       <CheckSquare className="w-5 h-5 text-cyan-400" />
-     ) : (
-       <Square className="w-5 h-5 text-gray-400" />
-     )}
-   </div>
-   <span className="text-sm font-medium text-gray-700">
-     Provide WhatsApp header
-   </span>
- </label>
- {whatsappSettings.provideHeader && (
-   <p className="text-xs text-gray-500 mt-1 ml-7">
-     Provide name of header in name and it's value in value column example <span className="text-red-500">Name : Accept and Value : application/json, Name : Content-Type and Value : application/json
-   </span></p>
- )}
+         <div className="flex space-x-4">
+  <label className="inline-flex items-center">
+    <input
+      type="radio"
+      checked={whatsappSettings.method === "GET"}
+      onChange={() => handleInputChange("method", "GET")}
+      className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
+    />
+    <span className="ml-2 text-sm text-gray-700">GET</span>
+  </label>
+  <label className="inline-flex items-center">
+    <input
+      type="radio"
+      checked={whatsappSettings.method === "POST"}
+      onChange={() => handleInputChange("method", "POST")}
+      className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
+    />
+    <span className="ml-2 text-sm text-gray-700">POST</span>
+  </label>
 </div>
+
+</div>
+<p className="text-sm text-gray-600 py-2">
+  To provide WhatsApp header, enable WhatsApp header option below and fill provided input boxes
+</p>
+<div className="mb-6">
+  <label className="inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      checked={whatsappSettings.provideHeader}
+      onChange={handleToggleHeader}
+      className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)] mr-2"
+    />
+    <span className="text-sm font-medium text-gray-700">
+      Provide WhatsApp header
+    </span>
+  </label>
+  {whatsappSettings.provideHeader && (
+    <p className="text-xs text-gray-500 mt-1 ml-7">
+      Provide name of header in name and its value in value column example{" "}
+      <span className="text-red-500">
+        Name : Accept and Value : application/json, Name : Content-Type and Value : application/json
+      </span>
+    </p>
+  )}
+</div>
+
 {/** The table and add header button are always visible, no longer conditional **/}
 <div className="mb-6 rounded-lg border border-gray-200 overflow-x-auto">
   <table className="min-w-full divide-y divide-gray-200">
@@ -659,12 +662,13 @@ Reason: {{REASON}}
       ))}
     </tbody>
   </table>
-  <button
-    onClick={addHeader}
-    className="mt-2 flex items-center text-sm text-cyan-500 hover:text-cyan-700 p-3"
-  >
-    <Plus className="w-4 h-4 mr-1" /> Add Header
-  </button>
+    <button
+      onClick={addHeader}
+      className="mt-2 flex items-center text-sm text-[var(--primary)] hover:opacity-80 p-3"
+    >
+      <Plus className="w-4 h-4 mr-1" /> Add Header
+    </button>
+
 </div>
 
 
@@ -829,12 +833,12 @@ Reason: {{REASON}}
         </div>
     
         <div className="flex space-x-4">
-  <button
-    onClick={() => handleSubmit("SUBMIT")}
-    className="bg-cyan-400 hover:bg-cyan-500 active:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-50 text-white px-6 py-2 rounded-md font-medium cursor-pointer transition duration-150"
-  >
-    APPLY
-  </button>
+ <button 
+         style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
+        >
+          APPLY
+        </button>
   <button
     onClick={() => handleSubmit("CANCEL")}
     className="bg-gray-300 hover:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 text-gray-700 px-6 py-2 rounded-md font-medium cursor-pointer transition duration-150"
