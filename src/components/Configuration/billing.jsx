@@ -144,14 +144,14 @@ useEffect(() => {
             <input 
               type="text"
               placeholder="Receipt terms"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="w-full mt-7 px-3 py-2 border border-gray-300 rounded-md text-sm"
             />  
           </div>
         </div>
 
         <div className="mt-4">
             <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="w-full my-2 px-3 py-2 border border-gray-300 rounded-md text-sm"
               value={printingSettings.defaultInvoiceWithoutTax || ""} // start empty
               onChange={(e) => handlePrintingChange('defaultInvoiceWithoutTax', e.target.value)}
             >
@@ -178,7 +178,7 @@ useEffect(() => {
               type="checkbox"
               checked={printingSettings.totalRoundOff}
               onChange={(e) => handlePrintingChange('totalRoundOff', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded"
+             className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Total round off</span>
           </label>
@@ -187,13 +187,16 @@ useEffect(() => {
               type="checkbox"
               checked={printingSettings.discountDisplayInPrint}
               onChange={(e) => handlePrintingChange('discountDisplayInPrint', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Discount display in invoice print</span>
           </label>
         </div>
 
-        <button className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium">
+        <button
+        style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
+        >
           APPLY
         </button>
       </div>
@@ -213,7 +216,7 @@ useEffect(() => {
               value={type}
               checked={taxSettings.selectedTax === type}
               onChange={(e) => handleTaxChange("selectedTax", e.target.value)}
-              className="w-4 h-4 text-cyan-400"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">{type}</span>
           </label>
@@ -334,8 +337,8 @@ useEffect(() => {
       )}
 
       <button
-        onClick={handleApply}
-        className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium"
+        style={{ backgroundColor: "var(--primary)" }}
+        className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
       >
         APPLY
       </button>
@@ -352,7 +355,7 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.autoInvoiceRecharge}
               onChange={(e) => handleInvoiceChange('autoInvoiceRecharge', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Auto invoice generate during recharge and new user creation time</span>
           </label>
@@ -362,7 +365,8 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.autoInvoiceOnlineRecharge}
               onChange={(e) => handleInvoiceChange('autoInvoiceOnlineRecharge', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded"
+             className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
+
             />
             <span className="text-sm text-gray-700">Auto invoice generate during online recharge from the client portal</span>
           </label>
@@ -388,7 +392,7 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.planCostDisplay}
               onChange={(e) => handleInvoiceChange('planCostDisplay', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Plan cost & plan name together displaying in recharge</span>
           </label>
@@ -398,7 +402,7 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.gracePeriod}
               onChange={(e) => handleInvoiceChange('gracePeriod', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Grace period in days</span>
           </label>
@@ -414,7 +418,7 @@ useEffect(() => {
                 value="full"
                 checked={invoiceSettings.zoneRefundType === "full"}
                 onChange={(e) => handleInvoiceChange('zoneRefundType', e.target.value)}
-                className="w-4 h-4 text-cyan-400"
+                className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
               />
               <span className="text-sm text-gray-700">Full</span>
             </label>
@@ -425,7 +429,7 @@ useEffect(() => {
                 value="partial"
                 checked={invoiceSettings.zoneRefundType === "partial"}
                 onChange={(e) => handleInvoiceChange('zoneRefundType', e.target.value)}
-                className="w-4 h-4 text-cyan-400"
+                className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
               />
               <span className="text-sm text-gray-700">Partial [Hourly basis]</span>
             </label>
@@ -438,7 +442,7 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.outstandingAmount}
               onChange={(e) => handleInvoiceChange('outstandingAmount', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">The outstanding amount is added when online recharge</span>
           </label>
@@ -448,7 +452,7 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.midNightExpiry}
               onChange={(e) => handleInvoiceChange('midNightExpiry', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">Mid night expiry display one day before if mid night set is start of day</span>
           </label>
@@ -458,13 +462,16 @@ useEffect(() => {
               type="checkbox"
               checked={invoiceSettings.disableOutstandingUpdate}
               onChange={(e) => handleInvoiceChange('disableOutstandingUpdate', e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-gray-300 rounded"
+              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
             />
             <span className="text-sm text-gray-700">The outstanding amount is disable for update when online recharge</span>
           </label>
         </div>
 
-        <button className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium">
+        <button 
+         style={{ backgroundColor: "var(--primary)" }}
+          className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
+        >
           APPLY
         </button>
       </div>
@@ -485,7 +492,10 @@ useEffect(() => {
             <select className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm">
               <option>Invoice Template 1</option>
             </select>
-            <button className="bg-cyan-400 hover:bg-cyan-500 text-white px-4 py-2 rounded-md text-sm">
+            <button 
+             style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
+            >
               VIEW
             </button>
           </div>
@@ -535,12 +545,15 @@ useEffect(() => {
         />
 
         <div className="flex space-x-4 mb-6">
-          <button className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium">
+          <button 
+           style={{ backgroundColor: "var(--primary)" }}
+            className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
+            >
             APPLY
           </button>
-          <button className="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-2 rounded-md font-medium">
-            Clear
-          </button>
+          <button className="bg-yellow-500 text-white px-5 py-1 rounded hover:bg-yellow-600">
+          CLEAR
+        </button>
         </div>
 
         {/* Invoice Series Table */}
