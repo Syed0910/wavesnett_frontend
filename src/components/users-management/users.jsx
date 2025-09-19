@@ -11,6 +11,11 @@ const Users = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
+  const handleAddUser = () => {
+    navigate("/user/new");
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -38,9 +43,9 @@ const handleView = (user) => {
 };
 
 
-  const handleImport = () => alert("Import users clicked");
-  const handleAddUser = () => alert("Add user clicked");
-
+  const handleImport = () => {
+    navigate("/user/import");
+  };
   const columns = [
     {
       key: 'username',
@@ -110,15 +115,15 @@ const handleView = (user) => {
             <Upload className="w-4 h-4" />
             Import
           </button>
-          <button
+            <button
             onClick={handleAddUser}
             className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
           >
             <Plus className="w-4 h-4" />
             Add User
           </button>
-        </div>
-      </div>
+              </div>
+            </div>
 
       
 
