@@ -109,7 +109,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       label: "Reports",
       icon: <BarChart2 className="w-5 h-5" />,
       subItems: [
-        { id: "online-users-report", label: "Online Users", icon: <User className="w-4 h-4" />, path: "/reports/online-users" },
+        { id: "online-users", label: "Online Users", icon: <User className="w-4 h-4" />, path: "/reports/online-users" },
         { id: "recharge-summary", label: "Recharge Summary", icon: <CreditCard className="w-4 h-4" />, path: "/reports/recharge-summary" },
         { id: "connection-attempt", label: "Connection Attempt", icon: <Network className="w-4 h-4" />, path: "/reports/connection-attempt" },
         { id: "active-records", label: "Active Records", icon: <Users2 className="w-4 h-4" />, path: "/reports/active-records" },

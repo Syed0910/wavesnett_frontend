@@ -131,6 +131,8 @@ const Receipts = () => {
 
   return (
     <div className="p-6">
+      <div className="flex justify-between items-center mb-4">
+      <h3 className="text-xl font-semibold">Receipts</h3>
       {/* Options */}
       <div className="flex justify-end mb-4">
         <button
@@ -140,7 +142,7 @@ const Receipts = () => {
           + New Receipt
         </button>
       </div>
-
+</div>
       <DataTable
         title="Receipts"
         data={receipts}
