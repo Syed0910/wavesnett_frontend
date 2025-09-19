@@ -4,7 +4,7 @@ import { TextField, Button, MenuItem, Box, Typography } from "@mui/material";
 
 const NewComplaint = () => {
   return (
-    <div className="max-w-8xl mx-auto bg-white p-0 pt-0 min-h-screen">
+    <div className="max-w-8xl mx-auto bg-white p-6 pt-0 min-h-screen">
       <Typography variant="h6" className="font-semibold mb-4">
        New Complaint
       </Typography>

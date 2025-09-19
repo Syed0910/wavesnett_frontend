@@ -62,7 +62,7 @@ const Complaints = () => {
   };
 
   return (
-    <div className="max-w-8xl mx-auto bg-white p-0 pt-0 min-h-screen">
+    <div className="max-w-8xl mx-auto bg-white p-6 pt-0 min-h-screen">
       {/* Header */}
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-xl font-semibold text-gray-800">Complaints</h2>
