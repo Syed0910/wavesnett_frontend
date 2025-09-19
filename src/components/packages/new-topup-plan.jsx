@@ -31,7 +31,7 @@ const NewTopupPlan = () => {
   };
 
   return (
-    <div className="w-full h-screen bg-white p-0 pt-0">
+    <div className="w-full h-screen bg-white p-6 pt-0">
       <h2 className="text-xl font-semibold mb-4">New Topup Plan</h2>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
