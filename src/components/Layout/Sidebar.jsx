@@ -13,7 +13,7 @@ import { useTheme } from "../../context/ThemeContext"; // ✅ import theme
 const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [expanded, setExpanded] = useState(["user"]);
+  const [expanded, setExpanded] = useState([""]);
   const { primaryColor } = useTheme(); // ✅ use primary color
 
   const toggleExpand = (id) => {

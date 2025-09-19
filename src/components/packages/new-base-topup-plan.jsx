@@ -24,7 +24,7 @@ const NewBaseTopupPlan = () => {
     };
 
     return (
-        <div className="w-full h-screen bg-white p-0 pt-0">
+        <div className="w-full h-screen bg-white p-6 pt-0">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
                 New Base Topup Plan
             </h2>

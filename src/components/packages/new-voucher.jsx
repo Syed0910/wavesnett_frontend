@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import navigate from "react-router-dom";
 
 
 const NewVoucher = () => {
@@ -14,7 +15,7 @@ const NewVoucher = () => {
   };
 
   return (
-    <div className="w-full h-screen bg-white p-0 pt-0">
+    <div className="w-full h-screen bg-white p-6 pt-0">
       <h2 className="text-xl font-semibold mb-4">New Voucher</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Zone */}

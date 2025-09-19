@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Search,
   User,
@@ -13,21 +13,20 @@ import {
   Sun,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../../context/ThemeContext"; // ✅ import global theme context
+
 
 const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
   const [activeMenu, setActiveMenu] = useState("profile");
+
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [query, setQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [notificationCount] = useState(91); // change this dynamically if needed
+  const [notificationCount] = useState(91); // change this value dynamically as needed
   const navigate = useNavigate();
-
-  // ✅ use global theme hook
-  const { theme, toggleTheme } = useTheme();
 
   // Dummy data for search (replace with API later)
   const usersList = [
@@ -36,6 +35,43 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
     { id: 3, name: "azhar khan" },
     { id: 4, name: "syedmamu" },
   ];
+
+
+  // initialize theme from localStorage or system preference
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+      setIsDarkMode(true);
+    } else if (savedTheme === "light") {
+      document.documentElement.classList.remove("dark");
+      setIsDarkMode(false);
+    } else {
+      // no preference saved, respect system preference
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (prefersDark) {
+        document.documentElement.classList.add("dark");
+        setIsDarkMode(true);
+      } else {
+        document.documentElement.classList.remove("dark");
+        setIsDarkMode(false);
+      }
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const html = document.documentElement;
+    if (isDarkMode) {
+      html.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setIsDarkMode(false);
+    } else {
+      html.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setIsDarkMode(true);
+    }
+  };
+
 
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
@@ -75,16 +111,20 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
   };
 
   const handleSuggestionSelect = (user) => {
+
+    // selecting a suggestion — set query and close dropdown
     setQuery(user.name);
     setIsOpen(false);
+    // you can navigate to a user page if desired:
+    // navigate(`/users/${user.id}`);
+
     console.log("Selected user:", user);
   };
 
   return (
-    <nav
-      className="sticky top-0 z-50 shadow-sm"
-      style={{ backgroundColor: "var(--primary)" }}
-    >
+
+    <nav className="bg-cyan-400 dark:bg-gray-900 sticky top-0 z-50 shadow-sm">
+
       <div className="px-0 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 gap-4">
           {/* Left - Menu Button */}
@@ -95,61 +135,75 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
           >
             <button
               onClick={onMenuToggle}
-              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
+
+              className="p-2 rounded-md hover:bg-cyan-500 transition-colors duration-200"
+
               aria-label="Toggle menu"
             >
               <Menu className="w-5 h-5 text-white" />
             </button>
           </div>
 
+
+          {/* Center - Search */}
+          
+
           {/* Right - Actions */}
           <div className="flex items-center gap-3">
-            {/* Search */}
-            <div className="flex items-center w-full max-w-2xl relative">
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center pointer-events-none">
-                <Search className="w-4 h-4 text-gray-400 mr-2" />
-                {!query && (
-                  <span className="text-gray-400 text-sm">Search Users</span>
-                )}
-              </div>
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => handleInputChange(e.target.value)}
-                onFocus={() => setIsOpen(filteredUsers.length > 0)}
-                onBlur={() => setTimeout(() => setIsOpen(false), 150)}
-                className="w-full pl-20 pr-12 py-2.5 bg-white dark:bg-gray-800 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-white/20 text-gray-700 dark:text-gray-200 shadow-sm"
-                placeholder=""
-                aria-label="Search users"
-              />
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <ChevronDown className="w-4 h-4 text-gray-400" />
-              </div>
-              {isOpen && filteredUsers.length > 0 && (
-                <div className="absolute top-full left-0 mt-1 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto z-[999]">
-                  {filteredUsers.map((user) => (
-                    <button
-                      key={user.id}
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        handleSuggestionSelect(user);
-                      }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm"
-                    >
-                      {user.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Center - Search */}
+<div className="flex items-center w-full max-w-2xl relative">
+  {/* Left Icon (Search) & Placeholder */}
+  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center pointer-events-none">
+    <Search className="w-4 h-4 text-gray-400 mr-2" />
+    {!query && (
+      <span className="text-gray-400 text-sm">Search Users</span>
+    )}
+  </div>
+
+  {/* Input */}
+  <input
+    type="text"
+    value={query}
+    onChange={(e) => handleInputChange(e.target.value)}
+    onFocus={() => setIsOpen(filteredUsers.length > 0)}
+    onBlur={() => setTimeout(() => setIsOpen(false), 150)}
+    className="w-full pl-20 pr-12 py-2.5 bg-white dark:bg-gray-800 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-white/20 text-gray-700 dark:text-gray-200 shadow-sm"
+    placeholder=""
+    aria-label="Search users"
+  />
+
+  {/* Right Dropdown Icon */}
+  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+    <ChevronDown className="w-4 h-4 text-gray-400" />
+  </div>
+
+  {/* Suggestions Dropdown */}
+  {isOpen && filteredUsers.length > 0 && (
+    <div className="absolute top-full left-0 mt-1 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto z-[999]">
+      {filteredUsers.map((user) => (
+        <button
+          key={user.id}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            handleSuggestionSelect(user);
+          }}
+          className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm"
+        >
+          {user.name}
+        </button>
+      ))}
+    </div>
+  )}
+</div>
 
             {/* Dark Mode Toggle */}
             <button
-              onClick={toggleTheme}
-              className="p-2 rounded-md hover:bg-cyan-500 transition-colors duration-200 "
+              onClick={toggleDarkMode}
+              className="p-2 rounded-md hover:bg-cyan-500 transition-colors duration-200"
               aria-label="Toggle dark mode"
             >
-              {theme === "dark" ? (
+              {isDarkMode ? (
+
                 <Sun className="w-5 h-5 text-white" />
               ) : (
                 <Moon className="w-5 h-5 text-white" />
@@ -165,7 +219,9 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
               <Maximize2 className="w-5 h-5 text-white" />
             </button>
 
-            {/* User Profile with Badge */}
+
+            {/* Profile icon with notification badge (navigates to /users/user) */}
+
             <div className="relative">
               <button
                 onClick={() => navigate("/user/users")}
@@ -181,7 +237,9 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
               </button>
             </div>
 
-            {/* Avatar Dropdown */}
+
+            {/* Avatar / Profile dropdown (keeps original avatar + menu) */}
+
             <div className="relative">
               <button
                 onClick={() => setIsProfileOpen((p) => !p)}
@@ -238,15 +296,13 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
                         setIsProfileOpen(false);
                       }}
                       className={`w-full px-4 py-2 text-left flex items-center gap-3 rounded-lg transition-colors ${
-                        activeMenu === "profile"
-                          ? "bg-gray-100 dark:bg-gray-700"
-                          : "hover:bg-gray-50 dark:hover:bg-gray-700"
+
+                        activeMenu === "profile" ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-50 dark:hover:bg-gray-700"
                       }`}
                     >
                       <User className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                      <span className="text-sm text-gray-700 dark:text-gray-200">
-                        My Profile
-                      </span>
+                      <span className="text-sm text-gray-700 dark:text-gray-200">My Profile</span>
+
                     </button>
 
                     <button
@@ -256,23 +312,21 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
                         setIsProfileOpen(false);
                       }}
                       className={`w-full px-4 py-2 text-left flex items-center gap-3 rounded-lg transition-colors ${
-                        activeMenu === "settings"
-                          ? "bg-gray-100 dark:bg-gray-700"
-                          : "hover:bg-gray-50 dark:hover:bg-gray-700"
+
+                        activeMenu === "settings" ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-50 dark:hover:bg-gray-700"
                       }`}
                     >
                       <Settings className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                      <span className="text-sm text-gray-700 dark:text-gray-200">
-                        Settings
-                      </span>
+                      <span className="text-sm text-gray-700 dark:text-gray-200">Settings</span>
+
                     </button>
 
                     <button className="w-full px-4 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 rounded-lg transition-colors">
                       <HelpCircle className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                      <span className="text-sm text-gray-700 dark:text-gray-200">
-                        Help & Support
-                      </span>
-                    </button>
+
+                      <span className="text-sm text-gray-700 dark:text-gray-200">Help & Support</span>
+
+                 </button>
 
                     <hr className="my-2 border-gray-200 dark:border-gray-700" />
 

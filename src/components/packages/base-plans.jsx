@@ -90,7 +90,7 @@ const BasePlans = () => {
     };
 
     return (
-        <div className="max-w-8xl mx-auto bg-white p-0 pt-0 min-h-screen">
+        <div className="max-w-8xl mx-auto bg-white p-6 pt-0 min-h-screen">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-medium text-gray-800">
                     Base Plans
