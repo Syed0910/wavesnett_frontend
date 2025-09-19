@@ -14,11 +14,13 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+
 const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
   const [activeMenu, setActiveMenu] = useState("profile");
+
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [query, setQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -33,6 +35,7 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
     { id: 3, name: "azhar khan" },
     { id: 4, name: "syedmamu" },
   ];
+
 
   // initialize theme from localStorage or system preference
   useEffect(() => {
@@ -68,6 +71,7 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
       setIsDarkMode(true);
     }
   };
+
 
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
@@ -107,16 +111,20 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
   };
 
   const handleSuggestionSelect = (user) => {
+
     // selecting a suggestion — set query and close dropdown
     setQuery(user.name);
     setIsOpen(false);
     // you can navigate to a user page if desired:
     // navigate(`/users/${user.id}`);
+
     console.log("Selected user:", user);
   };
 
   return (
+
     <nav className="bg-cyan-400 dark:bg-gray-900 sticky top-0 z-50 shadow-sm">
+
       <div className="px-0 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 gap-4">
           {/* Left - Menu Button */}
@@ -127,12 +135,15 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
           >
             <button
               onClick={onMenuToggle}
+
               className="p-2 rounded-md hover:bg-cyan-500 transition-colors duration-200"
+
               aria-label="Toggle menu"
             >
               <Menu className="w-5 h-5 text-white" />
             </button>
           </div>
+
 
           {/* Center - Search */}
           
@@ -192,6 +203,7 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
               aria-label="Toggle dark mode"
             >
               {isDarkMode ? (
+
                 <Sun className="w-5 h-5 text-white" />
               ) : (
                 <Moon className="w-5 h-5 text-white" />
@@ -207,7 +219,9 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
               <Maximize2 className="w-5 h-5 text-white" />
             </button>
 
+
             {/* Profile icon with notification badge (navigates to /users/user) */}
+
             <div className="relative">
               <button
                 onClick={() => navigate("/user/users")}
@@ -223,7 +237,9 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
               </button>
             </div>
 
+
             {/* Avatar / Profile dropdown (keeps original avatar + menu) */}
+
             <div className="relative">
               <button
                 onClick={() => setIsProfileOpen((p) => !p)}
@@ -280,11 +296,13 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
                         setIsProfileOpen(false);
                       }}
                       className={`w-full px-4 py-2 text-left flex items-center gap-3 rounded-lg transition-colors ${
+
                         activeMenu === "profile" ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-50 dark:hover:bg-gray-700"
                       }`}
                     >
                       <User className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                       <span className="text-sm text-gray-700 dark:text-gray-200">My Profile</span>
+
                     </button>
 
                     <button
@@ -294,17 +312,21 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
                         setIsProfileOpen(false);
                       }}
                       className={`w-full px-4 py-2 text-left flex items-center gap-3 rounded-lg transition-colors ${
+
                         activeMenu === "settings" ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-50 dark:hover:bg-gray-700"
                       }`}
                     >
                       <Settings className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                       <span className="text-sm text-gray-700 dark:text-gray-200">Settings</span>
+
                     </button>
 
                     <button className="w-full px-4 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 rounded-lg transition-colors">
                       <HelpCircle className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+
                       <span className="text-sm text-gray-700 dark:text-gray-200">Help & Support</span>
-                    </button>
+
+                 </button>
 
                     <hr className="my-2 border-gray-200 dark:border-gray-700" />
 

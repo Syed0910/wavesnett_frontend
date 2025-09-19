@@ -44,6 +44,22 @@ export const updateOnlineTransaction = (id, transaction) =>
 export const deleteOnlineTransaction = (id) =>
   API.delete(`/online-transactions/${id}`);
 
+/* -------------------- ONLINE USERS -------------------- */
+export const getOnlineUsers = () => API.get("/online-users");
+export const addOnlineUser = (user) => API.post("/online-users", user);
+export const updateOnlineUser = (id, user) => API.put(`/online-users/${id}`, user);
+export const deleteOnlineUser = (id) => API.delete(`/online-users/${id}`);
+
+/* -------------------- REPORTS -------------------- */
+// User Reports
+export const getUserReports = () => API.get("/reports/users");
+
+// Billing Reports
+export const getBillingReports = () => API.get("/reports/billing");
+
+// Complaint Reports
+export const getComplaintReports = () => API.get("/reports/complaints");
+
 /* -------------------- CONFIGS -------------------- */
 // Generic config operations
 export const getAllConfigs = () => API.get("/configs");
@@ -73,3 +89,12 @@ export const updateHotspotConfig = (config) => API.put("/configs/hotspot/config"
 
 export const getPermissionsConfig = () => API.get("/configs/permissions/config");
 export const updatePermissionsConfig = (config) => API.put("/configs/permissions/config", config);
+
+//*---------------------- configurations ----------------------------- */
+export const getAdminConfiguration = () => API.get("/configs");
+export const getAdminConfigurationById = (id) => API.get(`/configs/${id}`);
+export const addAdminConfiguration = (adminConfiguration) =>
+  API.post("/configs", adminConfiguration);
+export const updateAdminConfiguration = (id, data) => {
+  return API.put(`/configs/${id}`, data);  // remove 'admin' if not in backend 
+};

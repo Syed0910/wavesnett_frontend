@@ -145,7 +145,9 @@ const OnlineTransactions = () => {
 
   return (
     <div className="p-6">
-       <h3 className="text-xl font-semibold mb-4">Online Transactions</h3>
+
+      <h3 className="text-xl font-semibold mb-4">Online Transactions</h3>
+
       <DataTable
         title="Online Transactions"
         data={transactions}

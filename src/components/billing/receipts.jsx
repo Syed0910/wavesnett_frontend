@@ -156,13 +156,15 @@ const Receipts = () => {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-4 relative">
+
+      <div className="flex justify-between items-center mb-4">
       <h3 className="text-xl font-semibold">Receipts</h3>
-      {/* Options Menu */}
-   
-        <button 
-          onClick={() => setShowOptionsMenu(!showOptionsMenu)}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+      {/* Options */}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => setShowNewReceiptModal(true)}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+
         >
           <MoreVertical size={20} />
         </button>
@@ -191,7 +193,7 @@ const Receipts = () => {
           </div>
         )}
       </div>
-
+</div>
       <DataTable
         title="Receipts"
         data={receipts}

@@ -107,6 +107,7 @@ const Invoices = () => {
 
   return (
     <div className="p-6">
+
         <h3 className="text-xl font-semibold">Invoices</h3>
         {/* Options Menu */}
         <div className="relative flex justify-end">
@@ -144,6 +145,7 @@ const Invoices = () => {
    
 
 
+
       <DataTable
         title="Invoices"
         data={invoices}
@@ -152,10 +154,12 @@ const Invoices = () => {
         searchable={true}
         showNasDropdown={false}
         showDateFilter={true}
+
         onEdit={handleEditInvoice}
         onGenerate={handleGenerateInvoice}
         onPrint={handlePrint}
         showActionColumn={true}
+
       />
 
       {/* Edit Invoice Modal */}
