@@ -1,6 +1,6 @@
 // src/components/users/Users.jsx
 import { useEffect, useState } from "react";
-import { getUsers, addUser } from "../../services/api";
+import { getUsers } from "../../services/api";
 import { Eye, Edit, Trash2, Upload, Plus } from 'lucide-react';
 import DataTable from '../ui/datatable';
 import { useNavigate } from "react-router-dom";

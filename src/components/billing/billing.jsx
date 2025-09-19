@@ -4,6 +4,8 @@ import Invoices from '../billing/invoices';
 import BillingSummaryChart from '../billing/billing-summary-chart';
 import OnlineTransaction from '../billing/online-transaction';
 import Receipts from '../billing/receipts';
+import CreateInvoice from './new-invoices';
+import NewReceipt from './new-receipt';
 
 const Billing = () => {
   return (
@@ -16,6 +18,8 @@ const Billing = () => {
       <Route path="/receipts" element={<Receipts />} />
       <Route path="/online-transactions" element={<OnlineTransaction/>} />
       <Route path="/billing-summary-chart" element={<BillingSummaryChart />} />
+      <Route path="/new-invoice" element={<CreateInvoice/>} />
+      <Route path="/new-receipt" element={<NewReceipt/>} />
     </Routes>
   );
 };

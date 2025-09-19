@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import Icon from "@mdi/react";
 import { mdiThermometer } from "@mdi/js";
 import { Power } from "lucide-react";

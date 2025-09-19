@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import DataTable from "../../components/ui/datatable";
-import { Pencil, Trash2, Printer, Mail, FilePlus, X, MoreVertical } from "lucide-react";
-import { Tooltip } from "recharts";
+import { useNavigate } from "react-router-dom";
+import { Receipt,ReceiptText } from "lucide-react";
+
 
 const Invoices = () => {
   const [showCreateInvoice, setShowCreateInvoice] = useState(false);
@@ -9,7 +10,8 @@ const Invoices = () => {
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
-  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
+
+    const navigate = useNavigate();
 
   const invoices = [
     {
@@ -107,43 +109,32 @@ const Invoices = () => {
 
   return (
     <div className="p-6">
+      <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-semibold">Invoices</h3>
         {/* Options Menu */}
-        <div className="relative flex justify-end">
-  <button 
-    onClick={() => setShowOptionsMenu(!showOptionsMenu)}
-    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-  >
-    <MoreVertical size={20} />
-  </button>
-  
-  {showOptionsMenu && (
-    <div className="absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg z-10 w-48">
-      <button
-        onClick={() => {
-          setShowCreateInvoice(true);
-          setShowOptionsMenu(false);
-        }}
-        className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+        <div className="relative flex justify-end gap-2 p-2">
+ < button
+        onClick={() => navigate("/billing/new-invoice")}
+        className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
       >
-        New Invoice
+        <Receipt className="w-4 h-4" />
+        New Invoice 
       </button>
+
+      {/* All Users */}
       <button
-        onClick={() => {
-          setShowCreateReceipt(true);
-          setShowOptionsMenu(false);
-        }}
-        className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+        onClick={() => navigate("/billing/new-receipt")}
+        className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
       >
+        <ReceiptText className="w-4 h-4" />
         New Receipt
       </button>
-    </div>
-  )}
+
+
+     
+
         </div>
-
-   
-
-
+      </div>
       <DataTable
         title="Invoices"
         data={invoices}
@@ -427,214 +418,7 @@ const Invoices = () => {
         </div>
       )}
 
-      {/* Create Invoice Modal */}
-      {showCreateInvoice && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl w-[600px]">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">New Invoice</h2>
-              <button onClick={() => setShowCreateInvoice(false)} className="p-1">
-                <X size={20} />
-              </button>
-            </div>
-
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm">Zone</label>
-                <input
-                  type="text"
-                  defaultValue="admin"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">User Name</label>
-                <input
-                  type="text"
-                  defaultValue="sardar"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Balance</label>
-                <input
-                  type="number"
-                  defaultValue="2537.00"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Amount</label>
-                <input
-                  type="number"
-                  defaultValue="0"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Date</label>
-                <input
-                  type="date"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Receipt Notes</label>
-                <input
-                  type="text"
-                  placeholder="This note will be displayed on receipt"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Remarks</label>
-                <input
-                  type="text"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Receipt Type</label>
-                <select className="w-full border rounded px-3 py-2">
-                  <option>Cash</option>
-                  <option>Cheque</option>
-                  <option>Online Transfer</option>
-                  <option>Credit Card</option>
-                  <option>Debit Card</option>
-                  <option>Swipe Machine</option>
-                  <option>Demand Draft (DD)</option>
-                </select>
-              </div>
-
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateInvoice(false)}
-                  className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600 transition-colors"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Create Receipt Modal */}
-      {showCreateReceipt && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl w-[600px]">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">New Receipt</h2>
-              <button onClick={() => setShowCreateReceipt(false)} className="p-1">
-                <X size={20} />
-              </button>
-            </div>
-
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm">Zone</label>
-                <select className="w-full border rounded px-3 py-2">
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm">User Name</label>
-                <input
-                  type="text"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Balance</label>
-                <input
-                  type="number"
-                  className="w-full border rounded px-3 py-2"
-                  readOnly
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Amount</label>
-                <input
-                  type="number"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Date</label>
-                <input
-                  type="date"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Receipt Notes</label>
-                <input
-                  type="text"
-                  placeholder="This note will be displayed on receipt"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Remarks</label>
-                <input
-                  type="text"
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm">Receipt Type</label>
-                <select className="w-full border rounded px-3 py-2">
-                  <option>Cash</option>
-                  <option>Cheque</option>
-                  <option>Online Transfer</option>
-                  <option>Credit Card</option>
-                  <option>Debit Card</option>
-                  <option>Swipe Machine</option>
-                  <option>Demand Draft (DD)</option>
-                </select>
-              </div>
-
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateReceipt(false)}
-                  className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600 transition-colors"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+ 
     </div>
   );
 };
