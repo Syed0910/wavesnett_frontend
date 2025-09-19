@@ -3,6 +3,8 @@ import {useNavigate} from "react-router-dom";
 
 
 const NewVoucher = () => {
+  
+  const navigate = useNavigate();
 
   const [zone, setZone] = useState("admin");
   const [plan, setPlan] = useState("");
