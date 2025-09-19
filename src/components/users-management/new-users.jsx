@@ -66,7 +66,7 @@ const NewUser = () => {
   };
 
   return (
-    <div className="p-0 pt-0 max-w-8xl mx-auto bg-gray-50 min-h-screen">
+    <div className="p-6 pt-0 max-w-8xl mx-auto bg-gray-50 min-h-screen">
       
         {/* Header */}
         <div className="p-0 pt-0 pb-4 border-b border-gray-200">

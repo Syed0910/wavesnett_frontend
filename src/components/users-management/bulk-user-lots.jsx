@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Upload } from 'lucide-react';
+import { Plus, Upload,Settings, Users } from 'lucide-react';
 import axios from 'axios';
 import DataTable from '../ui/datatable';
 import { PrimaryButton } from '../ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const BulkUserLots = () => {
+  const navigate = useNavigate();
+
   const [bulkLots, setBulkLots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState({
     from: '',
     to: ''
   });
-
-  // Fetch bulk lots from API
+//Fetch bulk lots from API
   useEffect(() => {
     const fetchBulkLots = async () => {
       try {
@@ -63,38 +65,43 @@ const BulkUserLots = () => {
   const handleDateChange = (field, value) =>
     setDateRange((prev) => ({ ...prev, [field]: value }));
 
-  const handleImport = () => {
-    console.log('Importing bulk lots...');
-  };
-
-  const handleAddBulkLot = () => {
-    console.log('Adding new bulk lot...');
-  };
+ 
 
   return (
-    <div className="p-0 pt-0 max-w-8xl mx-auto bg-white min-h-screen">
+    <div className="p-6 pt-0 max-w-8xl mx-auto bg-white min-h-screen">
       {/* Header section */}
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-xl font-medium mb-1 text-gray-700">
           Bulk User Lots
         </h2>
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleImport}
-            className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
-          >
-            <Upload className="w-4 h-4" />
-            Import
-          </button>
+      {/* Configuration */}
+      <button
+        onClick={() => navigate("/user/configuration")}
+        className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
+      >
+        <Settings className="w-4 h-4" />
+        Configuration
+      </button>
 
-          <button
-            onClick={handleAddBulkLot}
-            className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
-          >
-            <Plus className="w-4 h-4" />
-            Add Bulk Lot
-          </button>
-        </div>
+      {/* All Users */}
+      <button
+        onClick={() => navigate("/user/bulk-users")}
+        className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
+      >
+        <Users className="w-4 h-4" />
+        All Users
+      </button>
+
+      {/* Create Bulk User */}
+      <button
+        onClick={() => navigate("/user/create")}
+        className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
+      >
+        <Plus className="w-4 h-4" />
+        Create Bulk User
+      </button>
+    </div>
       </div>
 
       {/* Show loader while fetching data */}

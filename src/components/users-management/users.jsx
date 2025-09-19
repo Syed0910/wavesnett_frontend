@@ -101,7 +101,7 @@ const handleView = (user) => {
   if (error) return <div className="p-6 text-red-600">{error}</div>;
 
   return (
-    <div className="p-0 pt-0">
+    <div className="p-6 pt-0">
       {/* Header section similar to complaints image */}
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-xl font-medium mb-1 text-gray-700">
