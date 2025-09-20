@@ -37,7 +37,7 @@ const ImportBasePlans = () => {
   };
 
   return (
-    <div className="max-w-8xl mx-auto bg-white p-0 pt-0 min-h-screen">
+    <div className="max-w-8xl mx-auto bg-white p-6 pt-0 min-h-screen">
       <div className="mb-2">
         <div className="flex items-center justify-between">
           <h2 className="text-xl pb-4 font-semibold text-gray-900">Import Base Plans</h2>

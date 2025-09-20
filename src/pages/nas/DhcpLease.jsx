@@ -250,6 +250,9 @@ const DHCPLease = () => {
 
   return (
     <div className="p-6">
+      <h3 className="text-xl font-medium mb-4 text-gray-700">
+        DHCP Lease
+      </h3>
       <DataTable
         title="DHCP Lease"
         data={leases}

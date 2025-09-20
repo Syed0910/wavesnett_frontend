@@ -210,6 +210,9 @@ const OnlineUsers = () => {
 
   return (
     <div className="p-6">
+      <h3 className="text-xl font-medium mb-4 text-gray-700">
+        Online Users
+      </h3>
       <DataTable
         title="Online Users"
         data={users}

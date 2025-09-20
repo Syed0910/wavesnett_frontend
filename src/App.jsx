@@ -17,6 +17,7 @@ import Configuration from "./components/Configuration/Configuration";
 import ChangePassword from "./components/Configuration/ChangePassword/ChangePassword";
 import NasManagement from "./components/NasManagement/nasManagement";
 import OltManagement from "./components/OLT-Management/OltManagement";
+import Reports from "./components/reports/reports";
 
 // Import the new Billing component
 import BillingComponent from "./components/billing/billing";
@@ -35,6 +36,9 @@ import Packages from "./pages/packages";
 import ActiveRecords from "./components/reports/ActiveRecords";
 // ✅ Import User Detail
 import UserDetail from "./components/users-management/UserDetail";
+
+// ✅ Corrected Import for Online Users
+import OnlineUsers from "./components/reports/online-users";
 
 const App = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -55,6 +59,7 @@ const App = () => {
       complaints: "/user/complaints",
       packages: "/packages",
       reports: "/reports",
+      online: "/online-users",
       config: "/config/admin",
       "admin-config": "/config/admin",
       "nas-management": "/nas-mgmt",
@@ -85,7 +90,7 @@ const App = () => {
 
         {/* Configuration Routes */}
         <Route path="/config/*" element={<Configuration />} />
-        <Route path="/config/ChangePassword/*" element={<ChangePassword/>}/>
+        <Route path="/config/ChangePassword/*" element={<ChangePassword />} />
 
         {/* Billing Routes */}
         <Route path="/billing" element={<BillingComponent />} />
@@ -99,6 +104,13 @@ const App = () => {
         <Route path="/reports/*" element={
           <OnlineUsersTable/>
         } />
+
+
+        {/* ✅ Reports with nested routes */}
+        <Route path="/reports/*" element={<Reports />} />
+
+        {/* ✅ Online Users */}
+        <Route path="/online-users" element={<OnlineUsers />} />
 
 
         {/* NAS Management */}

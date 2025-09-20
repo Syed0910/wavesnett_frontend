@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "../../components/ui/datatable";
-import { Pencil, Trash2, Printer, MoreVertical, FileText, Receipt } from "lucide-react";
-import { getReceipts, addReceipt, deleteReceipt } from "../../services/api"; // ✅ use API functions
+
+import { Pencil, Trash2, Printer, ReceiptText, Receipt } from "lucide-react";
+import { getReceipts, addReceipt, deleteReceipt } from "../../services/api"; 
+import { useNavigate } from "react-router-dom";
+
+
+
+
 
 const Receipts = () => {
   const [receipts, setReceipts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const [showNewReceiptModal, setShowNewReceiptModal] = useState(false);
   const [formData, setFormData] = useState({
     userName: "",
@@ -88,6 +95,9 @@ const Receipts = () => {
   };
 
   /* -------------------- TABLE COLUMNS -------------------- */
+
+
+
   const columns = [
     { key: "receiptNo", label: "Receipt No" },
     { key: "userName", label: "User name" },
@@ -125,22 +135,36 @@ const Receipts = () => {
     },
   ];
 
+
   if (loading) {
     return <div className="p-6">Loading receipts...</div>;
   }
 
   return (
     <div className="p-6">
-      {/* Options */}
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={() => setShowNewReceiptModal(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          + New Receipt
-        </button>
-      </div>
+   <div className="flex items-center justify-between mb-4">
 
+        <h3 className="text-xl font-semibold">Receipts</h3>
+        {/* Options Menu */}
+        <div className="relative flex justify-end gap-2 p-2">
+ < button
+        onClick={() => navigate("/billing/new-receipt")}
+        className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
+      >
+        <Receipt className="w-4 h-4" />
+        New Receipt 
+      </button>
+
+      {/* All Users */}
+      <button
+        onClick={() => navigate("/billing/new-invoice")}
+        className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
+      >
+        <ReceiptText className="w-4 h-4" />
+        New Invoice
+      </button>
+      </div>
+      </div>
       <DataTable
         title="Receipts"
         data={receipts}
@@ -151,6 +175,7 @@ const Receipts = () => {
         showDateFilter={true}
         showActionColumn={true}
       />
+
 
       {/* Modal */}
       {showNewReceiptModal && (
@@ -236,6 +261,7 @@ const Receipts = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

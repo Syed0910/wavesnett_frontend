@@ -1,7 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Search,
-  Bell,
   User,
   Settings,
   HelpCircle,
@@ -10,15 +9,82 @@ import {
   Camera,
   Maximize2,
   Menu,
+  Moon,
+  Sun,
+  Bell,
 } from "lucide-react";
-import { useTheme } from "../../context/ThemeContext"; // ✅ import ThemeContext
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../context/ThemeContext"; // ✅ dynamic theme
 
 const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
-  const { primaryColor } = useTheme(); // ✅ get selected theme color
+  const { primaryColor } = useTheme(); // ✅ dynamic theme color
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
+
+  const [activeMenu, setActiveMenu] = useState("profile");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [query, setQuery] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [notificationCount] = useState(91);
+
+  const navigate = useNavigate();
+
+  // Dummy users (replace with API later)
+  const usersList = [
+    { id: 1, name: "Qazi" },
+    { id: 2, name: "w-nett office" },
+    { id: 3, name: "azhar khan" },
+    { id: 4, name: "syedmamu" },
+  ];
+
+  // initialize dark mode from localStorage/system
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+      setIsDarkMode(true);
+    } else if (savedTheme === "light") {
+      document.documentElement.classList.remove("dark");
+      setIsDarkMode(false);
+    } else {
+      const prefersDark =
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (prefersDark) {
+        document.documentElement.classList.add("dark");
+        setIsDarkMode(true);
+      } else {
+        document.documentElement.classList.remove("dark");
+        setIsDarkMode(false);
+      }
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const html = document.documentElement;
+    if (isDarkMode) {
+      html.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setIsDarkMode(false);
+    } else {
+      html.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setIsDarkMode(true);
+    }
+  };
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  };
+
+  const triggerFileUpload = () => fileInputRef.current?.click();
 
   const handleImageUpload = (event) => {
     const file = event.target.files?.[0];
@@ -33,12 +99,30 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
     }
   };
 
-  const triggerFileUpload = () => fileInputRef.current?.click();
+  const handleInputChange = (value) => {
+    setQuery(value);
+    if (value.trim()) {
+      const matches = usersList.filter((u) =>
+        u.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredUsers(matches);
+      setIsOpen(matches.length > 0);
+    } else {
+      setFilteredUsers([]);
+      setIsOpen(false);
+    }
+  };
+
+  const handleSuggestionSelect = (user) => {
+    setQuery(user.name);
+    setIsOpen(false);
+    console.log("Selected user:", user);
+  };
 
   return (
     <nav
       className="sticky top-0 z-50 shadow-sm"
-      style={{ backgroundColor: primaryColor }} // ✅ dynamic color
+      style={{ backgroundColor: primaryColor }} // ✅ dynamic nav color
     >
       <div className="px-0 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 gap-4">
@@ -51,31 +135,81 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
             <button
               onClick={onMenuToggle}
               className="p-2 rounded-md hover:opacity-80 transition-colors duration-200"
+              aria-label="Toggle menu"
             >
               <Menu className="w-5 h-5 text-white" />
             </button>
           </div>
 
           {/* Center - Search */}
-          <div className="flex items-center">
-            <div className="relative w-full max-w-2xl">
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
-                <User className="w-4 h-4 text-gray-400 mr-2" />
-                <span className="text-gray-400 text-sm">Search Users</span>
-              </div>
-              <input
-                type="text"
-                className="w-full pl-20 pr-12 py-2.5 bg-white rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-white/20 text-gray-700 shadow-sm"
-              />
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <ChevronDown className="w-4 h-4 text-gray-400" />
-              </div>
-            </div>
-          </div>
+         
 
           {/* Right - Actions */}
-          <div className="flex items-center gap-3">
-            <button className="p-2 rounded-md hover:opacity-80 transition-colors duration-200">
+      <div className="flex items-center gap-3">
+            {/* Center - Search */}
+          <div className="flex items-center w-full max-w-2xl relative">
+            {/* Left Icon (Search) & Placeholder */}
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center pointer-events-none">
+              <Search className="w-4 h-4 text-gray-400 mr-2" />
+              {!query && (
+                <span className="text-gray-400 text-sm">Search Users</span>
+              )}
+            </div>
+
+            {/* Input */}
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => handleInputChange(e.target.value)}
+              onFocus={() => setIsOpen(filteredUsers.length > 0)}
+              onBlur={() => setTimeout(() => setIsOpen(false), 150)}
+              className="w-full pl-20 pr-12 py-2.5 bg-white dark:bg-gray-800 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-white/20 text-gray-700 dark:text-gray-200 shadow-sm"
+              placeholder=""
+              aria-label="Search users"
+            />
+
+            {/* Right Dropdown Icon */}
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </div>
+
+            {/* Suggestions Dropdown */}
+            {isOpen && filteredUsers.length > 0 && (
+              <div className="absolute top-full left-0 mt-1 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto z-[999]">
+                {filteredUsers.map((user) => (
+                  <button
+                    key={user.id}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handleSuggestionSelect(user);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm"
+                  >
+                    {user.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-md hover:opacity-80 transition-colors duration-200"
+              aria-label="Toggle dark mode"
+            >
+              {isDarkMode ? (
+                <Sun className="w-5 h-5 text-white" />
+              ) : (
+                <Moon className="w-5 h-5 text-white" />
+              )}
+            </button>
+
+            {/* Fullscreen */}
+            <button
+              onClick={toggleFullScreen}
+              className="p-2 rounded-md hover:opacity-80 transition-colors duration-200"
+              aria-label="Toggle fullscreen"
+            >
               <Maximize2 className="w-5 h-5 text-white" />
             </button>
 
@@ -86,29 +220,35 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
                 className="p-2 rounded-md hover:opacity-80 transition-colors duration-200 relative"
               >
                 <Bell className="w-5 h-5 text-white" />
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                  91
-                </span>
+                {notificationCount > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[18px] h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium px-1.5">
+                    {notificationCount > 99 ? "99+" : notificationCount}
+                  </span>
+                )}
               </button>
             </div>
 
             {/* Profile */}
             <div className="relative">
               <button
-                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                onClick={() => setIsProfileOpen((p) => !p)}
                 className="flex items-center gap-2 p-1 rounded-full hover:opacity-80 transition-colors duration-200"
               >
-                <div className="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center">
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: primaryColor }} // ✅ dynamic accent
+                >
                   <span className="text-white text-sm font-bold">A</span>
                 </div>
               </button>
 
               {isProfileOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-4 z-50">
+                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-4 z-50">
                   <div className="flex flex-col items-center px-4 mb-4">
                     <div className="relative mb-3">
                       <div
-                        className="w-20 h-20 rounded-full overflow-hidden bg-[var(--primary)] flex items-center justify-center border-4 border-gray-200 shadow-lg cursor-pointer hover:opacity-80 transition-opacity"
+                        className="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center border-4 border-gray-200 dark:border-gray-700 shadow-lg cursor-pointer hover:opacity-80 transition-opacity"
+                        style={{ backgroundColor: primaryColor }} // ✅ dynamic avatar bg
                         onClick={triggerFileUpload}
                       >
                         {profileImage ? (
@@ -123,47 +263,70 @@ const Navbar = ({ onMenuToggle, isSidebarOpen, onSettingsClick }) => {
                       </div>
                       <button
                         onClick={triggerFileUpload}
-                        className="absolute -bottom-1 -right-1 bg-[var(--primary)] hover:opacity-90 text-white rounded-full p-1.5 shadow-lg transition-colors"
+                        className="absolute -bottom-1 -right-1 text-white rounded-full p-1.5 shadow-lg transition-colors"
+                        style={{ backgroundColor: primaryColor }} // ✅ dynamic button
                       >
                         <Camera className="w-3 h-3" />
                       </button>
                     </div>
                     <div className="text-center mb-4">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-200">
                         Admin User
                       </p>
-                      <p className="text-xs text-gray-500">admin@example.com</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        admin@example.com
+                      </p>
                     </div>
                   </div>
 
                   {/* Dropdown Menu */}
                   <div className="px-2">
-                    <button className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 rounded-lg transition-colors">
-                      <User className="w-4 h-4 text-gray-600" />
-                      <span className="text-sm text-gray-700">My Profile</span>
+                    <button
+                      onClick={() => {
+                        setActiveMenu("profile");
+                        navigate("/users/user");
+                        setIsProfileOpen(false);
+                      }}
+                      className={`w-full px-4 py-2 text-left flex items-center gap-3 rounded-lg transition-colors ${
+                        activeMenu === "profile"
+                          ? "bg-gray-100 dark:bg-gray-700"
+                          : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                      }`}
+                    >
+                      <User className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                      <span className="text-sm text-gray-700 dark:text-gray-200">
+                        My Profile
+                      </span>
                     </button>
 
                     <button
                       onClick={() => {
+                        setActiveMenu("settings");
                         if (onSettingsClick) onSettingsClick();
                         setIsProfileOpen(false);
                       }}
-                      className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 rounded-lg transition-colors"
+                      className={`w-full px-4 py-2 text-left flex items-center gap-3 rounded-lg transition-colors ${
+                        activeMenu === "settings"
+                          ? "bg-gray-100 dark:bg-gray-700"
+                          : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                      }`}
                     >
-                      <Settings className="w-4 h-4 text-gray-600" />
-                      <span className="text-sm text-gray-700">Settings</span>
+                      <Settings className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                      <span className="text-sm text-gray-700 dark:text-gray-200">
+                        Settings
+                      </span>
                     </button>
 
-                    <button className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 rounded-lg transition-colors">
-                      <HelpCircle className="w-4 h-4 text-gray-600" />
-                      <span className="text-sm text-gray-700">
+                    <button className="w-full px-4 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 rounded-lg transition-colors">
+                      <HelpCircle className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                      <span className="text-sm text-gray-700 dark:text-gray-200">
                         Help & Support
                       </span>
                     </button>
 
-                    <hr className="my-2 border-gray-200" />
+                    <hr className="my-2 border-gray-200 dark:border-gray-700" />
 
-                    <button className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 rounded-lg transition-colors text-red-600">
+                    <button className="w-full px-4 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 rounded-lg transition-colors text-red-600">
                       <LogOut className="w-4 h-4" />
                       <span className="text-sm">Sign out</span>
                     </button>

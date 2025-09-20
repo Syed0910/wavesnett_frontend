@@ -41,7 +41,7 @@ const ImportPlans = () => {
     <div className="max-w-8xl mx-auto bg-white p-6 pt-0 min-h-screen">
       <div className="mb-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-800">Import Plans</h2>
+          <h2 className="text-xl font-semibold text-gray-800">Import Users</h2>
           <button
             onClick={handleBack}
             className="flex items-center px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors"
@@ -55,7 +55,7 @@ const ImportPlans = () => {
       
         <div className="mb-6">
           <p className="text-gray-600 mb-2">
-            <span className="font-medium">Note:</span> Please upload .xls or .xlsx file format to retrieve base plan's information according to given Sample.xls file format.{' '}
+            <span className="font-medium">Note:</span> Please upload .xls or .xlsx file format to retrieve user’s information according to given Sample.xls file format.{' '}
             <button
               onClick={handleSampleDownload}
               className="text-cyan-600 hover:text-cyan-800 underline inline-flex items-center ml-1"

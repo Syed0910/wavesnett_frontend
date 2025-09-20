@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import {useNavigate} from "react-router-dom";
 
 
 const NewVoucher = () => {
+  
+  const navigate = useNavigate();
 
   const [zone, setZone] = useState("admin");
   const [plan, setPlan] = useState("");
@@ -14,7 +17,7 @@ const NewVoucher = () => {
   };
 
   return (
-    <div className="w-full h-screen bg-white p-0 pt-0">
+    <div className="w-full h-screen bg-white p-6 pt-0">
       <h2 className="text-xl font-semibold mb-4">New Voucher</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Zone */}
@@ -65,7 +68,7 @@ const NewVoucher = () => {
           </button>
           <button
             type="button"
-            onClick={() => navigate("/vouchers")}
+            onClick={() => useNavigate("/vouchers")}
             className="px-4 py-1 border rounded-md hover:bg-gray-100"
           >
             CANCEL
