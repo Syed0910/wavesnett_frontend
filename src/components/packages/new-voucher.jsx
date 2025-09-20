@@ -68,7 +68,7 @@ const NewVoucher = () => {
           </button>
           <button
             type="button"
-            onClick={() => navigate("/vouchers")}
+            onClick={() => useNavigate("/vouchers")}
             className="px-4 py-1 border rounded-md hover:bg-gray-100"
           >
             CANCEL

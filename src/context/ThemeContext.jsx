@@ -7,14 +7,18 @@ export const ThemeProvider = ({ children }) => {
   const [primaryColor, setPrimaryColor] = useState("#06b6d4"); // default cyan
 
   useEffect(() => {
-    // load saved theme + primary color
+    // Load saved theme + primary color
     const savedTheme = localStorage.getItem("theme");
     const savedColor = localStorage.getItem("primaryColor");
 
-    if (savedTheme) setTheme(savedTheme);
-    if (savedColor) setPrimaryColor(savedColor);
-    else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       setTheme("dark");
+    }
+
+    if (savedColor) {
+      setPrimaryColor(savedColor);
     }
   }, []);
 
@@ -36,6 +40,7 @@ export const ThemeProvider = ({ children }) => {
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    console.log("Theme toggled to:", theme === "light" ? "dark" : "light");
   };
 
   return (

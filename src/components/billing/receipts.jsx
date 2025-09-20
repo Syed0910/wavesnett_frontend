@@ -1,74 +1,103 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from "../../components/ui/datatable";
-import { Pencil, Trash2, Printer, MoreVertical, FileText, Receipt,ReceiptText } from "lucide-react";
+
+import { Pencil, Trash2, Printer, ReceiptText, Receipt } from "lucide-react";
+import { getReceipts, addReceipt, deleteReceipt } from "../../services/api"; 
 import { useNavigate } from "react-router-dom";
 
+
+
+
+
 const Receipts = () => {
-  const [receipts] = useState([
-    {
-      receiptNo: "73",
-      date: "02/09/2025",
-      userName: "samiuddin",
-      name: "Syed Samiuddin",
-      amount: "₹2150.00",
-      createdBy: "admin",
-      type: "Cash",
-      zone: "admin",
-    },
-    {
-      receiptNo: "72",
-      date: "01/09/2025",
-      userName: "nizam",
-      name: "Mohd Nizamuddin",
-      amount: "₹2150.00",
-      createdBy: "admin",
-      type: "Cash",
-      zone: "admin",
-    },
-    {
-      receiptNo: "71",
-      date: "01/09/2025",
-      userName: "moiz",
-      name: "Md Moizuddin",
-      amount: "₹2150.00",
-      createdBy: "admin",
-      type: "Cash",
-      zone: "admin",
-    },
-    {
-      receiptNo: "70",
-      date: "31/08/2025",
-      userName: "maqbool",
-      name: "Mohammed Maqbool Ahmed",
-      amount: "₹2537.00",
-      createdBy: "admin",
-      type: "Cash",
-      zone: "admin",
-    },
-    {
-      receiptNo: "69",
-      date: "30/08/2025",
-      userName: "tkvideo",
-      name: "Abubakar",
-      amount: "₹2537.00",
-      createdBy: "admin",
-      type: "Cash",
-      zone: "admin",
-    },
-     {
-      receiptNo: "75",
-      date: "1/09/2025",
-      userName: "tkvideo",
-      name: "Abubakar",
-      amount: "₹456.00",
-      createdBy: "admin",
-      type: "Cash",
-      zone: "admin",
-    },
-  ]);
+  const [receipts, setReceipts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const [showNewReceiptModal, setShowNewReceiptModal] = useState(false);
+  const [formData, setFormData] = useState({
+    userName: "",
+    amount: 0,
+    receiptType: "Cash",
+    date: new Date().toISOString().split("T")[0], // yyyy-mm-dd
+    remarks: "",
+  });
+
+  /* -------------------- FETCH RECEIPTS -------------------- */
+  const fetchReceipts = async () => {
+    try {
+      const res = await getReceipts();
+      const mapped = res.data.map((r) => ({
+        id: r.id,
+        receiptNo: r.receiptNo,
+        userName: r.username,
+        name: r.username, // placeholder, can be replaced with fullName if you join with users
+        date: r.receiptDate,
+        amount: `₹${r.amount}`,
+        createdBy: r.createdBy || "system",
+        type: r.remark, // remark used as Type
+        zone: r.zoneName,
+      }));
+      setReceipts(mapped);
+    } catch (err) {
+      console.error("Error fetching receipts:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReceipts();
+  }, []);
+
+  /* -------------------- HANDLE INPUT -------------------- */
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  /* -------------------- ADD RECEIPT -------------------- */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await addReceipt({
+        receiptNo: Math.floor(Math.random() * 100000), // generate number
+        user_id: 1, // replace with actual user_id from your users table
+        username: formData.userName,
+        amount: formData.amount,
+        receipttype_id: 1, // map types properly later
+        notes: null,
+        remark: formData.receiptType,
+        receiptDate: formData.date,
+        operator_id: 1,
+        zoneName: "admin",
+        oldPayId: 0,
+        createdBy: "admin",
+      });
+      setShowNewReceiptModal(false);
+      fetchReceipts(); // refresh table
+    } catch (err) {
+      console.error("Error adding receipt:", err);
+    }
+  };
+
+  /* -------------------- DELETE RECEIPT -------------------- */
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this receipt?")) return;
+    try {
+      await deleteReceipt(id);
+      fetchReceipts();
+    } catch (err) {
+      console.error("Error deleting receipt:", err);
+    }
+  };
+
+  /* -------------------- TABLE COLUMNS -------------------- */
 
 
- const navigate = useNavigate();
+
   const columns = [
     { key: "receiptNo", label: "Receipt No" },
     { key: "userName", label: "User name" },
@@ -90,7 +119,7 @@ const Receipts = () => {
             <Pencil size={16} />
           </button>
           <button
-            onClick={() => alert(`Delete receipt ${row.receiptNo}`)}
+            onClick={() => handleDelete(row.id)}
             className="p-1 rounded-full bg-red-100 text-red-600 hover:bg-red-200"
           >
             <Trash2 size={16} />
@@ -107,34 +136,14 @@ const Receipts = () => {
   ];
 
 
-
-  // Custom Modal Component with lighter background
-  const Modal = ({ isOpen, onClose, title, children }) => {
-    if (!isOpen) return null;
-
-    return (
-      <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
-          <div className="flex justify-between items-center p-4 border-b">
-            <h2 className="text-xl font-semibold">{title}</h2>
-            <button
-              onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 text-2xl"
-            >
-              &times;
-            </button>
-          </div>
-          <div className="p-4 max-h-96 overflow-y-auto">
-            {children}
-          </div>
-        </div>
-      </div>
-    );
-  };
+  if (loading) {
+    return <div className="p-6">Loading receipts...</div>;
+  }
 
   return (
     <div className="p-6">
-  <div className="flex items-center justify-between mb-4">
+   <div className="flex items-center justify-between mb-4">
+
         <h3 className="text-xl font-semibold">Receipts</h3>
         {/* Options Menu */}
         <div className="relative flex justify-end gap-2 p-2">
@@ -166,6 +175,93 @@ const Receipts = () => {
         showDateFilter={true}
         showActionColumn={true}
       />
+
+
+      {/* Modal */}
+      {showNewReceiptModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+            <h2 className="text-xl font-semibold mb-4">New Receipt</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">User Name</label>
+                <input
+                  type="text"
+                  name="userName"
+                  value={formData.userName}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Amount</label>
+                <input
+                  type="number"
+                  name="amount"
+                  value={formData.amount}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Date</label>
+                <input
+                  type="date"
+                  name="date"
+                  value={formData.date}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Receipt Type</label>
+                <select
+                  name="receiptType"
+                  value={formData.receiptType}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                >
+                  <option value="Cash">Cash</option>
+                  <option value="Card">Card</option>
+                  <option value="UPI">UPI</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Remarks</label>
+                <textarea
+                  name="remarks"
+                  value={formData.remarks}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                  rows="3"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowNewReceiptModal(false)}
+                  className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

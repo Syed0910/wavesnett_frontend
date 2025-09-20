@@ -14,7 +14,6 @@ const Portal = () => {
   // Individual config states
   const [themeConfig, setThemeConfig] = useState({
     selectedTheme: 5,
-    darkMode: false,
     minSidebar: false,
     primaryColor: "#06b6d4"
   });
@@ -66,10 +65,11 @@ const Portal = () => {
   });
 
   const themeColors = [
-    "#ef4444", "#ec4899", "#a855f7", "#8b5cf6",
-    "#6366f1", "#3b82f6", "#06b6d4", "#10b981",
-    "#22c55e", "#84cc16", "#eab308", "#f59e0b",
-    "#f97316", "#f97316", "#78716c", "#6b7280"
+    "#f44236", "#ea1e63", "#f8591e", "#673ab7",
+    "#3f51b5", "#2196f3", "#03a9f5", "#00bcd5",
+    "#009788", "#4cb050", "#8bc24a", "#cddc39",
+    "#ffeb3c", "#fcc207", "#ff9700", "#fe581c",
+    "#795547", "#607d8b"
   ];
 
   // Fetch configurations from API
@@ -205,13 +205,6 @@ const Portal = () => {
     document.body.style.setProperty("--primary-rgb", hexToRgb(color));
     document.body.style.setProperty("--primary-hover", color + "dd");
     document.body.style.setProperty("--primary-light", color + "20");
-  };
-
-  const handleDarkModeToggle = async () => {
-    const newThemeConfig = { ...themeConfig, darkMode: !themeConfig.darkMode };
-    setThemeConfig(newThemeConfig);
-    toggleTheme(); // Update global theme context
-    await saveConfig('themeConfig', newThemeConfig);
   };
 
   const handleMinSidebarToggle = async () => {
@@ -432,17 +425,6 @@ const Portal = () => {
         </div>
 
         <div className="flex items-center space-x-6 mb-4">
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={theme === "dark"}
-              onChange={handleDarkModeToggle}
-              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
-            />
-            <span className="text-sm text-gray-700 dark:text-gray-300 hover:text-[var(--primary)] transition">
-              Dark Mode
-            </span>
-          </label>
 
           <label className="flex items-center space-x-2 cursor-pointer">
             <input
