@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "../../components/ui/datatable";
+
 import { Pencil, Trash2, Printer, ReceiptText, Receipt } from "lucide-react";
 import { getReceipts, addReceipt, deleteReceipt } from "../../services/api"; 
 import { useNavigate } from "react-router-dom";
+
+
 
 
 
@@ -92,6 +95,9 @@ const Receipts = () => {
   };
 
   /* -------------------- TABLE COLUMNS -------------------- */
+
+
+
   const columns = [
     { key: "receiptNo", label: "Receipt No" },
     { key: "userName", label: "User name" },
@@ -129,6 +135,7 @@ const Receipts = () => {
     },
   ];
 
+
   if (loading) {
     return <div className="p-6">Loading receipts...</div>;
   }
@@ -136,6 +143,7 @@ const Receipts = () => {
   return (
     <div className="p-6">
    <div className="flex items-center justify-between mb-4">
+
         <h3 className="text-xl font-semibold">Receipts</h3>
         {/* Options Menu */}
         <div className="relative flex justify-end gap-2 p-2">
@@ -157,7 +165,6 @@ const Receipts = () => {
       </button>
       </div>
       </div>
-
       <DataTable
         title="Receipts"
         data={receipts}
@@ -168,6 +175,7 @@ const Receipts = () => {
         showDateFilter={true}
         showActionColumn={true}
       />
+
 
       {/* Modal */}
       {showNewReceiptModal && (
@@ -253,6 +261,7 @@ const Receipts = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

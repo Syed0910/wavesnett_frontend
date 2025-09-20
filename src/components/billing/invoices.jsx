@@ -1,3 +1,4 @@
+
 // src/components/billing/invoices.jsx
 import React, { useEffect, useState } from "react";
 import DataTable from "../ui/datatable"; // 
@@ -23,6 +24,8 @@ const Invoices = () => {
     };
     fetchInvoices();
   }, []);
+
+
 
   const columns = [
     { key: "invoiceNo", label: "Invoice No" },
@@ -61,9 +64,13 @@ const Invoices = () => {
         <ReceiptText className="w-4 h-4" />
         New Receipt
       </button>
+
       </div>
       </div>
 
+
+        </div>
+      </div>
       <DataTable
         title="Invoices"
         data={invoices}
@@ -77,6 +84,8 @@ const Invoices = () => {
         onDelete={(row) => console.log("Delete invoice:", row)}
         onView={(row) => console.log("View invoice:", row)}
       />
+
+
     </div>
   );
 };
