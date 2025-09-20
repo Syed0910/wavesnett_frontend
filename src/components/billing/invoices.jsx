@@ -5,8 +5,6 @@ import { Receipt,ReceiptText } from "lucide-react";
 
 
 const Invoices = () => {
-  const [showCreateInvoice, setShowCreateInvoice] = useState(false);
-  const [showCreateReceipt, setShowCreateReceipt] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showGenerateModal, setShowGenerateModal] = useState(false);

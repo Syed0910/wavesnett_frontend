@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DataTable from "../../components/ui/datatable";
-import { Pencil, Trash2, Printer, MoreVertical, FileText, Receipt } from "lucide-react";
+import { Pencil, Trash2, Printer, MoreVertical, FileText, Receipt,ReceiptText } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Receipts = () => {
   const [receipts] = useState([
@@ -66,18 +67,8 @@ const Receipts = () => {
     },
   ]);
 
-  const [showNewReceiptModal, setShowNewReceiptModal] = useState(false);
-  const [showNewInvoiceModal, setShowNewInvoiceModal] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
-  const [formData, setFormData] = useState({
-    userName: "",
-    amount: 0,
-    receiptType: "Cash",
-    date: new Date().toLocaleDateString('en-GB'),
-    remarks: ""
-  });
 
+ const navigate = useNavigate();
   const columns = [
     { key: "receiptNo", label: "Receipt No" },
     { key: "userName", label: "User name" },
@@ -115,20 +106,7 @@ const Receipts = () => {
     },
   ];
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`Form submitted: ${JSON.stringify(formData)}`);
-    setShowNewReceiptModal(false);
-    setShowNewInvoiceModal(false);
-  };
 
   // Custom Modal Component with lighter background
   const Modal = ({ isOpen, onClose, title, children }) => {
@@ -156,42 +134,28 @@ const Receipts = () => {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-4 relative">
-      <h3 className="text-xl font-semibold">Receipts</h3>
-      {/* Options Menu */}
-   
-        <button 
-          onClick={() => setShowOptionsMenu(!showOptionsMenu)}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-        >
-          <MoreVertical size={20} />
-        </button>
-        
-        
-        {showOptionsMenu && (
-          <div className="absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg z-10 w-48">
-            <button
-              onClick={() => {
-                setShowNewInvoiceModal(true);
-                setShowOptionsMenu(false);
-              }}
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
-            >
-              New Invoice
-            </button>
-            <button
-              onClick={() => {
-                setShowNewReceiptModal(true);
-                setShowOptionsMenu(false);
-              }}
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
-            >
-              New Receipt
-            </button>
-          </div>
-        )}
-      </div>
+  <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-semibold">Receipts</h3>
+        {/* Options Menu */}
+        <div className="relative flex justify-end gap-2 p-2">
+ < button
+        onClick={() => navigate("/billing/new-receipt")}
+        className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
+      >
+        <Receipt className="w-4 h-4" />
+        New Receipt 
+      </button>
 
+      {/* All Users */}
+      <button
+        onClick={() => navigate("/billing/new-invoice")}
+        className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
+      >
+        <ReceiptText className="w-4 h-4" />
+        New Invoice
+      </button>
+      </div>
+      </div>
       <DataTable
         title="Receipts"
         data={receipts}
@@ -201,229 +165,7 @@ const Receipts = () => {
         showNasDropdown={false}
         showDateFilter={true}
         showActionColumn={true}
-        customHeader={
-          <div className="relative">
-            <button 
-              className="p-2 rounded-full hover:bg-gray-100"
-              onClick={() => setShowMenu(!showMenu)}
-            >
-              <MoreVertical size={20} />
-            </button>
-            
-            {showMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                <button
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                  onClick={() => {
-                    setShowNewReceiptModal(true);
-                    setShowMenu(false);
-                  }}
-                >
-                  <Receipt size={16} className="mr-2" />
-                  New Receipt
-                </button>
-                <button
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                  onClick={() => {
-                    setShowNewInvoiceModal(true);
-                    setShowMenu(false);
-                  }}
-                >
-                  <FileText size={16} className="mr-2" />
-                  New Invoice
-                </button>
-              </div>
-            )}
-          </div>
-        }
       />
-
-      {/* New Receipt Modal */}
-      <Modal
-        isOpen={showNewReceiptModal}
-        onClose={() => setShowNewReceiptModal(false)}
-        title="New Receipt"
-      >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Zero</label>
-              <select className="w-full p-2 border border-gray-300 rounded-md">
-                <option value="admin">admin</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-              <input
-                type="text"
-                value={formData.date}
-                className="w-full p-2 border border-gray-300 rounded-md"
-                readOnly
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">User name</label>
-            <input
-              type="text"
-              name="userName"
-              value={formData.userName}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Amount</label>
-            <input
-              type="number"
-              name="amount"
-              value={formData.amount}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Receipt Type</label>
-            <select
-              name="receiptType"
-              value={formData.receiptType}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-            >
-              <option value="Cash">Cash</option>
-              <option value="Card">Card</option>
-              <option value="UPI">UPI</option>
-              <option value="Bank Transfer">Bank Transfer</option>
-            </select>
-          </div>
-
-          <div className="border-t pt-4">
-            <h3 className="font-medium mb-2">Receipt Notes</h3>
-            <p className="text-sm text-gray-600 mb-2">This notes will be display on print of receipt.</p>
-            
-            <label className="block text-sm font-medium text-gray-700 mb-1">Remarks</label>
-            <textarea
-              name="remarks"
-              value={formData.remarks}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              rows="3"
-            />
-          </div>
-
-          <div className="flex justify-end space-x-2 pt-4">
-            <button
-              type="button"
-              onClick={() => setShowNewReceiptModal(false)}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
-            >
-              CANCEL
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              SUBMIT
-            </button>
-          </div>
-        </form>
-      </Modal>
-
-      {/* New Invoice Modal */}
-      <Modal
-        isOpen={showNewInvoiceModal}
-        onClose={() => setShowNewInvoiceModal(false)}
-        title="New Invoice"
-      >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Zero</label>
-              <select className="w-full p-2 border border-gray-300 rounded-md">
-                <option value="admin">admin</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-              <input
-                type="text"
-                value={formData.date}
-                className="w-full p-2 border border-gray-300 rounded-md"
-                readOnly
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Client name</label>
-            <input
-              type="text"
-              name="userName"
-              value={formData.userName}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Amount</label>
-            <input
-              type="number"
-              name="amount"
-              value={formData.amount}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Invoice Type</label>
-            <select
-              name="receiptType"
-              value={formData.receiptType}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-            >
-              <option value="Standard">Standard</option>
-              <option value="Proforma">Proforma</option>
-              <option value="Commercial">Commercial</option>
-            </select>
-          </div>
-
-          <div className="border-t pt-4">
-            <h3 className="font-medium mb-2">Invoice Notes</h3>
-            <p className="text-sm text-gray-600 mb-2">This notes will be display on print of invoice.</p>
-            
-            <label className="block text-sm font-medium text-gray-700 mb-1">Remarks</label>
-            <textarea
-              name="remarks"
-              value={formData.remarks}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              rows="3"
-            />
-          </div>
-
-          <div className="flex justify-end space-x-2 pt-4">
-            <button
-              type="button"
-              onClick={() => setShowNewInvoiceModal(false)}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
-            >
-              CANCEL
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              SUBMIT
-            </button>
-          </div>
-        </form>
-      </Modal>
     </div>
   );
 };

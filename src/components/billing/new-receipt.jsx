@@ -5,12 +5,32 @@ const NewReceipt = () => {
   const [formData, setFormData] = useState({
     zone: "admin",
     userName: "",
-    date: new Date().toLocaleDateString("en-GB"),
+    date: new Date().toISOString().split("T")[0], // current date in YYYY-MM-DD
     notes: "",
     remarks: "",
     amount: 0,
     type: "",
   });
+
+  // Example dynamic users array (replace with API fetch if needed)
+  const users = [
+    { value: "user1", label: "John Doe" },
+    { value: "user2", label: "Jane Smith" },
+    { value: "user3", label: "Alice Johnson" },
+  ];
+
+  // Dynamic receipt types
+  const receiptTypes = [
+    { value: "Cash", label: "Cash" },
+    { value: "Cheque", label: "Cheque" },
+    { value: "Online Transfer", label: "Online Transfer" },
+    { value: "Credit Card", label: "Credit card" },
+    { value: "Debit Card", label: "Debit Card" },
+    { value: "Swipe Machine", label: "Swipe Machine" },
+    { value: "Demand Draft(DD)", label: "Demand Draft" },
+    { value: "External Gateway", label: "External Gateway" },
+    { value: "Bank Transfer", label: "Bank Transfer" }
+    ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,7 +43,7 @@ const NewReceipt = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-8xl p-6">
       <h2 className="text-xl font-semibold mb-6">New Receipt</h2>
       <form
         onSubmit={handleSubmit}
@@ -36,14 +56,14 @@ const NewReceipt = () => {
           onChange={handleChange}
           className="border p-2 rounded"
         >
-          <option value="admin">admin</option>
+          <option value="admin">Admin</option>
         </select>
 
         {/* Date */}
         <div className="flex items-center border p-2 rounded">
           <Calendar className="w-4 h-4 mr-2 text-gray-500" />
           <input
-            type="text"
+            type="date"
             name="date"
             value={formData.date}
             onChange={handleChange}
@@ -51,15 +71,20 @@ const NewReceipt = () => {
           />
         </div>
 
-        {/* User Name */}
-        <input
-          type="text"
+        {/* User Name (Dynamic) */}
+        <select
           name="userName"
-          placeholder="User name"
           value={formData.userName}
           onChange={handleChange}
           className="border p-2 rounded"
-        />
+        >
+          <option value="">Select User</option>
+          {users.map((user) => (
+            <option key={user.value} value={user.value}>
+              {user.label}
+            </option>
+          ))}
+        </select>
 
         {/* Notes */}
         <div className="flex items-center border p-2 rounded">
@@ -97,16 +122,19 @@ const NewReceipt = () => {
           className="border p-2 rounded"
         />
 
-        {/* Receipt Type */}
+        {/* Receipt Type (Dynamic) */}
         <select
           name="type"
           value={formData.type}
           onChange={handleChange}
           className="border p-2 rounded md:col-span-2"
         >
-          <option value="">Receipt Type</option>
-          <option value="Cash">Cash</option>
-          <option value="Online">Online</option>
+          <option value="">Select Receipt Type</option>
+          {receiptTypes.map((r) => (
+            <option key={r.value} value={r.value}>
+              {r.label}
+            </option>
+          ))}
         </select>
 
         {/* Buttons */}
