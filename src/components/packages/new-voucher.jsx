@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import navigate from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 
 const NewVoucher = () => {
+  
+  const navigate = useNavigate();
 
   const [zone, setZone] = useState("admin");
   const [plan, setPlan] = useState("");
@@ -66,7 +68,7 @@ const NewVoucher = () => {
           </button>
           <button
             type="button"
-            onClick={() => navigate("/vouchers")}
+            onClick={() => useNavigate("/vouchers")}
             className="px-4 py-1 border rounded-md hover:bg-gray-100"
           >
             CANCEL

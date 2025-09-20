@@ -1,6 +1,6 @@
 // src/components/users/Users.jsx
 import { useEffect, useState } from "react";
-import { getUsers, addUser } from "../../services/api";
+import { getUsers } from "../../services/api";
 import { Eye, Edit, Trash2, Upload, Plus } from 'lucide-react';
 import DataTable from '../ui/datatable';
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,11 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+
+  const handleAddUser = () => {
+    navigate("/user/new");
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -38,9 +43,9 @@ const handleView = (user) => {
 };
 
 
-  const handleImport = () => alert("Import users clicked");
-  const handleAddUser = () => alert("Add user clicked");
-
+  const handleImport = () => {
+    navigate("/user/import");
+  };
   const columns = [
     {
       key: 'username',
@@ -96,7 +101,7 @@ const handleView = (user) => {
   if (error) return <div className="p-6 text-red-600">{error}</div>;
 
   return (
-    <div className="p-0 pt-0">
+    <div className="p-6 pt-0">
       {/* Header section similar to complaints image */}
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-xl font-medium mb-1 text-gray-700">
@@ -110,15 +115,15 @@ const handleView = (user) => {
             <Upload className="w-4 h-4" />
             Import
           </button>
-          <button
+            <button
             onClick={handleAddUser}
             className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
           >
             <Plus className="w-4 h-4" />
             Add User
           </button>
-        </div>
-      </div>
+              </div>
+            </div>
 
       
 

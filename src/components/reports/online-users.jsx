@@ -1,4 +1,6 @@
+
 // src/components/reports/online-users.jsx
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DataTable from "../ui/datatable";
@@ -22,6 +24,8 @@ const OnlineUsers = () => {
         setLoading(false);
       }
     };
+
+
 
     fetchUsers();
   }, []);
@@ -71,7 +75,9 @@ const OnlineUsers = () => {
   return (
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">Online Users</h2>
+
       <DataTable data={users} columns={columns} showSelection={false} pageSize={10} />
+
     </div>
   );
 };

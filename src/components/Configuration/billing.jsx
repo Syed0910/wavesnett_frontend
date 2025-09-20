@@ -1,15 +1,21 @@
+
 // components/Configuration/billing.jsx
 import React, { useState,useEffect } from "react";
 import axios from "axios"; 
+import DataTable from '../ui/datatable';
+import { MoreVertical, Plus, Eye, Edit, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 
 const Billing = () => {
   const [printingSettings, setPrintingSettings] = useState({
+
     defaultInvoiceSeries: "",
     defaultInvoiceWithoutTax: "",
+
     totalRoundOff: true,
     discountDisplayInPrint: true
   });
-
  const [taxSettings, setTaxSettings] = useState({
     selectedTax: "None",
     gstNumber: "",
@@ -37,8 +43,10 @@ const Billing = () => {
     disableOutstandingUpdate: false
   });
 
+
   
   const [invoiceSeries, setInvoiceSeries] = useState([]);
+
   const handlePrintingChange = (field, value) => {
     setPrintingSettings(prev => ({ ...prev, [field]: value }));
   };
@@ -116,6 +124,7 @@ useEffect(() => {
 
     fetchTaxConfig();
   }, []);
+
   return (
     <div className="space-y-6">
       {/* Printing Settings */}
@@ -125,6 +134,7 @@ useEffect(() => {
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm text-gray-600 mb-2">Default Invoice Series</label>
+
             <select
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
               value={printingSettings.defaultInvoiceSeries}
@@ -144,14 +154,17 @@ useEffect(() => {
             <input 
               type="text"
               placeholder="Receipt terms"
-              className="w-full mt-7 px-3 py-2 border border-gray-300 rounded-md text-sm"
+              value={printingSettings.receiptTerms}
+              onChange={(e) => handlePrintingChange('receiptTerms', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
             />  
           </div>
         </div>
 
+
         <div className="mt-4">
             <select
-              className="w-full my-2 px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
               value={printingSettings.defaultInvoiceWithoutTax || ""} // start empty
               onChange={(e) => handlePrintingChange('defaultInvoiceWithoutTax', e.target.value)}
             >
@@ -173,6 +186,7 @@ useEffect(() => {
 
 
         <div className="space-y-2 mb-4">
+
           <label className="flex items-center space-x-3">
             <input
               type="checkbox"
@@ -216,7 +230,7 @@ useEffect(() => {
               value={type}
               checked={taxSettings.selectedTax === type}
               onChange={(e) => handleTaxChange("selectedTax", e.target.value)}
-              className="w-4 h-4 border-gray-300 rounded accent-[var(--primary)]"
+              className="w-4 h-4 text-cyan-400"
             />
             <span className="text-sm text-gray-700">{type}</span>
           </label>
@@ -229,6 +243,7 @@ useEffect(() => {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               HSN/SAC Code
+
             </label>
             <input
               type="text"
@@ -337,13 +352,12 @@ useEffect(() => {
       )}
 
       <button
-        style={{ backgroundColor: "var(--primary)" }}
-        className="hover:opacity-90 text-white px-6 py-2 rounded-md font-medium"
+        onClick={handleApply}
+        className="bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-md font-medium"
       >
         APPLY
       </button>
     </div>
-
 
       {/* Invoice & Plan Setting */}
       <div className="bg-white rounded-lg p-6 shadow-sm">
