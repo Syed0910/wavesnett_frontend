@@ -9,6 +9,8 @@ import NasDashboard from "./pages/Nas";
 import Billing from "./components/billing/billing";
 import RechargeSummary from "./components/reports/RechargeSummary";
 import ConnectionAttempt from "./components/reports/ConnectionAttempt";
+import Walletledgers from "./components/reports/Walletledgers";
+import ZoneLedgers from "./components/reports/ZoneLedgers";
 
 import AdminConfiguration from "./components/Configuration/adminConfiguration";
 import Configuration from "./components/Configuration/Configuration";
@@ -30,7 +32,7 @@ import Complaints from "./components/complaint/Complaints";
 import NewComplaint from "./components/complaint/new-complaint";
 import CloseComplaint from "./components/complaint/close-complaint";
 import Packages from "./pages/packages";
-
+import ActiveRecords from "./components/reports/ActiveRecords";
 // ✅ Import User Detail
 import UserDetail from "./components/users-management/UserDetail";
 
@@ -125,7 +127,9 @@ const App = () => {
 <Route path="/reports/online-users" element={<OnlineUsersTable />} />
 <Route path="/reports/recharge-summary" element={<RechargeSummary />} />
 <Route path="/reports/connection-attempt" element={<ConnectionAttempt />} />
-
+<Route path="/reports/active-records" element={<ActiveRecords />} />
+<Route path="/reports/wallet-ledgers" element={<Walletledgers />} />
+<Route path="/reports/zone-ledgers" element={<ZoneLedgers />} />
 
         {/* Complaints Management Route */}
 

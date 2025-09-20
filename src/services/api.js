@@ -51,6 +51,7 @@ export const deleteOnlineTransaction = (id) =>
 export const getOnlineUsers = () => API.get("/reports/online-users");
 export const getRechargeSummary = () => API.get("/reports/recharge-summary");
 export const getConnectionAttempts = () => API.get("/connection-attempts");
+export const getActiveRecords = () => API.get("/active-records"); 
 
 /* -------------------- EMAIL TEMPLATES -------------------- */
 export const getEmailTemplateByName = (notifyName) =>
@@ -91,3 +92,5 @@ export const updateHotspotConfig = (config) => API.put("/configs/hotspot/config"
 export const getPermissionsConfig = () => API.get("/configs/permissions/config");
 export const updatePermissionsConfig = (config) => API.put("/configs/permissions/config", config);
 
+/* -------------------- WALLETLEDGERS -------------------- */
+export const getWalletledgers = () => API.get("/reports/walletledgers");
