@@ -397,7 +397,6 @@ const DataTable = ({
   onDelete,
   onView,
   showSelection = false,
-  toolbar,
   pageSize = 10,
   searchable = true,
   showNasDropdown = false,

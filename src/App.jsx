@@ -100,10 +100,7 @@ const App = () => {
         {/* Packages Routes */}
          <Route path="/packages/*" element={<Packages />} />
 
-        {/* Reports Routes */}
-        <Route path="/reports/*" element={
-          <OnlineUsersTable/>
-        } />
+       
 
 
         {/* ✅ Reports with nested routes */}

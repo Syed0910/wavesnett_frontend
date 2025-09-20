@@ -115,7 +115,12 @@ const Sidebar = ({ isOpen, onClose }) => {
         { id: "active-records", label: "Active Records", icon: <Users2 className="w-4 h-4" />, path: "/reports/active-records" },
         { id: "wallet-ledgers", label: "Wallet Ledger", icon: <DollarSign className="w-4 h-4" />, path: "/reports/wallet-ledgers" },
         { id: "zone-ledgers", label: "Zone Acc. Ledger", icon: <Box className="w-4 h-4" />, path: "/reports/zone-ledgers" },
-        { id: "logs", label: "Logs", icon: <ClipboardList className="w-4 h-4" />, path: "/reports/logs" },
+       { 
+  id: "logs-reports", 
+  label: "Logs", 
+  icon: <ClipboardList className="w-4 h-4" />, 
+  path: "/reports/logs"  // This should match your route path
+},
         { id: "operator-logs", label: "Operator Logs", icon: <FileText className="w-4 h-4" />, path: "/reports/operator-logs" },
         { id: "tax-summary", label: "Tax Summary", icon: <Receipt className="w-4 h-4" />, path: "/reports/tax-summary" },
         { id: "sms-status", label: "SMS Status", icon: <MessageSquare className="w-4 h-4" />, path: "/reports/sms-status" },

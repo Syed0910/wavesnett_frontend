@@ -64,7 +64,7 @@ export const getMailConfig = () => API.get("/configs/mail/config");
 export default API;
 
 /* -------------------- ONLINE USERS -------------------- */
-export const getOnlineUsers = () => API.get("/online-users");
+export const getOnlineUsersReports = () => API.get("/online-users");
 export const addOnlineUser = (user) => API.post("/online-users", user);
 export const updateOnlineUser = (id, user) => API.put(`/online-users/${id}`, user);
 export const deleteOnlineUser = (id) => API.delete(`/online-users/${id}`);

@@ -2,8 +2,11 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-// ✅ Only Online Users report
+// ✅ Import all report components
 import OnlineUsers from "./online-users";
+import LogViewer from "./Logs-reports"; 
+import TermsPage from "./Terms";
+import UserLogins from "./UserLogins";
 
 const Reports = () => {
   return (
@@ -12,7 +15,12 @@ const Reports = () => {
       <Route path="/" element={<Navigate to="/reports/online-users" replace />} />
 
       {/* ✅ Online Users */}
-      <Route path="/online-users" element={<OnlineUsers />} />
+      <Route path="online-users" element={<OnlineUsers />} />
+      
+      {/* ✅ Fixed Logs route - matches sidebar path */}
+      <Route path="logs" element={<LogViewer />} />
+       <Route path="terms" element={<TermsPage />} />
+       <Route path="user-logins" element={<UserLogins/>}/>
     </Routes>
   );
 };
