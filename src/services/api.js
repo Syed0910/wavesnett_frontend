@@ -1,6 +1,9 @@
+// src/services/api.js
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:3000/api" });
+const API = axios.create({
+  baseURL: "http://localhost:3000/api", // backend prefix
+});
 
 /* -------------------- USERS -------------------- */
 export const getUsers = () => API.get("/users");
@@ -20,7 +23,6 @@ export const getNas = () => API.get("/nas");
 export const getNasById = (id) => API.get(`/nas/${id}`);
 export const addNas = (nas) => API.post("/nas", nas);
 export const updateNas = (id, nas) => API.put(`/nas/${id}`, nas);
-export const deleteNas = (id) => API.delete(`/nas/${id}`);
 
 /* -------------------- INVOICES -------------------- */
 export const getInvoices = () => API.get("/invoices");
@@ -28,6 +30,7 @@ export const getInvoiceById = (id) => API.get(`/invoices/${id}`);
 export const addInvoice = (invoice) => API.post("/invoices", invoice);
 export const updateInvoice = (id, invoice) => API.put(`/invoices/${id}`, invoice);
 export const deleteInvoice = (id) => API.delete(`/invoices/${id}`);
+export const deleteNas = (id) => API.delete(`/nas/${id}`);
 
 /* -------------------- RECEIPTS -------------------- */
 export const getReceipts = () => API.get("/receipts");
@@ -44,6 +47,22 @@ export const updateOnlineTransaction = (id, transaction) =>
 export const deleteOnlineTransaction = (id) =>
   API.delete(`/online-transactions/${id}`);
 
+
+/* -------------------- RECHARGES / REPORTS -------------------- */
+export const getOnlineUsers = () => API.get("/reports/online-users");
+export const getRechargeSummary = () => API.get("/reports/recharge-summary");
+export const getConnectionAttempts = () => API.get("/connection-attempts");
+export const getActiveRecords = () => API.get("/active-records"); 
+
+/* -------------------- EMAIL TEMPLATES -------------------- */
+export const getEmailTemplateByName = (notifyName) =>
+  API.get(`/emailtemplates/byName/${encodeURIComponent(notifyName)}`);
+
+/* -------------------- CONFIGS -------------------- */
+export const getMailConfig = () => API.get("/configs/mail/config");
+
+export default API;
+
 /* -------------------- ONLINE USERS -------------------- */
 export const getOnlineUsers = () => API.get("/online-users");
 export const addOnlineUser = (user) => API.post("/online-users", user);
@@ -59,6 +78,7 @@ export const getBillingReports = () => API.get("/reports/billing");
 
 // Complaint Reports
 export const getComplaintReports = () => API.get("/reports/complaints");
+
 
 /* -------------------- CONFIGS -------------------- */
 // Generic config operations
@@ -90,6 +110,10 @@ export const updateHotspotConfig = (config) => API.put("/configs/hotspot/config"
 export const getPermissionsConfig = () => API.get("/configs/permissions/config");
 export const updatePermissionsConfig = (config) => API.put("/configs/permissions/config", config);
 
+
+/* -------------------- WALLETLEDGERS -------------------- */
+export const getWalletledgers = () => API.get("/reports/walletledgers");
+
 //*---------------------- configurations ----------------------------- */
 export const getAdminConfiguration = () => API.get("/configs");
 export const getAdminConfigurationById = (id) => API.get(`/configs/${id}`);
@@ -98,3 +122,4 @@ export const addAdminConfiguration = (adminConfiguration) =>
 export const updateAdminConfiguration = (id, data) => {
   return API.put(`/configs/${id}`, data);  // remove 'admin' if not in backend 
 };
+
