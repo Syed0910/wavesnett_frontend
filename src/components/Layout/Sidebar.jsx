@@ -112,7 +112,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         { id: "online-users", label: "Online Users", icon: <User className="w-4 h-4" />, path: "/reports/online-users" },
         { id: "recharge-summary", label: "Recharge Summary", icon: <CreditCard className="w-4 h-4" />, path: "/reports/recharge-summary" },
         { id: "connection-attempt", label: "Connection Attempt", icon: <Network className="w-4 h-4" />, path: "/reports/connection-attempt" },
-        { id: "active-records", label: "Active Records", icon: <Users2 className="w-4 h-4" />, path: "/reports/active-records" },
+        { id: "ActiveRecords", label: "Active Records", icon: <Users2 className="w-4 h-4" />, path: "/reports/ActiveRecords" },
         { id: "wallet-ledgers", label: "Wallet Ledger", icon: <DollarSign className="w-4 h-4" />, path: "/reports/wallet-ledgers" },
         { id: "zone-ledgers", label: "Zone Acc. Ledger", icon: <Box className="w-4 h-4" />, path: "/reports/zone-ledgers" },
         { id: "logs", label: "Logs", icon: <ClipboardList className="w-4 h-4" />, path: "/reports/logs" },

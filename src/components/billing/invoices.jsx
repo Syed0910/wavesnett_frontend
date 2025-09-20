@@ -1,9 +1,8 @@
-
 // src/components/billing/invoices.jsx
 import React, { useEffect, useState } from "react";
-import DataTable from "../ui/datatable"; // 
-import { getInvoices } from "../../services/api"; // 
-import { Receipt,  ReceiptText } from "lucide-react";
+import DataTable from "../ui/datatable";
+import { getInvoices } from "../../services/api";
+import { Receipt, ReceiptText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Invoices = () => {
@@ -15,7 +14,7 @@ const Invoices = () => {
     const fetchInvoices = async () => {
       try {
         const res = await getInvoices();
-        setInvoices(res.data || []); // API should return array
+        setInvoices(res.data || []); // API should return an array
       } catch (err) {
         console.error("Error fetching invoices:", err);
       } finally {
@@ -25,12 +24,10 @@ const Invoices = () => {
     fetchInvoices();
   }, []);
 
-
-
   const columns = [
     { key: "invoiceNo", label: "Invoice No" },
     { key: "date", label: "Date" },
-    { key: "userName", label: "User name" },
+    { key: "userName", label: "User Name" },
     { key: "name", label: "Name" },
     { key: "status", label: "Status" },
     { key: "totalAmt", label: "Total Amt." },
@@ -46,31 +43,30 @@ const Invoices = () => {
     <div className="p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-semibold">Invoices</h3>
-        {/* Options Menu */}
-        <div className="relative flex justify-end gap-2 p-2">
- < button
-        onClick={() => navigate("/billing/new-invoice")}
-        className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
-      >
-        <Receipt className="w-4 h-4" />
-        New Invoice 
-      </button>
 
-      {/* All Users */}
-      <button
-        onClick={() => navigate("/billing/new-receipt")}
-        className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
-      >
-        <ReceiptText className="w-4 h-4" />
-        New Receipt
-      </button>
+        {/* Action Buttons */}
+        <div className="flex justify-end gap-2 p-2">
+          {/* New Invoice */}
+          <button
+            onClick={() => navigate("/billing/new-invoice")}
+            className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
+          >
+            <Receipt className="w-4 h-4" />
+            New Invoice
+          </button>
 
-      </div>
-      </div>
-
-
+          {/* New Receipt */}
+          <button
+            onClick={() => navigate("/billing/new-receipt")}
+            className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200"
+          >
+            <ReceiptText className="w-4 h-4" />
+            New Receipt
+          </button>
         </div>
       </div>
+
+      {/* DataTable */}
       <DataTable
         title="Invoices"
         data={invoices}
@@ -84,8 +80,6 @@ const Invoices = () => {
         onDelete={(row) => console.log("Delete invoice:", row)}
         onView={(row) => console.log("View invoice:", row)}
       />
-
-
     </div>
   );
 };
